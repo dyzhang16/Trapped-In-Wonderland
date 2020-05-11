@@ -16,7 +16,7 @@ class Loading extends Phaser.Scene{
         });                      
     }
     update(){
-        if(seconds > 3){
+        if(seconds > 1){
             this.scene.start('menuScene');
         }
     }
