@@ -13,7 +13,8 @@ class LevelTwo extends Phaser.Scene{
       this.load.tilemapTiledJSON('map2','./assets/TileMaps/level2.json');
       this.load.spritesheet('playerIdle','./assets/Alice_Standing/initialAliceStandingMedium.png',{frameWidth: 23, frameHeight: 61, startFrame: 0, endFrame: 1});
       this.load.spritesheet('playerJump','./assets/Alice_Jumping/initialAliceJumpMedium.png',{frameWidth: 37, frameHeight: 61, startFrame: 0, endFrame: 6});
-  }
+      this.load.spritesheet('playerWalk','./assets/Alice_Walking/initialAliceWalking.png',{frameWidth:28, frameHeight: 61, startFrame:0, endFrame: 5})
+    }
   create(){
       keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
       keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
@@ -37,38 +38,49 @@ class LevelTwo extends Phaser.Scene{
 
       this.p1 = new Player(this, 110, 473,'playerIdle').setOrigin(0.5,1);
       this.anims.create({                                 //basic movement animation
-          key: 'p1Idle',
-          repeat: -1,
-          frames: this.anims.generateFrameNumbers('playerIdle', {start: 0, end: 1, first: 0}),
-          frameRate: 30
+        key: 'p1Idle',
+        repeat: -1,
+        frames: this.anims.generateFrameNumbers('playerIdle', {start: 0, end: 1, first: 0}),
+        frameRate: 30
       });
       this.anims.create({                                 //basic movement animation
-          key: 'p1Jump',
-          frames: this.anims.generateFrameNumbers('playerJump', {start: 0, end: 6, first: 0}),
-          frameRate: 5
+        key: 'p1Walk',
+        repeat: -1,
+        frames: this.anims.generateFrameNumbers('playerWalk', {start: 0, end: 5, first: 0}),
+        frameRate: 24
+      });
+      this.anims.create({                                 //basic movement animation
+        key: 'p1Jump',
+        frames: this.anims.generateFrameNumbers('playerJump', {start: 0, end: 4, first: 0}),
+        frameRate: 5
       });
 
       this.physics.add.collider(this.p1, platforms2);
 
-      this.smallBox = new SmallBox(this,350,400,'smallBox').setOrigin(0.5);
+      this.smallBox = new SmallBox(this, 350,400,'smallBox').setOrigin(0.5);
       this.physics.add.collider(this.smallBox, platforms2);
+      this.physics.add.collider(this.p1, this.smallBox);
       this.physics.add.collider(this.p1,this.smallBox,this.pickUpBox,null, this);    
+  }
 
-  }    
   update(){
     if(currentScale == 1){  
       if (cursors.left.isDown) {              
           this.p1.setVelocityX(-150);
-          //needs animation
+          if (this.p1.body.onFloor()) {
+            this.p1.anims.play('p1Walk', true);
+          }
       } else if (cursors.right.isDown) {
           this.p1.setVelocityX(150);
-          //needs animation
-      } else {
+          if(this.p1.body.onFloor()) {
+            this.p1.anims.play('p1Walk', true);
+          }  
+      } else { 
           this.p1.setVelocityX(0);
-      if (this.p1.body.onFloor()) {
+          if (this.p1.body.onFloor()) {
             this.p1.anims.play('p1Idle',true);
           }
-      }
+        }
       if (cursors.up.isDown && this.p1.body.onFloor()) {
         //console.log('jump');
         this.p1.setVelocityY(-150);
@@ -77,10 +89,14 @@ class LevelTwo extends Phaser.Scene{
     } else if(currentScale == 2){
         if (cursors.left.isDown) {              
           this.p1.setVelocityX(-125);
-          //needs animation
+          if (this.p1.body.onFloor()) {
+            this.p1.anims.play('p1Walk', true);
+          }
         } else if (cursors.right.isDown) {
           this.p1.setVelocityX(125);
-          //needs animation
+          if (this.p1.body.onFloor()) {
+            this.p1.anims.play('p1Walk', true);
+          }
         } else {
           this.p1.setVelocityX(0);
           if (this.p1.body.onFloor()) {
@@ -94,10 +110,14 @@ class LevelTwo extends Phaser.Scene{
     } else if(currentScale == 4){
         if (cursors.left.isDown) {              
           this.p1.setVelocityX(-100);
-          //needs animation
+          if (this.p1.body.onFloor()) {
+            this.p1.anims.play('p1Walk', true);
+          }
         } else if (cursors.right.isDown) {
           this.p1.setVelocityX(100);
-          //needs animation
+          if (this.p1.body.onFloor()) {
+            this.p1.anims.play('p1Walk', true);
+          }
         } else {
           this.p1.setVelocityX(0);
           if (this.p1.body.onFloor()) {
@@ -111,10 +131,14 @@ class LevelTwo extends Phaser.Scene{
     } else if(currentScale == 0.5){
         if (cursors.left.isDown) {              
           this.p1.setVelocityX(-175);
-          //needs animation
+          if (this.p1.body.onFloor()) {
+            this.p1.anims.play('p1Walk', true);
+          }
         } else if (cursors.right.isDown) {
           this.p1.setVelocityX(175);
-          //needs animation
+          if (this.p1.body.onFloor()) {
+            this.p1.anims.play('p1Walk', true);
+          }
         } else {
           this.p1.setVelocityX(0);
           if (this.p1.body.onFloor()) {
@@ -147,15 +171,21 @@ class LevelTwo extends Phaser.Scene{
           //console.log('CurrentScale is:', currentScale);
         }
       }
+      /*if(pickedUpBox == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
+        this.smallBox = new SmallBox(this,this.p1.x,this.p1.y,'smallBox').setOrigin(0.5,1);
+        pickedUpBox = false;
+      }*/
 
       this.physics.world.collide(this.p1, this.door2, this.atDoor, null, this);
       
   }    
-  pickUpBox(smallBox){
-    //animation to pick up box
-    smallBox.destroy();
-
-  }
+  /*pickUpBox(p1,smallBox){
+    if(Phaser.Input.Keyboard.JustDown(keySPACE)){
+      smallBox.destroy();
+      //animation to pickup box
+      pickedUpBox = true;
+    } 
+  }*/
   atDoor(){
     if(cursors.up.isDown && this.p1.body.onFloor()){
       this.scene.start('menuScene');

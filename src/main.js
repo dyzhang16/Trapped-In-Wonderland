@@ -23,3 +23,6 @@ let seconds = 0;
 let cookieObtained = false;
 let drinkObtained = false;
 const textSpacer = 36;
+let pickedUpBox = false;
+let inVent = false;
+let Ventzone;
