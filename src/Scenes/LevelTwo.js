@@ -60,7 +60,7 @@ class LevelTwo extends Phaser.Scene{
       this.smallBox = new SmallBox(this, 350,400,'smallBox').setOrigin(0.5);
       this.physics.add.collider(this.smallBox, platforms2);
       this.physics.add.collider(this.p1, this.smallBox);
-      this.physics.add.collider(this.p1,this.smallBox,this.pickUpBox,null, this);    
+      //this.physics.add.collider(this.p1,this.smallBox,this.pickUpBox,null, this);    
   }
 
   update(){
