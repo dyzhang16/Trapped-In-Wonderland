@@ -37,12 +37,12 @@ class LevelOne extends Phaser.Scene{
         const door1 = this.door1.create(doorObject1.x, doorObject1.y, 'medBox').setOrigin(0,0);
         });
         
-        Ventzone = this.add.zone(570, 420).setSize(155, 90).setOrigin(0,0);
+        Ventzone = this.add.zone(560, 300).setSize(155, 190).setOrigin(0,0);
         this.physics.world.enable(Ventzone);
         Ventzone.body.setAllowGravity(false);
         Ventzone.body.moves = false;
         
-        this.p1 = new Player(this, 400, 100,'playerIdle').setOrigin(0.5,1);
+        this.p1 = new Player(this, 400, 100,'playerIdle').setOrigin(0.5,1); //bug with swapping different sized characters
         this.anims.create({                                 //basic movement animation
             key: 'p1Idle',
             repeat: -1,
@@ -72,131 +72,20 @@ class LevelOne extends Phaser.Scene{
         Ventzone.on('leavezone', () => inVent = false);
     }
     update(){
-
+      this.p1.update();
+      
+      this.physics.world.collide(this.p1, this.cookie, this.p1cookieCollision, null, this); 
+      this.physics.world.collide(this.p1, this.drink, this.p1drinkCollision,null, this);
+      this.physics.world.collide(this.p1, this.door1, this.atDoor, null, this);
+      
       let touching = Ventzone.body.touching;
-      let wasTouching = Ventzone.body.wasTouching;
-  
+      let wasTouching = Ventzone.body.wasTouching;  
       if (touching.none && !wasTouching.none) {
         Ventzone.emit('leavezone');
       }
       else if (!touching.none && wasTouching.none) {
         Ventzone.emit('enterzone');
       }
-
-
-      if(currentScale == 1){  
-        if (cursors.left.isDown) {              
-            this.p1.setVelocityX(-150);
-            if (this.p1.body.onFloor()) {
-              this.p1.anims.play('p1Walk', true);
-            }
-        } else if (cursors.right.isDown) {
-            this.p1.setVelocityX(150);
-            if(this.p1.body.onFloor()) {
-              this.p1.anims.play('p1Walk', true);
-            }  
-        } else { 
-            this.p1.setVelocityX(0);
-            if (this.p1.body.onFloor()) {
-              this.p1.anims.play('p1Idle',true);
-            }
-          }
-        if (cursors.up.isDown && this.p1.body.onFloor()) {
-          //console.log('jump');
-          this.p1.setVelocityY(-150);
-          this.p1.play('p1Jump',true);
-        }
-      } else if(currentScale == 2){
-          if (cursors.left.isDown) {              
-            this.p1.setVelocityX(-125);
-            if (this.p1.body.onFloor()) {
-              this.p1.anims.play('p1Walk', true);
-            }
-          } else if (cursors.right.isDown) {
-            this.p1.setVelocityX(125);
-            if (this.p1.body.onFloor()) {
-              this.p1.anims.play('p1Walk', true);
-            }
-          } else {
-            this.p1.setVelocityX(0);
-            if (this.p1.body.onFloor()) {
-              this.p1.anims.play('p1Idle',true);
-            }
-          }
-          if (cursors.up.isDown && this.p1.body.onFloor()) {
-            this.p1.setVelocityY(-175);
-            this.p1.play('p1Jump',true);
-          }
-      } else if(currentScale == 4){
-          if (cursors.left.isDown) {              
-            this.p1.setVelocityX(-100);
-            if (this.p1.body.onFloor()) {
-              this.p1.anims.play('p1Walk', true);
-            }
-          } else if (cursors.right.isDown) {
-            this.p1.setVelocityX(100);
-            if (this.p1.body.onFloor()) {
-              this.p1.anims.play('p1Walk', true);
-            }
-          } else {
-            this.p1.setVelocityX(0);
-            if (this.p1.body.onFloor()) {
-              this.p1.anims.play('p1Idle',true);
-            }
-          }
-          if (cursors.up.isDown && this.p1.body.onFloor()) {
-            this.p1.setVelocityY(-200);
-            this.p1.play('p1Jump',true);
-          }
-      } else if(currentScale == 0.5){
-          if (cursors.left.isDown) {              
-            this.p1.setVelocityX(-175);
-            if (this.p1.body.onFloor()) {
-              this.p1.anims.play('p1Walk', true);
-            }
-          } else if (cursors.right.isDown) {
-            this.p1.setVelocityX(175);
-            if (this.p1.body.onFloor()) {
-              this.p1.anims.play('p1Walk', true);
-            }
-          } else {
-            this.p1.setVelocityX(0);
-            if (this.p1.body.onFloor()) {
-              this.p1.anims.play('p1Idle',true);
-            }
-          }
-          if (cursors.up.isDown && this.p1.body.onFloor()) {
-            this.p1.setVelocityY(-125);
-            this.p1.play('p1Jump',true);
-          }
-        } 
-      if (this.p1.body.velocity.x > 0) {
-        this.p1.setFlipX(false);
-      } else if (this.p1.body.velocity.x < 0) {
-        // otherwise, make them face the other side
-          this.p1.setFlipX(true);
-        }
-
-        if(cookieObtained == true && this.p1.body.onFloor()){
-          if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 4 && inVent == false){
-            this.p1.setScale(2*currentScale);
-            currentScale = 2*currentScale;
-            //console.log('CurrentScale is:', currentScale);
-          }
-        }
-        if(drinkObtained == true && this.p1.body.onFloor()){
-          if(Phaser.Input.Keyboard.JustDown(keyQ) && currentScale > 0.5){
-            this.p1.setScale(currentScale * 0.5);
-            currentScale = 0.5*currentScale;
-            //console.log('CurrentScale is:', currentScale);
-          }
-        }
-
-        this.physics.world.collide(this.p1, this.cookie, this.p1cookieCollision, null, this); 
-        this.physics.world.collide(this.p1, this.drink, this.p1drinkCollision,null, this);
-        this.physics.world.collide(this.p1, this.door1, this.atDoor, null, this);
-        //this.physics.world.overlap(this.p1, Ventzone, this.UnabletoSizeUp, null, this);
-        
     }    
     p1cookieCollision(){
       this.cookie.destroy();

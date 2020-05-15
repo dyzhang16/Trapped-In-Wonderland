@@ -64,128 +64,22 @@ class LevelTwo extends Phaser.Scene{
   }
 
   update(){
-    if(currentScale == 1){  
-      if (cursors.left.isDown) {              
-          this.p1.setVelocityX(-150);
-          if (this.p1.body.onFloor()) {
-            this.p1.anims.play('p1Walk', true);
-          }
-      } else if (cursors.right.isDown) {
-          this.p1.setVelocityX(150);
-          if(this.p1.body.onFloor()) {
-            this.p1.anims.play('p1Walk', true);
-          }  
-      } else { 
-          this.p1.setVelocityX(0);
-          if (this.p1.body.onFloor()) {
-            this.p1.anims.play('p1Idle',true);
-          }
-        }
-      if (cursors.up.isDown && this.p1.body.onFloor()) {
-        //console.log('jump');
-        this.p1.setVelocityY(-150);
-        this.p1.play('p1Jump',true);
-      }
-    } else if(currentScale == 2){
-        if (cursors.left.isDown) {              
-          this.p1.setVelocityX(-125);
-          if (this.p1.body.onFloor()) {
-            this.p1.anims.play('p1Walk', true);
-          }
-        } else if (cursors.right.isDown) {
-          this.p1.setVelocityX(125);
-          if (this.p1.body.onFloor()) {
-            this.p1.anims.play('p1Walk', true);
-          }
-        } else {
-          this.p1.setVelocityX(0);
-          if (this.p1.body.onFloor()) {
-            this.p1.anims.play('p1Idle',true);
-          }
-        }
-        if (cursors.up.isDown && this.p1.body.onFloor()) {
-          this.p1.setVelocityY(-175);
-          this.p1.play('p1Jump',true);
-        }
-    } else if(currentScale == 4){
-        if (cursors.left.isDown) {              
-          this.p1.setVelocityX(-100);
-          if (this.p1.body.onFloor()) {
-            this.p1.anims.play('p1Walk', true);
-          }
-        } else if (cursors.right.isDown) {
-          this.p1.setVelocityX(100);
-          if (this.p1.body.onFloor()) {
-            this.p1.anims.play('p1Walk', true);
-          }
-        } else {
-          this.p1.setVelocityX(0);
-          if (this.p1.body.onFloor()) {
-            this.p1.anims.play('p1Idle',true);
-          }
-        }
-        if (cursors.up.isDown && this.p1.body.onFloor()) {
-          this.p1.setVelocityY(-200);
-          this.p1.play('p1Jump',true);
-        }
-    } else if(currentScale == 0.5){
-        if (cursors.left.isDown) {              
-          this.p1.setVelocityX(-175);
-          if (this.p1.body.onFloor()) {
-            this.p1.anims.play('p1Walk', true);
-          }
-        } else if (cursors.right.isDown) {
-          this.p1.setVelocityX(175);
-          if (this.p1.body.onFloor()) {
-            this.p1.anims.play('p1Walk', true);
-          }
-        } else {
-          this.p1.setVelocityX(0);
-          if (this.p1.body.onFloor()) {
-            this.p1.anims.play('p1Idle',true);
-          }
-        }
-        if (cursors.up.isDown && this.p1.body.onFloor()) {
-          this.p1.setVelocityY(-125);
-          this.p1.play('p1Jump',true);
-        }
-      } 
-    if (this.p1.body.velocity.x > 0) {
-      this.p1.setFlipX(false);
-    } else if (this.p1.body.velocity.x < 0) {
-      // otherwise, make them face the other side
-        this.p1.setFlipX(true);
-      }
-
-      if(cookieObtained == true && this.p1.body.onFloor()){
-        if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 4){
-          this.p1.setScale(2*currentScale);
-          currentScale = 2*currentScale;
-          //console.log('CurrentScale is:', currentScale);
-        }
-      }
-      if(drinkObtained == true && this.p1.body.onFloor()){
-        if(Phaser.Input.Keyboard.JustDown(keyQ) && currentScale > 0.5){
-          this.p1.setScale(currentScale * 0.5);
-          currentScale = 0.5*currentScale;
-          //console.log('CurrentScale is:', currentScale);
-        }
-      }
+    this.p1.update();
       /*if(pickedUpBox == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
         this.smallBox = new SmallBox(this,this.p1.x,this.p1.y,'smallBox').setOrigin(0.5,1);
         pickedUpBox = false;
       }*/
 
-      this.physics.world.collide(this.p1, this.door2, this.atDoor, null, this);
+    this.physics.world.collide(this.p1, this.door2, this.atDoor, null, this);
       
   }    
-  /*pickUpBox(p1,smallBox){
+  pickUpBox(p1,smallBox){
     if(Phaser.Input.Keyboard.JustDown(keySPACE)){
       smallBox.destroy();
       //animation to pickup box
       pickedUpBox = true;
     } 
-  }*/
+  }
   atDoor(){
     if(cursors.up.isDown && this.p1.body.onFloor()){
       this.scene.start('menuScene');
