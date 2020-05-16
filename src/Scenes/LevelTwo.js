@@ -60,18 +60,22 @@ class LevelTwo extends Phaser.Scene{
       this.smallBox = new SmallBox(this, 350,400,'smallBox').setOrigin(0.5);
       this.physics.add.collider(this.smallBox, platforms2);
       this.physics.add.collider(this.p1, this.smallBox);
-      //this.physics.add.collider(this.p1,this.smallBox,this.pickUpBox,null, this);    
+      //this.physics.add.collider(this.p1,this.smallBox,this.pickUpBox,null, this); 
+         
   }
 
   update(){
     this.p1.update();
-      /*if(pickedUpBox == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
-        this.smallBox = new SmallBox(this,this.p1.x,this.p1.y,'smallBox').setOrigin(0.5,1);
-        pickedUpBox = false;
-      }*/
+   
 
     this.physics.world.collide(this.p1, this.door2, this.atDoor, null, this);
+    this.physics.world.collide(this.p1, this.smallBox, this.pickUpBox, null, this);
       
+    if(pickedUpBox == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
+      //this.physics.world.collide(this.platforms2, this.smallBox, null, this);
+      this.smallBox = new SmallBox(this,this.p1.x,this.p1.y-20,'smallBox').setOrigin(0.5,1);
+      pickedUpBox = false;
+    }
   }    
   pickUpBox(p1,smallBox){
     if(Phaser.Input.Keyboard.JustDown(keySPACE)){
@@ -80,6 +84,8 @@ class LevelTwo extends Phaser.Scene{
       pickedUpBox = true;
     } 
   }
+  
+
   atDoor(){
     if(cursors.up.isDown && this.p1.body.onFloor()){
       this.scene.start('menuScene');

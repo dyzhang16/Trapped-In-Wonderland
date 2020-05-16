@@ -73,7 +73,9 @@ class LevelOne extends Phaser.Scene{
     }
     update(){
       this.p1.update();
-      
+      // if(Phaser.Input.Keyboard.JustDown(keySPACE)){           //left Click transition to next scene
+      //   this.scene.start('levelTwoScene');
+      // }
       this.physics.world.collide(this.p1, this.cookie, this.p1cookieCollision, null, this); 
       this.physics.world.collide(this.p1, this.drink, this.p1drinkCollision,null, this);
       this.physics.world.collide(this.p1, this.door1, this.atDoor, null, this);
