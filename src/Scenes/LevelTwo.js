@@ -11,6 +11,8 @@ class LevelTwo extends Phaser.Scene{
       this.load.image('drink','./assets/tempShrink.png');
       this.load.image('tiles','./assets/Tiles/spritesheet.png');
       this.load.tilemapTiledJSON('map2','./assets/TileMaps/level2.json');
+      this.load.spritesheet('button','./assets/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
+      this.load.spritesheet('door', './assets/doorAnimation/doorOpening.png',{frameWidth: 32, frameHeight: 32, startFrame:0 , endFrame: 4});
       this.load.spritesheet('playerIdle','./assets/Alice_Standing/initialAliceStandingMedium.png',{frameWidth: 23, frameHeight: 61, startFrame: 0, endFrame: 1});
       this.load.spritesheet('playerJump','./assets/Alice_Jumping/initialAliceJumpMedium.png',{frameWidth: 37, frameHeight: 61, startFrame: 0, endFrame: 6});
       this.load.spritesheet('playerWalk','./assets/Alice_Walking/initialAliceWalking.png',{frameWidth:28, frameHeight: 61, startFrame:0, endFrame: 5})
@@ -33,10 +35,10 @@ class LevelTwo extends Phaser.Scene{
       })
       const doorObject2 = map2.getObjectLayer('Door')['objects'];
       doorObject2.forEach(doorObject2 => {
-      const door2 = this.door2.create(doorObject2.x, doorObject2.y, 'medBox').setOrigin(0,0);
+      const door2 = this.door2.create(doorObject2.x, doorObject2.y, 'door').setOrigin(0,0).setScale(2);
       });
 
-      this.p1 = new Player(this, 110, 473,'playerIdle').setOrigin(0.5,1);
+      this.p1 = new Player(this, 110, 475,'playerIdle').setOrigin(0.5,1);
       this.anims.create({                                 //basic movement animation
         key: 'p1Idle',
         repeat: -1,
@@ -54,28 +56,86 @@ class LevelTwo extends Phaser.Scene{
         frames: this.anims.generateFrameNumbers('playerJump', {start: 0, end: 4, first: 0}),
         frameRate: 5
       });
+      this.anims.create({                                 //basic movement animation
+        key: 'p1SizeUp',
+        frames: this.anims.generateFrameNumbers('playerSizeUp', {start: 0, end: 10, first: 0}),
+        frameRate: 10
+      });
+      this.anims.create({                                 //basic movement animation
+        key: 'p1SizeDown',
+        frames: this.anims.generateFrameNumbers('playerSizeDown', {start: 0, end: 11, first: 0}),
+        frameRate: 10
+      });
 
       this.physics.add.collider(this.p1, platforms2);
+      
+      this.button1 = new Button(this,380,475,'button').setOrigin(0.5);
+      this.physics.add.collider(this.button1,platforms2);
+      buttonzone1 = this.add.zone(380, 465).setSize(32, 32).setOrigin(0.5);
+      this.physics.world.enable(buttonzone1);
+      buttonzone1.body.setAllowGravity(false);
+      buttonzone1.body.moves = false;
 
-      this.smallBox = new SmallBox(this, 350,400,'smallBox').setOrigin(0.5);
+      this.button2 = new Button(this,660,450,'button').setOrigin(0.5).setScale(2);
+      this.physics.add.collider(this.button2,platforms2);
+      buttonzone2 = this.add.zone(660, 450).setSize(64, 64).setOrigin(0.5);
+      this.physics.world.enable(buttonzone2);
+      buttonzone2.body.setAllowGravity(false);
+      buttonzone2.body.moves = false;
+
+      this.smallBox = new Box(this, 310,475,'smallBox').setOrigin(0.5);
       this.physics.add.collider(this.smallBox, platforms2);
-      this.physics.add.collider(this.p1, this.smallBox);
-      //this.physics.add.collider(this.p1,this.smallBox,this.pickUpBox,null, this); 
-         
+      this.physics.add.collider(this.p1, this.smallBox);   
+
+      this.medBox = new Box(this,550,445,'medBox').setOrigin(0.5);
+      this.physics.add.collider(this.medBox, platforms2);
+      this.physics.add.collider(this.p1, this.medBox, this.checkSize, null, this);  
+
+      this.physics.add.overlap(this.smallBox, buttonzone1);
+      buttonzone1.on('enterzone1', () => onButton1 = true);
+      buttonzone1.on('leavezone1', () => onButton1 = false);
+
+      this.physics.add.overlap(this.medBox, buttonzone2);
+      buttonzone2.on('enterzone2', () => onButton2 = true);
+      buttonzone2.on('leavezone2', () => onButton2 = false);
   }
 
   update(){
     this.p1.update();
-   
-
     this.physics.world.collide(this.p1, this.door2, this.atDoor, null, this);
     this.physics.world.collide(this.p1, this.smallBox, this.pickUpBox, null, this);
       
     if(pickedUpBox == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
       //this.physics.world.collide(this.platforms2, this.smallBox, null, this);
-      this.smallBox = new SmallBox(this,this.p1.x,this.p1.y-20,'smallBox').setOrigin(0.5,1);
+      this.Box = new Box(this,this.p1.x,this.p1.y-20,'smallBox').setOrigin(0.5,1);
       pickedUpBox = false;
     }
+
+    let touching1 = buttonzone1.body.touching;
+    let wasTouching1 = buttonzone1.body.wasTouching;  
+    if (touching1.none && !wasTouching1.none) {
+      buttonzone1.emit('leavezone1');
+    }
+    else if (!touching1.none && wasTouching1.none) {
+      buttonzone1.emit('enterzone1');
+    }
+    if(onButton1 == true){
+      this.button1.setFrame(1);
+    }else{
+      this.button1.setFrame(0);
+    }
+
+    let touching2 = buttonzone2.body.touching;
+    let wasTouching2 = buttonzone2.body.wasTouching;  
+    if (touching2.none && !wasTouching2.none) {
+      buttonzone2.emit('leavezone2');
+    } else if (!touching2.none && wasTouching2.none) {
+        buttonzone2.emit('enterzone2');
+    }
+    if(onButton2 == true){
+      this.button2.setFrame(1);
+    }else
+      this.button2.setFrame(0);  
   }    
   pickUpBox(p1,smallBox){
     if(Phaser.Input.Keyboard.JustDown(keySPACE)){
@@ -84,11 +144,19 @@ class LevelTwo extends Phaser.Scene{
       pickedUpBox = true;
     } 
   }
-  
-
   atDoor(){
-    if(cursors.up.isDown && this.p1.body.onFloor()){
-      this.scene.start('menuScene');
+    if(onButton1 == true && onButton2 == true){
+      //play door animation
+      if(cursors.up.isDown && this.p1.body.onFloor()){
+        this.scene.start('menuScene');
+      }
+    }  
+  }
+  checkSize(p1,Box){
+    if(currentScale < 2){
+      Box.setImmovable();
+    }else{
+      Box.setImmovable(false);
     }
   }
 }    

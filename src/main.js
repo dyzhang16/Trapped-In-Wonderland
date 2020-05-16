@@ -26,3 +26,7 @@ const textSpacer = 36;
 let pickedUpBox = false;
 let inVent = false;
 let Ventzone;
+let buttonzone1;
+let buttonzone2;
+let onButton1 = false;
+let onButton2 = false;

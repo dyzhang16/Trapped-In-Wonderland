@@ -106,9 +106,10 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             this.setFlipX(true);
         }
         if(cookieObtained == true && this.body.onFloor()){
-            if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 4){
+            if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 4 && inVent == false){
                 this.setScale(2*currentScale);
                 currentScale = 2*currentScale;
+                //this.play('p1SizeUp');
                 //console.log('CurrentScale is:', currentScale);
             }
         }
@@ -116,6 +117,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             if(Phaser.Input.Keyboard.JustDown(keyQ) && currentScale > 0.5){
                 this.setScale(currentScale * 0.5);
                 currentScale = 0.5*currentScale;
+                //this.play('p1SizeDown');
                 //console.log('CurrentScale is:', currentScale);
             }
         }
