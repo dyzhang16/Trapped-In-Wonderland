@@ -146,7 +146,6 @@ class LevelTwo extends Phaser.Scene{
     if(onButton1 == true && onButton2 == true){
       //this.anims.play('door');
       if(cursors.up.isDown && this.p1.body.onFloor()){
-        this.menumusic.stop();
         this.scene.start('creditScene');
       }
     }  
