@@ -31,24 +31,13 @@ class LevelOne extends Phaser.Scene{
         const platforms1 = map1.createStaticLayer('Platforms',tileset1,0,0);
         platforms1.setCollisionByProperty({collides: true});
 
-        this.door1 = this.physics.add.group({
-          allowGravity: false,
-          immovable: true
-        })
-        const doorObject1 = map1.getObjectLayer('Door')['objects'];
-        doorObject1.forEach(doorObject1 => {
-        const door1 = this.door1.create(doorObject1.x, doorObject1.y, 'door').setOrigin(0,0).setScale(2);
-        });
+        this.door = new Door(this, 800, 448,'door', 4).setOrigin(0.5).setScale(2);
         this.anims.create({
           key: 'door',
+          repeat: -1,
           frames: this.anims.generateFrameNumbers('door', {start: 0, end: 4, first: 0}),
           frameRate: 12
-        })
-
-        Ventzone = this.add.zone(560, 300).setSize(155, 190).setOrigin(0,0);
-        this.physics.world.enable(Ventzone);
-        Ventzone.body.setAllowGravity(false);
-        Ventzone.body.moves = false;
+        });
         
         this.p1 = new Player(this, 400, 100,'playerIdle').setOrigin(0.5,1); //bug with swapping different sized characters
         this.anims.create({                                 //basic movement animation
@@ -78,11 +67,17 @@ class LevelOne extends Phaser.Scene{
           frames: this.anims.generateFrameNumbers('playerSizeDown', {start: 0, end: 11, first: 0}),
           frameRate: 10
         });
-
+        
         this.cookie = new Cookie(this, 350, 420,'cookie').setOrigin(0.5);
         this.drink = new Drink(this, 70, 300,'drink').setOrigin(0.5);
+        
+        Ventzone = this.add.zone(560, 300).setSize(155, 190).setOrigin(0,0);
+        this.physics.world.enable(Ventzone);
+        Ventzone.body.setAllowGravity(false);
+        Ventzone.body.moves = false;
 
         this.physics.add.collider(this.p1, platforms1);
+        this.physics.add.collider(this.door, platforms1);
         this.physics.add.collider(this.cookie, platforms1);
         this.physics.add.collider(this.drink, platforms1);
         this.physics.add.overlap(this.p1, Ventzone);
@@ -96,7 +91,7 @@ class LevelOne extends Phaser.Scene{
        //}
       this.physics.world.collide(this.p1, this.cookie, this.p1cookieCollision, null, this); 
       this.physics.world.collide(this.p1, this.drink, this.p1drinkCollision,null, this);
-      this.physics.world.collide(this.p1, this.door1, this.atDoor, null, this);
+      this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);
       
       let touching = Ventzone.body.touching;
       let wasTouching = Ventzone.body.wasTouching;  
@@ -118,7 +113,7 @@ class LevelOne extends Phaser.Scene{
       //console.log(drinkObtained);
     }
     atDoor(){
-      //this.anims.play('door');
+      //this.anims.play(door);
       if(cursors.up.isDown && this.p1.body.onFloor() && currentScale == 1){
         this.scene.start('levelTwoScene');
       }

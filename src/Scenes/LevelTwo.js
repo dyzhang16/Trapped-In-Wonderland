@@ -29,14 +29,30 @@ class LevelTwo extends Phaser.Scene{
       const tileset2 = map2.addTilesetImage('level2','tiles',32,32,0,0);
       const platforms2 = map2.createStaticLayer('Platforms',tileset2,0,0);
       platforms2.setCollisionByProperty({collides: true});
-      this.door2 = this.physics.add.group({
-        allowGravity: false,
-        immovable: true
-      })
-      const doorObject2 = map2.getObjectLayer('Door')['objects'];
-      doorObject2.forEach(doorObject2 => {
-      const door2 = this.door2.create(doorObject2.x, doorObject2.y, 'door').setOrigin(0,0).setScale(2);
+
+      this.door = new Door(this, 800, 448,'door').setOrigin(0.5).setScale(2);
+      this.anims.create({
+        key: 'door',
+        frames: this.anims.generateFrameNumbers('door', {start: 0, end: 4, first: 0}),
+        frameRate: 12
       });
+      
+      this.button1 = new Button(this,380,475,'button').setOrigin(0.5);
+      this.physics.add.collider(this.button1,platforms2);
+      buttonzone1 = this.add.zone(380, 465).setSize(32, 32).setOrigin(0.5);
+      this.physics.world.enable(buttonzone1);
+      buttonzone1.body.setAllowGravity(false);
+      buttonzone1.body.moves = false;
+
+      this.button2 = new Button(this,660,450,'button').setOrigin(0.5).setScale(2);
+      this.physics.add.collider(this.button2,platforms2);
+      buttonzone2 = this.add.zone(660, 450).setSize(64, 64).setOrigin(0.5);
+      this.physics.world.enable(buttonzone2);
+      buttonzone2.body.setAllowGravity(false);
+      buttonzone2.body.moves = false;
+
+      this.smallBox = new Box(this, 310,475,'smallBox').setOrigin(0.5);
+      this.medBox = new Box(this,550,445,'medBox').setOrigin(0.5);
 
       this.p1 = new Player(this, 110, 475,'playerIdle').setOrigin(0.5,1);
       this.anims.create({                                 //basic movement animation
@@ -66,35 +82,17 @@ class LevelTwo extends Phaser.Scene{
         frames: this.anims.generateFrameNumbers('playerSizeDown', {start: 0, end: 11, first: 0}),
         frameRate: 10
       });
-
-      this.physics.add.collider(this.p1, platforms2);
       
-      this.button1 = new Button(this,380,475,'button').setOrigin(0.5);
-      this.physics.add.collider(this.button1,platforms2);
-      buttonzone1 = this.add.zone(380, 465).setSize(32, 32).setOrigin(0.5);
-      this.physics.world.enable(buttonzone1);
-      buttonzone1.body.setAllowGravity(false);
-      buttonzone1.body.moves = false;
-
-      this.button2 = new Button(this,660,450,'button').setOrigin(0.5).setScale(2);
-      this.physics.add.collider(this.button2,platforms2);
-      buttonzone2 = this.add.zone(660, 450).setSize(64, 64).setOrigin(0.5);
-      this.physics.world.enable(buttonzone2);
-      buttonzone2.body.setAllowGravity(false);
-      buttonzone2.body.moves = false;
-
-      this.smallBox = new Box(this, 310,475,'smallBox').setOrigin(0.5);
+      this.physics.add.collider(this.p1, platforms2);
+      this.physics.add.collider(this.door,platforms2);
       this.physics.add.collider(this.smallBox, platforms2);
       this.physics.add.collider(this.p1, this.smallBox);   
-
-      this.medBox = new Box(this,550,445,'medBox').setOrigin(0.5);
       this.physics.add.collider(this.medBox, platforms2);
       this.physics.add.collider(this.p1, this.medBox, this.checkSize, null, this);  
-
+      
       this.physics.add.overlap(this.smallBox, buttonzone1);
       buttonzone1.on('enterzone1', () => onButton1 = true);
       buttonzone1.on('leavezone1', () => onButton1 = false);
-
       this.physics.add.overlap(this.medBox, buttonzone2);
       buttonzone2.on('enterzone2', () => onButton2 = true);
       buttonzone2.on('leavezone2', () => onButton2 = false);
@@ -102,7 +100,7 @@ class LevelTwo extends Phaser.Scene{
 
   update(){
     this.p1.update();
-    this.physics.world.collide(this.p1, this.door2, this.atDoor, null, this);
+    this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);
     this.physics.world.collide(this.p1, this.smallBox, this.pickUpBox, null, this);
       
     if(pickedUpBox == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
@@ -146,9 +144,10 @@ class LevelTwo extends Phaser.Scene{
   }
   atDoor(){
     if(onButton1 == true && onButton2 == true){
-      //play door animation
+      //this.anims.play('door');
       if(cursors.up.isDown && this.p1.body.onFloor()){
-        this.scene.start('menuScene');
+        this.menumusic.stop();
+        this.scene.start('creditScene');
       }
     }  
   }

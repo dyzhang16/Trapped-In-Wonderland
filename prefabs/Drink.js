@@ -8,7 +8,6 @@ class Drink extends Phaser.Physics.Arcade.Sprite{
         this.setImmovable();                                                    //cannot be pushed by other objects
         scene.add.existing(this);                                               //add to current scene
         scene.physics.add.existing(this);                                       //add object to existing scene
-        
     }
     update(){
     }   

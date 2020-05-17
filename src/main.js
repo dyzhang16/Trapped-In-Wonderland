@@ -2,7 +2,7 @@ let config = {                                                      //set config
     type: Phaser.CANVAS,                                            //game window is 640 by 480
     width: 896, 
     height: 512,
-    scene:[Loading, Menu, LevelOne, LevelTwo],
+    scene:[Loading, Menu, LevelOne, LevelTwo, Credits],
     physics:{                                                       //include arcadePhysics for phaser game
         default: "arcade",
         arcade:{

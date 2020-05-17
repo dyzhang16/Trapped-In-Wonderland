@@ -15,28 +15,6 @@
          "width":28,
          "x":0,
          "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":2,
-         "name":"Door",
-         "objects":[
-                {
-                 "height":63.3529,
-                 "id":1,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":62.8583,
-                 "x":768.667,
-                 "y":416.348
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
         }],
  "nextlayerid":3,
  "nextobjectid":2,

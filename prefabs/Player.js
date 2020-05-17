@@ -10,7 +10,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.setCollideWorldBounds(true);                                       //bound by game window
         scene.add.existing(this);                                               //add to current scene
         scene.physics.add.existing(this);                                       //add object to existing scene
-        
     }
     update(){ 
         if(currentScale == 1){
@@ -33,7 +32,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             if (cursors.up.isDown && this.body.onFloor()) {
                 //console.log('jump');
                 this.setVelocityY(-150);
-                this.play('p1Jump',true);
+                this.anims.play('p1Jump',true);
             }   
         } else if(currentScale == 2){
             if (cursors.left.isDown) {              
@@ -54,7 +53,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             }
             if (cursors.up.isDown && this.body.onFloor()) {
                 this.setVelocityY(-175);
-                this.play('p1Jump',true);
+                this.anims.play('p1Jump',true);
             }
         } else if(currentScale == 4){
             if (cursors.left.isDown) {              
@@ -75,7 +74,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             }
             if (cursors.up.isDown && this.body.onFloor()) {
                 this.setVelocityY(-200);
-                this.play('p1Jump',true);
+                this.anims.play('p1Jump',true);
             }
         } else if(currentScale == 0.5){
             if (cursors.left.isDown) {              
@@ -96,7 +95,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             }
             if (cursors.up.isDown && this.body.onFloor()) {
                 this.setVelocityY(-125);
-                this.play('p1Jump',true);
+                this.anims.play('p1Jump',true);
             }
         }  
         if (this.body.velocity.x > 0) {
@@ -109,6 +108,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 4 && inVent == false){
                 this.setScale(2*currentScale);
                 currentScale = 2*currentScale;
+                //this.eatingFX.play();
                 //this.play('p1SizeUp');
                 //console.log('CurrentScale is:', currentScale);
             }
@@ -117,6 +117,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             if(Phaser.Input.Keyboard.JustDown(keyQ) && currentScale > 0.5){
                 this.setScale(currentScale * 0.5);
                 currentScale = 0.5*currentScale;
+                //this.drinkingFX.play();
                 //this.play('p1SizeDown');
                 //console.log('CurrentScale is:', currentScale);
             }
