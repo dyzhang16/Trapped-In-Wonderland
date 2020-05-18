@@ -6,7 +6,7 @@ class Loading extends Phaser.Scene{
     preload(){                           
     }
     create(){
-        seconds = 0;
+        seconds = 0;                                                            
         this.add.text(centerX,centerY, 'Loading....',{ fontSize: '22px', color: '#FFF' }).setOrigin(0.5);   
         this.difficultyTimer = this.time.addEvent({                         
             delay: 1000,                                                    //calls on TimePlayed() function
@@ -22,6 +22,6 @@ class Loading extends Phaser.Scene{
     }
     LoadingTime(){
         seconds++;
-        console.log(seconds);
+        //console.log(seconds);
     }   
 }
