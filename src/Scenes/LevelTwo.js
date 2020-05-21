@@ -29,12 +29,17 @@ class LevelTwo extends Phaser.Scene{
       const platforms2 = map2.createStaticLayer('Platforms',tileset2,0,0);
       platforms2.setCollisionByProperty({collides: true});
       //add in door object and create its animation(currently broken)
-      this.door = new Door(this, 800, 448,'door').setOrigin(0.5).setScale(2);
+      this.door = new Door(this, 800, 448,'door').setOrigin(0.5);
       this.anims.create({
-        key: 'door',
-        frames: this.anims.generateFrameNumbers('door', {start: 0, end: 4, first: 0}),
+        key: 'doorOpen',
+        frames: this.anims.generateFrameNumbers('door', {start: 0, end: 13, first: 0}),
         frameRate: 12
       });
+      //creating a zone for a door to play animation
+      Doorzone = this.add.zone(800, 448).setSize(64, 64).setOrigin(0.5);    
+      this.physics.world.enable(Doorzone);
+      Doorzone.body.setAllowGravity(false);
+      Doorzone.body.moves = false;      
       //create small button object and add collision between the button and map
       this.button1 = new Button(this,380,475,'button').setOrigin(0.5);
       this.physics.add.collider(this.button1,platforms2);
@@ -89,13 +94,18 @@ class LevelTwo extends Phaser.Scene{
       //instantiate physics between player and boxes
       this.physics.add.collider(this.p1, this.smallBox);
       this.physics.add.collider(this.p1, this.medBox, this.checkSize, null, this);  //checks if player is big enough to push box
-      //creates zones on buttons to play buttonDown Animation
+      //creates zones on door to play doorOpening Animation
+      this.physics.add.overlap(this.p1, Doorzone);
+      Doorzone.on('enterDzone', () => this.anims.play('doorOpen', this.door));
+      Doorzone.on('leaveDzone', () => this.door.setFrame(0));
+      //creates zones on buttons to play buttonDown Animation 
       this.physics.add.overlap(this.smallBox, buttonzone1);
       buttonzone1.on('enterzone1', () => onButton1 = true);
       buttonzone1.on('leavezone1', () => onButton1 = false);
       this.physics.add.overlap(this.medBox, buttonzone2);
       buttonzone2.on('enterzone2', () => onButton2 = true);
       buttonzone2.on('leavezone2', () => onButton2 = false);
+      
   }
 
   update(){
@@ -135,7 +145,15 @@ class LevelTwo extends Phaser.Scene{
     if(onButton2 == true){
       this.button2.setFrame(1);
     }else
-      this.button2.setFrame(0);  
+      this.button2.setFrame(0);
+    let Dtouching = Doorzone.body.touching;                                //reserve variables for overlapping door
+    let DwasTouching = Doorzone.body.wasTouching;                                   
+    if (Dtouching.none && !DwasTouching.none) {                             //if not touching door, set to leavezone                    
+      Doorzone.emit('leaveDzone');
+    }
+    else if (!Dtouching.none && DwasTouching.none) {                        //else if touching, set to enterzone
+      Doorzone.emit('enterDzone');
+    }     
   }
   //attempt at picking up a box if the player is overlapping(not implemented yet)    
   pickUpBox(p1,smallBox){
@@ -148,7 +166,6 @@ class LevelTwo extends Phaser.Scene{
   //door collision only allowed to continue if both buttons are pressed
   atDoor(){
     if(onButton1 == true && onButton2 == true){
-      //this.anims.play('door');                            //animation bug
       if(cursors.up.isDown && this.p1.body.onFloor()){
         this.scene.start('creditScene');
       }

@@ -29,6 +29,7 @@ let drinkObtained = false;
 let pickedUpBox = false;
 let inVent = false;
 let Ventzone;
+let Doorzone;
 let buttonzone1;
 let buttonzone2;
 let onButton1 = false;

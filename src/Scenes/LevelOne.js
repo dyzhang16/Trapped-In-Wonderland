@@ -8,7 +8,7 @@ class LevelOne extends Phaser.Scene{
         this.load.image('drink','./assets/initialDrinkMe.png');
         this.load.image('tiles','./assets/Tiles/spritesheet.png');
         this.load.tilemapTiledJSON('map1','./assets/TileMaps/level1.json');
-        this.load.spritesheet('door', './assets/doorAnimation/doorOpening.png',{frameWidth: 32, frameHeight: 32, startFrame:0 , endFrame: 4});
+        this.load.spritesheet('door', './assets/doorAnimation/initialDoor.png',{frameWidth: 64, frameHeight: 64, startFrame:0 , endFrame: 13});
         this.load.spritesheet('playerIdle','./assets/Alice_Standing/initialAliceStandingMedium.png',{frameWidth: 23, frameHeight: 61, startFrame: 0, endFrame: 1});
         this.load.spritesheet('playerJump','./assets/Alice_Jumping/initialAliceJumpMedium.png',{frameWidth: 37, frameHeight: 61, startFrame: 0, endFrame: 6});
         this.load.spritesheet('playerWalk','./assets/Alice_Walking/initialAliceWalking.png',{frameWidth:28, frameHeight: 61, startFrame:0, endFrame: 5});
@@ -29,11 +29,10 @@ class LevelOne extends Phaser.Scene{
         const platforms1 = map1.createStaticLayer('Platforms',tileset1,0,0);
         platforms1.setCollisionByProperty({collides: true});
         //add in door object and create animations(animations still bugged atm)
-        this.door = new Door(this, 800, 448,'door', 4).setOrigin(0.5).setScale(2);
+        this.door = new Door(this, 800, 448,'door').setOrigin(0.5);
         this.anims.create({
-          key: 'door',
-          repeat: -1,
-          frames: this.anims.generateFrameNumbers('door', {start: 0, end: 4, first: 0}),
+          key: 'doorOpen',
+          frames: this.anims.generateFrameNumbers('door', {start: 0, end: 13, first: 0}),
           frameRate: 12
         });
         //add in player object and create animations(scale up and down animations bugged atm)
@@ -73,15 +72,23 @@ class LevelOne extends Phaser.Scene{
         this.physics.world.enable(Ventzone);
         Ventzone.body.setAllowGravity(false);
         Ventzone.body.moves = false;
+        //creating a zone for a door to play animation
+        Doorzone = this.add.zone(800, 448).setSize(64, 64).setOrigin(0.5);    
+        this.physics.world.enable(Doorzone);
+        Doorzone.body.setAllowGravity(false);
+        Doorzone.body.moves = false;
         //instantiating physics 
         this.physics.add.collider(this.p1, platforms1);                     //physics between objects and map 
         this.physics.add.collider(this.door, platforms1);                   //to ensure they don't fall through
         this.physics.add.collider(this.cookie, platforms1);                 //the map 
         this.physics.add.collider(this.drink, platforms1);
-        this.physics.add.overlap(this.p1, Ventzone);                        //if player overlaps with ventzone 
-        Ventzone.on('enterzone', () => inVent = true);                      //on entering zone, set to true
-        Ventzone.on('leavezone', () => inVent = false);                     //when not overlapping, set to false
-    }
+        this.physics.add.overlap(this.p1, Ventzone);                        //if player overlaps with ventzone
+        this.physics.add.overlap(this.p1, Doorzone); 
+        Ventzone.on('enterVzone', () => inVent = true);                      //on entering zone, set to true
+        Ventzone.on('leaveVzone', () => inVent = false);                     //when not overlapping, set to false
+        Doorzone.on('enterDzone', () => this.anims.play('doorOpen', this.door));
+        Doorzone.on('leaveDzone', () => this.door.setFrame(0));
+      }
     update(){ 
       this.p1.update();                                                     //calls on player object update()
       /*if(Phaser.Input.Keyboard.JustDown(keySPACE)){                       //shortcut for debugging future levels
@@ -89,17 +96,26 @@ class LevelOne extends Phaser.Scene{
       }*/
       this.physics.world.collide(this.p1, this.cookie, this.p1cookieCollision, null, this); //add physics for collision between player
       this.physics.world.collide(this.p1, this.drink, this.p1drinkCollision,null, this);    //and objects in the game
-      this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);
+      this.physics.world.overlap(this.p1, this.door, this.atDoor, null, this);
       
-      let touching = Ventzone.body.touching;                                //reserve variables for overlapping vent
-      let wasTouching = Ventzone.body.wasTouching;                                   
-      if (touching.none && !wasTouching.none) {                             //if not touching vent, set to leavezone                    
-        Ventzone.emit('leavezone');
+      let Vtouching = Ventzone.body.touching;                                //reserve variables for overlapping vent
+      let VwasTouching = Ventzone.body.wasTouching;                                   
+      if (Vtouching.none && !VwasTouching.none) {                             //if not touching vent, set to leavezone                    
+        Ventzone.emit('leaveVzone');
       }
-      else if (!touching.none && wasTouching.none) {                        //else if touching, set to enterzone
-        Ventzone.emit('enterzone');
+      else if (!Vtouching.none && VwasTouching.none) {                        //else if touching, set to enterzone
+        Ventzone.emit('enterVzone');
       }
-    }    
+      let Dtouching = Doorzone.body.touching;                                //reserve variables for overlapping door
+      let DwasTouching = Doorzone.body.wasTouching;                                   
+      if (Dtouching.none && !DwasTouching.none) {                             //if not touching door, set to leavezone                    
+        Doorzone.emit('leaveDzone');
+      }
+      else if (!Dtouching.none && DwasTouching.none) {                        //else if touching, set to enterzone
+        Doorzone.emit('enterDzone');
+      }    
+    }
+
     p1cookieCollision(){                                                    //called when p1 collides into the cookie object
       this.cookie.destroy();
       cookieObtained = true;                                                //sets variable to true to enable future use
@@ -111,7 +127,6 @@ class LevelOne extends Phaser.Scene{
       //console.log(drinkObtained);
     }
     atDoor(){                                                               //called when p1 collides into the door object
-      //this.anims.play(door);                                              //animation bugged atm
       if(cursors.up.isDown && this.p1.body.onFloor() && currentScale == 1){ //can only transition if the player is the right size
         this.scene.start('levelTwoScene');
       }
