@@ -7,7 +7,7 @@ let config = {                                                      //set config
         default: "arcade",
         arcade:{
             gravity:{ y : 150},                                     //include gravity with a velocityY of 150
-            debug: false
+            debug: true
         }
     }
 }
