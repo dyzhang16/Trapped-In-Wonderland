@@ -6,7 +6,7 @@ class LevelOne extends Phaser.Scene{
     preload(){
         this.load.image('cookie','./assets/initialEatMe.png');        //load in all assets for level 1
         this.load.image('drink','./assets/initialDrinkMe.png');
-        this.load.image('tiles','./assets/Tiles/spritesheet.png');
+        this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
         this.load.tilemapTiledJSON('map1','./assets/TileMaps/level1.json');
         this.load.spritesheet('door', './assets/doorAnimation/initialDoor.png',{frameWidth: 64, frameHeight: 64, startFrame:0 , endFrame: 13});
         this.load.spritesheet('playerIdle','./assets/Alice_Standing/initialAliceStandingMedium.png',{frameWidth: 23, frameHeight: 61, startFrame: 0, endFrame: 1});
@@ -16,17 +16,15 @@ class LevelOne extends Phaser.Scene{
         this.load.spritesheet('playerSizeDown','./assets/initialAliceSizeUp.png',{frameWidth:66, frameHeight:122,startFrame:0, endFrame: 11 });
       }
     create(){
+        drugsTaken = 0;
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);  //reserve space e and q as interactable buttons
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         cursors = this.input.keyboard.createCursorKeys();                             //reserve arrow keys for movement
-        //instructions to solve puzzle(will implement disappearing and reappearing feature in the future)
-        this.add.text(centerX,centerY, 'Press E to Increase',{ fontSize: '22px', color: '#FFF' }).setOrigin(0.5);
-        this.add.text(centerX,centerY- textSpacer, 'Press Q to Decrease',{ fontSize: '22px', color: '#FFF' }).setOrigin(0.5);
         //add in level 1 tilemap and sets collision for tilemap
         const map1 = this.make.tilemap({key: 'map1'});                                //https://stackabuse.com/phaser-3-and-tiled-building-a-platformer/
-        const tileset1 = map1.addTilesetImage('level1','tiles',32,32,0,0);
-        const platforms1 = map1.createStaticLayer('Platforms',tileset1,0,0);
+        const tileset1 = map1.addTilesetImage('ScaleDistortionGameTileset','tiles',32,32,0,0);
+        const platforms1 = map1.createStaticLayer('Platforms',tileset1,1,1);
         platforms1.setCollisionByProperty({collides: true});
         //add in door object and create animations(animations still bugged atm)
         this.door = new Door(this, 800, 448,'door').setOrigin(0.5);
@@ -65,8 +63,8 @@ class LevelOne extends Phaser.Scene{
           frameRate: 10
         });
         //add in cookie and drink objects
-        this.cookie = new Cookie(this, 350, 420,'cookie').setOrigin(0.5);
-        this.drink = new Drink(this, 70, 300,'drink').setOrigin(0.5);
+        this.cookie = new Cookie(this, 350, 432,'cookie').setOrigin(0.5);
+        this.drink = new Drink(this, 70, 350,'drink').setOrigin(0.5);
         //creating a zone for the vent area where the player cannot scale up
         Ventzone = this.add.zone(560, 300).setSize(155, 190).setOrigin(0,0);    //https://www.html5gamedevs.com/topic/38895-making-a-zone/
         this.physics.world.enable(Ventzone);
@@ -88,12 +86,25 @@ class LevelOne extends Phaser.Scene{
         Ventzone.on('leaveVzone', () => inVent = false);                     //when not overlapping, set to false
         Doorzone.on('enterDzone', () => this.anims.play('doorOpen', this.door));
         Doorzone.on('leaveDzone', () => this.door.setFrame(0));
+
+        this.cameras.main.setBounds(0, 0, 896, 512);
+        this.cameras.main.setZoom(1.25);
+        this.cameras.main.startFollow(this.p1);
       }
     update(){ 
       this.p1.update();                                                     //calls on player object update()
+      
       /*if(Phaser.Input.Keyboard.JustDown(keySPACE)){                       //shortcut for debugging future levels
-      this.scene.start('levelTwoScene');
+      this.scene.start('levelThreeScene');
       }*/
+
+      if(currentScale == 2){
+        this.cameras.main.setZoom(1);
+      }else if(currentScale == 0.5){
+        this.cameras.main.setZoom(1.5);
+      }else if(currentScale == 1){
+        this.cameras.main.setZoom(1.25);
+      }
       this.physics.world.collide(this.p1, this.cookie, this.p1cookieCollision, null, this); //add physics for collision between player
       this.physics.world.collide(this.p1, this.drink, this.p1drinkCollision,null, this);    //and objects in the game
       this.physics.world.overlap(this.p1, this.door, this.atDoor, null, this);
@@ -115,7 +126,6 @@ class LevelOne extends Phaser.Scene{
         Doorzone.emit('enterDzone');
       }    
     }
-
     p1cookieCollision(){                                                    //called when p1 collides into the cookie object
       this.cookie.destroy();
       cookieObtained = true;                                                //sets variable to true to enable future use
@@ -129,6 +139,28 @@ class LevelOne extends Phaser.Scene{
     atDoor(){                                                               //called when p1 collides into the door object
       if(cursors.up.isDown && this.p1.body.onFloor() && currentScale == 1){ //can only transition if the player is the right size
         this.scene.start('levelTwoScene');
+      }
+    }
+    puzzleSolver(){
+      switch(drugsTaken)
+      {
+        case 7:   let text1 = this.add.text(centerX,centerY - textSpacer, 'P___s _ __ I_cr__s_',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                  let text2 = this.add.text(centerX,centerY, '___s_ Q t_ _e___a__',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                  text1.alpha = 0.2;
+                  text2.alpha = 0.2; 
+          break;
+        case 10:  let text3 = this.add.text(centerX,centerY - textSpacer, '_r___ _ _o _n___a__',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                  let text4 = this.add.text(centerX,centerY, '__e__ _ _o __c___s_',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                  text3.alpha = 0.5;
+                  text4.alpha = 0.5;
+          break;
+        case 15:  let text5 = this.add.text(centerX,centerY - textSpacer, '__es_ E t_ ____e__e',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                  let text6 = this.add.text(centerX,centerY, 'Pr__s _ __ D__re__e',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                  text5.alpha = 0.7;
+                  text6.alpha = 0.7;
+          break;      
+        default:
+          break;
       }
     }
 }    

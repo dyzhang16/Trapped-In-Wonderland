@@ -1,8 +1,9 @@
 let config = {                                                      //set configuration for phaser game
     type: Phaser.CANVAS,                                            //game window is 896 by512
+    pixelArt: true,
     width: 896, 
     height: 512,
-    scene:[Loading, Menu, LevelOne, LevelTwo, Credits],
+    scene:[Loading, Menu, LevelOne, LevelTwo, LevelThree, Credits],
     physics:{                                                       //include arcadePhysics for phaser game
         default: "arcade",
         arcade:{
@@ -24,8 +25,9 @@ const textSpacer = 36;
 let seconds = 0;                                                    //tracks time
 
 let currentScale = 1;                                               //tracks ingame variables and states
-let cookieObtained = false;
-let drinkObtained = false;
+let drugsTaken = 0;
+let cookieObtained = true;
+let drinkObtained = true;
 let pickedUpBox = false;
 let inVent = false;
 let Ventzone;

@@ -7,7 +7,7 @@ class LevelTwo extends Phaser.Scene{
       this.load.image('bigBox','./assets/Tiles/heavyObstacleLarge.png');          //load all assets used in Level 2
       this.load.image('medBox','./assets/Tiles/heavyObstacleMedium.png');
       this.load.image('smallBox','./assets/Tiles/smallObstacle.png');
-      this.load.image('tiles','./assets/Tiles/spritesheet.png');
+      this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
       this.load.tilemapTiledJSON('map2','./assets/TileMaps/level2.json');
       this.load.spritesheet('button','./assets/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
       this.load.spritesheet('door', './assets/doorAnimation/doorOpening.png',{frameWidth: 32, frameHeight: 32, startFrame:0 , endFrame: 4});
@@ -16,16 +16,14 @@ class LevelTwo extends Phaser.Scene{
       this.load.spritesheet('playerWalk','./assets/Alice_Walking/initialAliceWalking.png',{frameWidth:28, frameHeight: 61, startFrame:0, endFrame: 5})
     }
   create(){
+      drugsTaken = 0;
       keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);    //reserve variables for key inputs
       keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
       keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
       cursors = this.input.keyboard.createCursorKeys();                               //reserve arrow keys for movement
-      //text as clues to help players solve the puzzle(will implemented disappearing and reappearing text in the future)
-      this.add.text(centerX,centerY, 'Push the Boxes',{ fontSize: '22px', color: '#FFF' }).setOrigin(0.5);
-      this.add.text(centerX,centerY + textSpacer, 'on button to open Door',{ fontSize: '22px', color: '#FFF' }).setOrigin(0.5);
       //add in level 2 tilemap and sets collision for tilemap
       const map2 = this.make.tilemap({key: 'map2'});
-      const tileset2 = map2.addTilesetImage('level2','tiles',32,32,0,0);
+      const tileset2 = map2.addTilesetImage('ScaleDistortionGameTileset','tiles',32,32,0,0);
       const platforms2 = map2.createStaticLayer('Platforms',tileset2,0,0);
       platforms2.setCollisionByProperty({collides: true});
       //add in door object and create its animation(currently broken)
@@ -106,10 +104,22 @@ class LevelTwo extends Phaser.Scene{
       buttonzone2.on('enterzone2', () => onButton2 = true);
       buttonzone2.on('leavezone2', () => onButton2 = false);
       
+      this.cameras.main.setBounds(0, 0, 896, 512);
+      this.cameras.main.setZoom(1.25);
+      this.cameras.main.startFollow(this.p1);
   }
 
   update(){
     this.p1.update();                                                                 //calls player update for controls
+    if(currentScale == 2){
+      this.cameras.main.setZoom(1);
+    }else if(currentScale == 0.5){
+      this.cameras.main.setZoom(1.5);
+    }else if(currentScale == 1){
+      this.cameras.main.setZoom(1.25);
+    }
+    //instructions to solve puzzle(letters appear the more drugs are taken)
+    this.puzzleSolver();
     this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);          //instantiate physics between player and door
     this.physics.world.collide(this.p1, this.smallBox, this.pickUpBox, null, this);   
     //attempt at collision between player picking up box(not implemented yet) 
@@ -146,14 +156,16 @@ class LevelTwo extends Phaser.Scene{
       this.button2.setFrame(1);
     }else
       this.button2.setFrame(0);
-    let Dtouching = Doorzone.body.touching;                                //reserve variables for overlapping door
-    let DwasTouching = Doorzone.body.wasTouching;                                   
-    if (Dtouching.none && !DwasTouching.none) {                             //if not touching door, set to leavezone                    
-      Doorzone.emit('leaveDzone');
+    if(onButton1 == true && onButton2 == true){
+      let Dtouching = Doorzone.body.touching;                                //reserve variables for overlapping door
+      let DwasTouching = Doorzone.body.wasTouching;                                   
+      if (Dtouching.none && !DwasTouching.none) {                             //if not touching door, set to leavezone                    
+        Doorzone.emit('leaveDzone');
+      }
+      else if (!Dtouching.none && DwasTouching.none) {                        //else if touching, set to enterzone
+        Doorzone.emit('enterDzone');
+      }     
     }
-    else if (!Dtouching.none && DwasTouching.none) {                        //else if touching, set to enterzone
-      Doorzone.emit('enterDzone');
-    }     
   }
   //attempt at picking up a box if the player is overlapping(not implemented yet)    
   pickUpBox(p1,smallBox){
@@ -165,9 +177,9 @@ class LevelTwo extends Phaser.Scene{
   }
   //door collision only allowed to continue if both buttons are pressed
   atDoor(){
-    if(onButton1 == true && onButton2 == true){
+    if(onButton1 == true && onButton2 == true  && currentScale == 1){
       if(cursors.up.isDown && this.p1.body.onFloor()){
-        this.scene.start('creditScene');
+        this.scene.start('levelThreeScene');
       }
     }  
   }
@@ -177,6 +189,28 @@ class LevelTwo extends Phaser.Scene{
       Box.setImmovable();
     }else{
       Box.setImmovable(false);
+    }
+  }
+  puzzleSolver(){
+    switch(drugsTaken)
+    {
+      case 7:   let text1 = this.add.text(centerX,centerY - textSpacer, 'P___ _h_ B___s',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                let text2 = this.add.text(centerX,centerY, '_n b___o_ __ _p__ _o__',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                text1.alpha = 0.2;
+                text2.alpha = 0.2; 
+        break;
+      case 10:  let text3 = this.add.text(centerX,centerY - textSpacer, '_u__ __e _o___',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                let text4 = this.add.text(centerX,centerY, '__ __t__n t_ ___n __or',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                text3.alpha = 0.5;
+                text4.alpha = 0.5;
+        break;
+      case 15:  let text5 = this.add.text(centerX,centerY - textSpacer, '__sh t__ __xe_',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                let text6 = this.add.text(centerX,centerY, 'o_ _u_to_ _o o_e_ D___',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                text5.alpha = 0.7;
+                text6.alpha = 0.7;
+        break;      
+      default:
+        break;
     }
   }
 }    

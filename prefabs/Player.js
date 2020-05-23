@@ -7,7 +7,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.setBounce(0);                                                      //bounce when hitting other object    
         this.setImmovable();                                                    //cannot be pushed by other objects
         this.destroyed = false;                                                 //variables for player state
-        this.setCollideWorldBounds(true);                                       //bound by game window
+        //this.setCollideWorldBounds(true);                                       //bound by game window
         scene.add.existing(this);                                               //add to current scene
         scene.physics.add.existing(this);                                       //add object to existing scene
     }
@@ -37,12 +37,12 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             }   
         } else if(currentScale == 2){                                           //slower but can jump higher
             if (cursors.left.isDown) {              
-                this.setVelocityX(-125);
+                this.setVelocityX(-100);
                 if (this.body.onFloor()) {
                     this.anims.play('p1Walk', true);
                 }
             } else if (cursors.right.isDown) {
-                this.setVelocityX(125);
+                this.setVelocityX(100);
                 if (this.body.onFloor()) {
                   this.anims.play('p1Walk', true);
                 }
@@ -53,38 +53,17 @@ class Player extends Phaser.Physics.Arcade.Sprite{
                 }
             }
             if (cursors.up.isDown && this.body.onFloor()) {
-                this.setVelocityY(-175);
-                this.anims.play('p1Jump',true);
-            }
-        } else if(currentScale == 4){                                           //even slower but can jump even higher
-            if (cursors.left.isDown) {              
-                this.setVelocityX(-100);
-                if (this.body.onFloor()) {
-                    this.anims.play('p1Walk', true);
-                }
-            } else if (cursors.right.isDown) {
-                this.setVelocityX(100);
-                if (this.body.onFloor()) {
-                    this.anims.play('p1Walk', true);
-                }
-            } else {
-                this.setVelocityX(0);
-                if (this.body.onFloor()) {
-                    this.anims.play('p1Idle',true);
-                }
-            }
-            if (cursors.up.isDown && this.body.onFloor()) {
                 this.setVelocityY(-200);
                 this.anims.play('p1Jump',true);
             }
         } else if(currentScale == 0.5){                                        //walks faster, but jumps shorter
             if (cursors.left.isDown) {              
-                this.setVelocityX(-175);
+                this.setVelocityX(-200);
                 if (this.body.onFloor()) {
                     this.anims.play('p1Walk', true);
                 }
             } else if (cursors.right.isDown) {
-                this.setVelocityX(175);
+                this.setVelocityX(200);
                 if (this.body.onFloor()) {
                     this.anims.play('p1Walk', true);
                 }
@@ -95,7 +74,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
                 }
             }
             if (cursors.up.isDown && this.body.onFloor()) {
-                this.setVelocityY(-125);
+                this.setVelocityY(-100);
                 this.anims.play('p1Jump',true);
             }
         }  
@@ -106,9 +85,11 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             this.setFlipX(true);
         }
         if(cookieObtained == true && this.body.onFloor()){                      //sizeUp upon eating cookie
-            if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 4 && inVent == false){ //can scale up to 4x original size
+            if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 2 && inVent == false){ //can scale up to 2x original size
                 this.setScale(2*currentScale);                                  //but can only scale up provided not in a vent
                 currentScale = 2*currentScale;                                  //sets scale and keep track of current scale
+                drugsTaken += 1;
+                console.log(drugsTaken);
                 //this.eatingFX.play();                                         //bugged eating sound
                 //this.play('p1SizeUp');                                        //bugged sizeUp animation
                 //console.log('CurrentScale is:', currentScale);
@@ -117,7 +98,9 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         if(drinkObtained == true && this.body.onFloor()){                       //sizeDown upon drinking drink
             if(Phaser.Input.Keyboard.JustDown(keyQ) && currentScale > 0.5){ //can shrink to half size
                 this.setScale(currentScale * 0.5);                          //sets scale and keeps track of current scale
-                currentScale = 0.5*currentScale;        
+                currentScale = 0.5*currentScale;
+                drugsTaken += 1;
+                console.log(drugsTaken);        
                 //this.drinkingFX.play();                                   //bugged drinking sound                        
                 //this.play('p1SizeDown');                                  //bugged sizeDown animation
                 //console.log('CurrentScale is:', currentScale);
