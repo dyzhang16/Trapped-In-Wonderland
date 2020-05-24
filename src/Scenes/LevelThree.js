@@ -31,7 +31,7 @@ class LevelThree extends Phaser.Scene{
         platforms3.setCollisionByProperty({collides: true});
         //add in door object and create its animation(currently broken)
         this.door = new Door(this, 438, 896,'door').setOrigin(0.5);
-        this.exit = new DoorIndicator(this, 800, 398, 'exitSign').setOrigin(0.5);
+        this.exit = new DoorIndicator(this, 438, 846, 'exitSign').setOrigin(0.5);
         this.anims.create({
           key: 'doorOpen',
           frames: this.anims.generateFrameNumbers('door', {start: 0, end: 13, first: 0}),
