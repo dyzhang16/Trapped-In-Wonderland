@@ -11,6 +11,7 @@ class LevelThree extends Phaser.Scene{
         this.load.tilemapTiledJSON('map3','./assets/TileMaps/level3.json');
         this.load.spritesheet('button','./assets/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
         this.load.spritesheet('door', './assets/doorAnimation/doorOpening.png',{frameWidth: 32, frameHeight: 32, startFrame:0 , endFrame: 4});
+        this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
         this.load.spritesheet('playerIdle','./assets/Alice_Standing/initialAliceStandingMedium.png',{frameWidth: 23, frameHeight: 61, startFrame: 0, endFrame: 1});
         this.load.spritesheet('playerJump','./assets/Alice_Jumping/initialAliceJumpMedium.png',{frameWidth: 37, frameHeight: 61, startFrame: 0, endFrame: 6});
         this.load.spritesheet('playerWalk','./assets/Alice_Walking/initialAliceWalking.png',{frameWidth:28, frameHeight: 61, startFrame:0, endFrame: 5})
@@ -30,6 +31,7 @@ class LevelThree extends Phaser.Scene{
         platforms3.setCollisionByProperty({collides: true});
         //add in door object and create its animation(currently broken)
         this.door = new Door(this, 438, 896,'door').setOrigin(0.5);
+        this.exit = new DoorIndicator(this, 800, 398, 'exitSign').setOrigin(0.5);
         this.anims.create({
           key: 'doorOpen',
           frames: this.anims.generateFrameNumbers('door', {start: 0, end: 13, first: 0}),
@@ -40,6 +42,11 @@ class LevelThree extends Phaser.Scene{
         this.physics.world.enable(Doorzone);
         Doorzone.body.setAllowGravity(false);
         Doorzone.body.moves = false;      
+        //creating a zone for the vent area where the player cannot scale up
+        Ventzone = this.add.zone(185, 850).setSize(140, 100).setOrigin(0,0);   
+        this.physics.world.enable(Ventzone);
+        Ventzone.body.setAllowGravity(false);
+        Ventzone.body.moves = false;      
         //create large button object and add collision between the button and map
         this.button = new Button(this,359,896,'button').setOrigin(0.5).setScale(2);
         this.physics.add.collider(this.button,platforms3);
@@ -48,7 +55,7 @@ class LevelThree extends Phaser.Scene{
         buttonzone1.body.setAllowGravity(false);
         buttonzone1.body.moves = false;
         //add small and medium box objects
-        this.medBox = new Box(this, 120, 100,'medBox').setOrigin(0.5);
+        this.medBox = new Box(this, 140, 100,'medBox').setOrigin(0.5);
         //add in player object and its animations(sizeUp animations not working)
         this.p1 = new Player(this, 110, 920,'playerIdle').setOrigin(0.5,1);
         this.anims.create({                                 //basic movement animation
@@ -88,12 +95,16 @@ class LevelThree extends Phaser.Scene{
         this.physics.add.overlap(this.p1, Doorzone);
         Doorzone.on('enterDzone', () => this.anims.play('doorOpen', this.door));
         Doorzone.on('leaveDzone', () => this.door.setFrame(0));
+        //create zone for Vent
+        this.physics.add.overlap(this.p1, Ventzone);                         //if player overlaps with ventzone
+        Ventzone.on('enterVzone', () => inVent = true);                      //on entering zone, set to true
+        Ventzone.on('leaveVzone', () => inVent = false);     
         //creates zones on buttons to play buttonDown Animation 
         this.physics.add.overlap(this.medBox, buttonzone1);
         buttonzone1.on('enterbzone', () => onButton1 = true);
         buttonzone1.on('leavebzone', () => onButton1 = false);
 
-        console.log(onButton1);
+        //console.log(onButton1);
         this.cameras.main.setBounds(0, 0, 512, 960);
         this.cameras.main.setZoom(1.25);
         this.cameras.main.startFollow(this.p1);
@@ -101,6 +112,7 @@ class LevelThree extends Phaser.Scene{
   
     update(){
       this.p1.update();                                                                   //calls player update for controls
+      this.puzzleSolver();
       if(currentScale == 2){
         this.cameras.main.setZoom(1);
       }else if(currentScale == 0.5){
@@ -109,7 +121,7 @@ class LevelThree extends Phaser.Scene{
         this.cameras.main.setZoom(1.25);
       }
       //instructions to solve puzzle(letters appear the more drugs are taken)
-      //this.puzzleSolver();
+      
       this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);          //instantiate physics between player and door
       //this.physics.world.collide(this.p1, this.smallBox, this.pickUpBox, null, this);   
       //attempt at collision between player picking up box(not implemented yet) 
@@ -118,7 +130,15 @@ class LevelThree extends Phaser.Scene{
         this.Box = new Box(this,this.p1.x,this.p1.y-20,'smallBox').setOrigin(0.5,1);
         pickedUpBox = false;
       }*/
-      //second button zone variables for entry and leaving
+      let Vtouching = Ventzone.body.touching;                                //reserve variables for overlapping vent
+      let VwasTouching = Ventzone.body.wasTouching;                                   
+      if (Vtouching.none && !VwasTouching.none) {                             //if not touching vent, set to leavezone                    
+        Ventzone.emit('leaveVzone');
+      }
+      else if (!Vtouching.none && VwasTouching.none) {                        //else if touching, set to enterzone
+        Ventzone.emit('enterVzone');
+      }
+      //second button zone variables for entry and leaving  
       let btouching = buttonzone1.body.touching;
       let bwasTouching = buttonzone1.body.wasTouching;  
       if (btouching.none && !bwasTouching.none) {
@@ -127,7 +147,8 @@ class LevelThree extends Phaser.Scene{
           buttonzone1.emit('enterbzone');
       }
       //sets first button to buttonDown frame is box is on button
-      if(onButton1 == true){
+      if(onButton1 == true){ 
+        this.exit.setFrame(1);
         this.button.setFrame(1);
         let Dtouching = Doorzone.body.touching;                                //reserve variables for overlapping door
         let DwasTouching = Doorzone.body.wasTouching;                                   
@@ -164,26 +185,26 @@ class LevelThree extends Phaser.Scene{
         Box.setImmovable(false);
       }
     }
-    /*puzzleSolver(){
+    puzzleSolver(){
       switch(drugsTaken)
       {
-        case 7:   let text1 = this.add.text(centerX,centerY - textSpacer, 'P___ _h_ B___s',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                  let text2 = this.add.text(centerX,centerY, '_n b___o_ __ _p__ _o__',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+        case 7:   let text1 = this.add.text(400,700, 'S_a__ _p',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
+                  let text2 = this.add.text(400,700 + textSpacer, '_ _o U__',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
                   text1.alpha = 0.2;
                   text2.alpha = 0.2; 
           break;
-        case 10:  let text3 = this.add.text(centerX,centerY - textSpacer, '_u__ __e _o___',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                  let text4 = this.add.text(centerX,centerY, '__ __t__n t_ ___n __or',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+        case 10:  let text3 = this.add.text(400,700, '___l_ U_',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
+                  let text4 = this.add.text(400,700 + textSpacer, '& __ __!',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
                   text3.alpha = 0.5;
                   text4.alpha = 0.5;
           break;
-        case 15:  let text5 = this.add.text(centerX,centerY - textSpacer, '__sh t__ __xe_',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                  let text6 = this.add.text(centerX,centerY, 'o_ _u_to_ _o o_e_ D___',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+        case 15:  let text5 = this.add.text(400,700, '_c__e __',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
+                  let text6 = this.add.text(400,700 + textSpacer, '_ G_ _p_',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
                   text5.alpha = 0.7;
                   text6.alpha = 0.7;
           break;      
         default:
           break;
       }
-    }*/
+    }
   }    

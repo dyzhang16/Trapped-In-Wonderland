@@ -11,6 +11,7 @@ class LevelTwo extends Phaser.Scene{
       this.load.tilemapTiledJSON('map2','./assets/TileMaps/level2.json');
       this.load.spritesheet('button','./assets/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
       this.load.spritesheet('door', './assets/doorAnimation/doorOpening.png',{frameWidth: 32, frameHeight: 32, startFrame:0 , endFrame: 4});
+      this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
       this.load.spritesheet('playerIdle','./assets/Alice_Standing/initialAliceStandingMedium.png',{frameWidth: 23, frameHeight: 61, startFrame: 0, endFrame: 1});
       this.load.spritesheet('playerJump','./assets/Alice_Jumping/initialAliceJumpMedium.png',{frameWidth: 37, frameHeight: 61, startFrame: 0, endFrame: 6});
       this.load.spritesheet('playerWalk','./assets/Alice_Walking/initialAliceWalking.png',{frameWidth:28, frameHeight: 61, startFrame:0, endFrame: 5})
@@ -28,16 +29,12 @@ class LevelTwo extends Phaser.Scene{
       platforms2.setCollisionByProperty({collides: true});
       //add in door object and create its animation(currently broken)
       this.door = new Door(this, 800, 448,'door').setOrigin(0.5);
+      this.exit = new DoorIndicator(this, 800, 398, 'exitSign').setOrigin(0.5);
       this.anims.create({
         key: 'doorOpen',
         frames: this.anims.generateFrameNumbers('door', {start: 0, end: 13, first: 0}),
         frameRate: 12
-      });
-      //creating a zone for a door to play animation
-      Doorzone = this.add.zone(800, 448).setSize(64, 64).setOrigin(0.5);    
-      this.physics.world.enable(Doorzone);
-      Doorzone.body.setAllowGravity(false);
-      Doorzone.body.moves = false;      
+      });  
       //create small button object and add collision between the button and map
       this.button1 = new Button(this,380,475,'button').setOrigin(0.5);
       this.physics.add.collider(this.button1,platforms2);
@@ -92,10 +89,6 @@ class LevelTwo extends Phaser.Scene{
       //instantiate physics between player and boxes
       this.physics.add.collider(this.p1, this.smallBox);
       this.physics.add.collider(this.p1, this.medBox, this.checkSize, null, this);  //checks if player is big enough to push box
-      //creates zones on door to play doorOpening Animation
-      this.physics.add.overlap(this.p1, Doorzone);
-      Doorzone.on('enterDzone', () => this.anims.play('doorOpen', this.door));
-      Doorzone.on('leaveDzone', () => this.door.setFrame(0));
       //creates zones on buttons to play buttonDown Animation 
       this.physics.add.overlap(this.smallBox, buttonzone1);
       buttonzone1.on('enterzone1', () => onButton1 = true);
@@ -154,18 +147,13 @@ class LevelTwo extends Phaser.Scene{
     //sets first button to buttonDown frame is box is on button
     if(onButton2 == true){
       this.button2.setFrame(1);
-    }else
+    }else{
       this.button2.setFrame(0);
-    if(onButton1 == true && onButton2 == true){
-      let Dtouching = Doorzone.body.touching;                                //reserve variables for overlapping door
-      let DwasTouching = Doorzone.body.wasTouching;                                   
-      if (Dtouching.none && !DwasTouching.none) {                             //if not touching door, set to leavezone                    
-        Doorzone.emit('leaveDzone');
-      }
-      else if (!Dtouching.none && DwasTouching.none) {                        //else if touching, set to enterzone
-        Doorzone.emit('enterDzone');
-      }     
     }
+    if(onButton1 == true && onButton2 == true){
+        this.exit.setFrame(1);
+        this.anims.play('doorOpen', this.door);
+      }     
   }
   //attempt at picking up a box if the player is overlapping(not implemented yet)    
   pickUpBox(p1,smallBox){

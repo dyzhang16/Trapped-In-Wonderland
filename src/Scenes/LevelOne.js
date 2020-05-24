@@ -9,6 +9,7 @@ class LevelOne extends Phaser.Scene{
         this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
         this.load.tilemapTiledJSON('map1','./assets/TileMaps/level1.json');
         this.load.spritesheet('door', './assets/doorAnimation/initialDoor.png',{frameWidth: 64, frameHeight: 64, startFrame:0 , endFrame: 13});
+        this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
         this.load.spritesheet('playerIdle','./assets/Alice_Standing/initialAliceStandingMedium.png',{frameWidth: 23, frameHeight: 61, startFrame: 0, endFrame: 1});
         this.load.spritesheet('playerJump','./assets/Alice_Jumping/initialAliceJumpMedium.png',{frameWidth: 37, frameHeight: 61, startFrame: 0, endFrame: 6});
         this.load.spritesheet('playerWalk','./assets/Alice_Walking/initialAliceWalking.png',{frameWidth:28, frameHeight: 61, startFrame:0, endFrame: 5});
@@ -26,13 +27,9 @@ class LevelOne extends Phaser.Scene{
         const tileset1 = map1.addTilesetImage('ScaleDistortionGameTileset','tiles',32,32,0,0);
         const platforms1 = map1.createStaticLayer('Platforms',tileset1,1,1);
         platforms1.setCollisionByProperty({collides: true});
-        //add in door object and create animations(animations still bugged atm)
-        this.door = new Door(this, 800, 448,'door').setOrigin(0.5);
-        this.anims.create({
-          key: 'doorOpen',
-          frames: this.anims.generateFrameNumbers('door', {start: 0, end: 13, first: 0}),
-          frameRate: 12
-        });
+        //add in door object and exitSign object 
+        this.door = new Door(this, 800, 448,'door', 13).setOrigin(0.5);
+        this.exit = new DoorIndicator(this, 800, 398, 'exitSign', 1).setOrigin(0.5);
         //add in player object and create animations(scale up and down animations bugged atm)
         this.p1 = new Player(this, 400, 100,'playerIdle').setOrigin(0.5,1); //bug with swapping different sized characters
         this.anims.create({                                 //basic movement animation
@@ -70,22 +67,14 @@ class LevelOne extends Phaser.Scene{
         this.physics.world.enable(Ventzone);
         Ventzone.body.setAllowGravity(false);
         Ventzone.body.moves = false;
-        //creating a zone for a door to play animation
-        Doorzone = this.add.zone(800, 448).setSize(64, 64).setOrigin(0.5);    
-        this.physics.world.enable(Doorzone);
-        Doorzone.body.setAllowGravity(false);
-        Doorzone.body.moves = false;
         //instantiating physics 
         this.physics.add.collider(this.p1, platforms1);                     //physics between objects and map 
         this.physics.add.collider(this.door, platforms1);                   //to ensure they don't fall through
         this.physics.add.collider(this.cookie, platforms1);                 //the map 
         this.physics.add.collider(this.drink, platforms1);
         this.physics.add.overlap(this.p1, Ventzone);                        //if player overlaps with ventzone
-        this.physics.add.overlap(this.p1, Doorzone); 
         Ventzone.on('enterVzone', () => inVent = true);                      //on entering zone, set to true
         Ventzone.on('leaveVzone', () => inVent = false);                     //when not overlapping, set to false
-        Doorzone.on('enterDzone', () => this.anims.play('doorOpen', this.door));
-        Doorzone.on('leaveDzone', () => this.door.setFrame(0));
 
         this.cameras.main.setBounds(0, 0, 896, 512);
         this.cameras.main.setZoom(1.25);
@@ -94,6 +83,7 @@ class LevelOne extends Phaser.Scene{
     update(){ 
       this.p1.update();                                                     //calls on player object update()
       
+      this.puzzleSolver();
       /*if(Phaser.Input.Keyboard.JustDown(keySPACE)){                       //shortcut for debugging future levels
       this.scene.start('levelThreeScene');
       }*/
@@ -116,15 +106,7 @@ class LevelOne extends Phaser.Scene{
       }
       else if (!Vtouching.none && VwasTouching.none) {                        //else if touching, set to enterzone
         Ventzone.emit('enterVzone');
-      }
-      let Dtouching = Doorzone.body.touching;                                //reserve variables for overlapping door
-      let DwasTouching = Doorzone.body.wasTouching;                                   
-      if (Dtouching.none && !DwasTouching.none) {                             //if not touching door, set to leavezone                    
-        Doorzone.emit('leaveDzone');
-      }
-      else if (!Dtouching.none && DwasTouching.none) {                        //else if touching, set to enterzone
-        Doorzone.emit('enterDzone');
-      }    
+      } 
     }
     p1cookieCollision(){                                                    //called when p1 collides into the cookie object
       this.cookie.destroy();
