@@ -8,7 +8,7 @@ let config = {                                                      //set config
         default: "arcade",
         arcade:{
             gravity:{ y : 150},                                     //include gravity with a velocityY of 150
-            debug: false
+            debug: true
         }
     }
 }
@@ -26,8 +26,8 @@ let seconds = 0;                                                    //tracks tim
 
 let currentScale = 1;                                               //tracks ingame variables and states
 let drugsTaken = 0;
-let cookieObtained = false;
-let drinkObtained = false;
+let cookieObtained = true;
+let drinkObtained = true;
 let pickedUpBox = false;
 let inVent = false;
 let Ventzone;

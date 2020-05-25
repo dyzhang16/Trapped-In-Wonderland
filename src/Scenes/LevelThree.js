@@ -57,7 +57,7 @@ class LevelThree extends Phaser.Scene{
         //add small and medium box objects
         this.medBox = new Box(this, 140, 100,'medBox').setOrigin(0.5);
         //add in player object and its animations(sizeUp animations not working)
-        this.p1 = new Player(this, 110, 920,'playerIdle').setOrigin(0.5,1);
+        this.p1 = new Player(this, 120, 920,'playerIdle').setOrigin(0.5,1);
         this.anims.create({                                 //basic movement animation
           key: 'p1Idle',
           repeat: -1,

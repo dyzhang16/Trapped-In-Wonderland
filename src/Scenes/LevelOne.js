@@ -84,9 +84,9 @@ class LevelOne extends Phaser.Scene{
       this.p1.update();                                                     //calls on player object update()
       
       this.puzzleSolver();
-      /*if(Phaser.Input.Keyboard.JustDown(keySPACE)){                       //shortcut for debugging future levels
+      if(Phaser.Input.Keyboard.JustDown(keySPACE)){                       //shortcut for debugging future levels
       this.scene.start('levelThreeScene');
-      }*/
+      }
 
       if(currentScale == 2){
         this.cameras.main.setZoom(1);
