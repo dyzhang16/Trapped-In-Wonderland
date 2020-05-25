@@ -15,13 +15,12 @@ let config = {                                                      //set config
 
 let game = new Phaser.Game(config);
 
-let keySPACE, keyQ, keyE;                                           //reserve key variables
+let keySPACE, keyQ, keyE, keyDOWN, keyUP;                                           //reserve key variables
 let cursors;                                                        //reserve arrow keys
                         
 let centerX = game.config.width/2;                                  //reserve variables for text and spacing
 let centerY = game.config.height/2;
 const textSpacer = 36;
-
 let seconds = 0;                                                    //tracks time
 
 let currentScale = 1;                                               //tracks ingame variables and states

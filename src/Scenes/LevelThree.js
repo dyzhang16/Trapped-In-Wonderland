@@ -43,7 +43,7 @@ class LevelThree extends Phaser.Scene{
         Doorzone.body.setAllowGravity(false);
         Doorzone.body.moves = false;      
         //creating a zone for the vent area where the player cannot scale up
-        Ventzone = this.add.zone(185, 850).setSize(140, 100).setOrigin(0,0);   
+        Ventzone = this.add.zone(220, 850).setSize(105, 100).setOrigin(0,0);   
         this.physics.world.enable(Ventzone);
         Ventzone.body.setAllowGravity(false);
         Ventzone.body.moves = false;      
