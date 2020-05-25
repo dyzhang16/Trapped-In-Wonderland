@@ -68,7 +68,7 @@ class LevelFour extends Phaser.Scene{
         buttonzone3.body.setAllowGravity(false);
         buttonzone3.body.moves = false;
         //add small and medium box objects
-        this.smallBox1 = new Box(this, 500, 110,'smallBox').setOrigin(0.5);
+        this.smallBox1 = new Box(this, 500, 150,'smallBox').setOrigin(0.5);
         this.smallBox2 = new Box(this, 1000, 120,'smallBox').setOrigin(0.5);
         this.smallBox3 = new Box(this, 790, 280,'smallBox').setOrigin(0.5);
         this.medBox = new Box(this, 720, 255,'medBox').setOrigin(0.5);
