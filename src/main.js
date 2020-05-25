@@ -3,7 +3,7 @@ let config = {                                                      //set config
     pixelArt: true,
     width: 896, 
     height: 512,
-    scene:[Loading, Menu, Instructions, LevelOne, LevelTwo, LevelThree, Credits],
+    scene:[Loading, Menu, Instructions, LevelOne, LevelTwo, LevelThree, LevelFour, Credits],
     physics:{                                                       //include arcadePhysics for phaser game
         default: "arcade",
         arcade:{
@@ -33,5 +33,7 @@ let Ventzone;
 let Doorzone;
 let buttonzone1;
 let buttonzone2;
+let buttonzone3;
 let onButton1 = false;
 let onButton2 = false;
+let onButton3 = false;

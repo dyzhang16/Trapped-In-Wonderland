@@ -85,7 +85,7 @@ class LevelOne extends Phaser.Scene{
       
       this.puzzleSolver();
       if(Phaser.Input.Keyboard.JustDown(keySPACE)){                       //shortcut for debugging future levels
-      this.scene.start('levelThreeScene');
+      this.scene.start('levelFourScene');
       }
 
       if(currentScale == 2){
