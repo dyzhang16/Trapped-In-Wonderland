@@ -118,7 +118,10 @@ class LevelTwo extends Phaser.Scene{
     //attempt at collision between player picking up box(not implemented yet) 
     if(pickedUpBox == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
       //this.physics.world.collide(this.platforms2, this.smallBox, null, this);
-      this.Box = new Box(this,this.p1.x,this.p1.y-20,'smallBox').setOrigin(0.5,1);
+      this.smallBox.x = this.p1.x;
+      this.smallBox.y = this.p1.y-50;
+      this.smallBox.setVisible(true);
+      this.smallBox.body.enable = true;
       pickedUpBox = false;
     }
     //first button zone variables for entry and leaving
@@ -158,7 +161,8 @@ class LevelTwo extends Phaser.Scene{
   //attempt at picking up a box if the player is overlapping(not implemented yet)    
   pickUpBox(p1,smallBox){
     if(Phaser.Input.Keyboard.JustDown(keySPACE)){
-      smallBox.destroy();
+      this.smallBox.setVisible(false);
+      this.smallBox.body.enable = false;
       //animation to pickup box
       pickedUpBox = true;
     } 
