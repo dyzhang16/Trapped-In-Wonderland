@@ -147,11 +147,14 @@ class LevelFour extends Phaser.Scene{
       this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);          //instantiate physics between player and door
       //this.physics.world.collide(this.p1, this.smallBox, this.pickUpBox, null, this);   
       //attempt at collision between player picking up box(not implemented yet) 
-      /*if(pickedUpBox == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
+      if(pickedUpBox == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
         //this.physics.world.collide(this.platforms2, this.smallBox, null, this);
-        this.Box = new Box(this,this.p1.x,this.p1.y-20,'smallBox').setOrigin(0.5,1);
+        this.smallBox.x = this.p1.x;
+        this.smallBox.y = this.p1.y-50;
+        this.smallBox.setVisible(true);
+        this.smallBox.body.enable = true;
         pickedUpBox = false;
-      }*/
+      }
       /*let Vtouching = Ventzone.body.touching;                                //reserve variables for overlapping vent
       let VwasTouching = Ventzone.body.wasTouching;                                   
       if (Vtouching.none && !VwasTouching.none) {                             //if not touching vent, set to leavezone                    
@@ -184,13 +187,14 @@ class LevelFour extends Phaser.Scene{
         this.button.setFrame(0);*/     
     }
     //attempt at picking up a box if the player is overlapping(not implemented yet)    
-    /*pickUpBox(p1,smallBox){
+    pickUpBox(p1,smallBox){
       if(Phaser.Input.Keyboard.JustDown(keySPACE)){
-        smallBox.destroy();
+        this.smallBox.setVisible(false);
+        this.smallBox.body.enable = false;
         //animation to pickup box
         pickedUpBox = true;
       } 
-    }*/
+    }
     //door collision only allowed to continue if both buttons are pressed
     atDoor(){
       if(onButton1 == true && onButton2 == true && onButton3 == true && currentScale == 1){
