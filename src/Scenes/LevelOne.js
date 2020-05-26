@@ -63,18 +63,18 @@ class LevelOne extends Phaser.Scene{
         this.cookie = new Cookie(this, 350, 432,'cookie').setOrigin(0.5);
         this.drink = new Drink(this, 70, 350,'drink').setOrigin(0.5);
         //creating a zone for the vent area where the player cannot scale up
-        Ventzone = this.add.zone(560, 300).setSize(155, 190).setOrigin(0,0);    //https://www.html5gamedevs.com/topic/38895-making-a-zone/
-        this.physics.world.enable(Ventzone);
-        Ventzone.body.setAllowGravity(false);
-        Ventzone.body.moves = false;
+        Ventzone1 = this.add.zone(560, 300).setSize(155, 190).setOrigin(0,0);    //https://www.html5gamedevs.com/topic/38895-making-a-zone/
+        this.physics.world.enable(Ventzone1);
+        Ventzone1.body.setAllowGravity(false);
+        Ventzone1.body.moves = false;
         //instantiating physics 
         this.physics.add.collider(this.p1, platforms1);                     //physics between objects and map 
         this.physics.add.collider(this.door, platforms1);                   //to ensure they don't fall through
         this.physics.add.collider(this.cookie, platforms1);                 //the map 
         this.physics.add.collider(this.drink, platforms1);
-        this.physics.add.overlap(this.p1, Ventzone);                        //if player overlaps with ventzone
-        Ventzone.on('enterVzone', () => inVent = true);                      //on entering zone, set to true
-        Ventzone.on('leaveVzone', () => inVent = false);                     //when not overlapping, set to false
+        this.physics.add.overlap(this.p1, Ventzone1);                        //if player overlaps with ventzone
+        Ventzone1.on('enterVzone', () => inSmallVent = true);                      //on entering zone, set to true
+        Ventzone1.on('leaveVzone', () => inSmallVent = false);                     //when not overlapping, set to false
 
         this.cameras.main.setBounds(0, 0, 896, 512);
         this.cameras.main.setZoom(1.25);
@@ -99,13 +99,13 @@ class LevelOne extends Phaser.Scene{
       this.physics.world.collide(this.p1, this.drink, this.p1drinkCollision,null, this);    //and objects in the game
       this.physics.world.overlap(this.p1, this.door, this.atDoor, null, this);
       
-      let Vtouching = Ventzone.body.touching;                                //reserve variables for overlapping vent
-      let VwasTouching = Ventzone.body.wasTouching;                                   
+      let Vtouching = Ventzone1.body.touching;                                //reserve variables for overlapping vent
+      let VwasTouching = Ventzone1.body.wasTouching;                                   
       if (Vtouching.none && !VwasTouching.none) {                             //if not touching vent, set to leavezone                    
-        Ventzone.emit('leaveVzone');
+        Ventzone1.emit('leaveVzone');
       }
       else if (!Vtouching.none && VwasTouching.none) {                        //else if touching, set to enterzone
-        Ventzone.emit('enterVzone');
+        Ventzone1.emit('enterVzone');
       } 
     }
     p1cookieCollision(){                                                    //called when p1 collides into the cookie object

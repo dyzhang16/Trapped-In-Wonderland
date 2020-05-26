@@ -28,8 +28,14 @@ let drugsTaken = 0;
 let cookieObtained = true;
 let drinkObtained = true;
 let pickedUpBox = false;
-let inVent = false;
-let Ventzone;
+let inSmallVent = false;
+let inMedVent = false;
+let Ventzone1;
+let Ventzone2;
+let Ventzone3;
+let Ventzone4;
+let Ventzone5;
+
 let Doorzone;
 let buttonzone1;
 let buttonzone2;

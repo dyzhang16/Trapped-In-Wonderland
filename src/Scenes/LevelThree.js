@@ -43,10 +43,15 @@ class LevelThree extends Phaser.Scene{
         Doorzone.body.setAllowGravity(false);
         Doorzone.body.moves = false;      
         //creating a zone for the vent area where the player cannot scale up
-        Ventzone = this.add.zone(220, 850).setSize(105, 100).setOrigin(0,0);   
-        this.physics.world.enable(Ventzone);
-        Ventzone.body.setAllowGravity(false);
-        Ventzone.body.moves = false;      
+        Ventzone1 = this.add.zone(220, 882).setSize(105, 50).setOrigin(0,0);   
+        this.physics.world.enable(Ventzone1);
+        Ventzone1.body.setAllowGravity(false);
+        Ventzone1.body.moves = false;   
+        //creating a zone for the vent area where the player cannot scale up
+        Ventzone2 = this.add.zone(157, 350).setSize(35, 35).setOrigin(0,0);   
+        this.physics.world.enable(Ventzone2);
+        Ventzone2.body.setAllowGravity(false);
+        Ventzone2.body.moves = false;               
         //create large button object and add collision between the button and map
         this.button = new Button(this,359,896,'button').setOrigin(0.5).setScale(2);
         this.physics.add.collider(this.button,platforms3);
@@ -57,7 +62,7 @@ class LevelThree extends Phaser.Scene{
         //add small and medium box objects
         this.medBox = new Box(this, 140, 100,'medBox').setOrigin(0.5);
         //add in player object and its animations(sizeUp animations not working)
-        this.p1 = new Player(this, 120, 920,'playerIdle').setOrigin(0.5,1);
+        this.p1 = new Player(this, 140, 920,'playerIdle').setOrigin(0.5,1);
         this.anims.create({                                 //basic movement animation
           key: 'p1Idle',
           repeat: -1,
@@ -96,9 +101,13 @@ class LevelThree extends Phaser.Scene{
         Doorzone.on('enterDzone', () => this.anims.play('doorOpen', this.door));
         Doorzone.on('leaveDzone', () => this.door.setFrame(0));
         //create zone for Vent
-        this.physics.add.overlap(this.p1, Ventzone);                         //if player overlaps with ventzone
-        Ventzone.on('enterVzone', () => inVent = true);                      //on entering zone, set to true
-        Ventzone.on('leaveVzone', () => inVent = false);     
+        this.physics.add.overlap(this.p1, Ventzone1);                         //if player overlaps with ventzone
+        Ventzone1.on('enterVzone', () => inSmallVent = true);                      //on entering zone, set to true
+        Ventzone1.on('leaveVzone', () => inSmallVent = false);
+
+        this.physics.add.overlap(this.p1, Ventzone2);                         //if player overlaps with ventzone
+        Ventzone2.on('enterV2zone', () => inSmallVent = true);                      //on entering zone, set to true
+        Ventzone2.on('leaveV2zone', () => inSmallVent = false);       
         //creates zones on buttons to play buttonDown Animation 
         this.physics.add.overlap(this.medBox, buttonzone1);
         buttonzone1.on('enterbzone', () => onButton1 = true);
@@ -130,13 +139,22 @@ class LevelThree extends Phaser.Scene{
         this.Box = new Box(this,this.p1.x,this.p1.y-20,'smallBox').setOrigin(0.5,1);
         pickedUpBox = false;
       }*/
-      let Vtouching = Ventzone.body.touching;                                //reserve variables for overlapping vent
-      let VwasTouching = Ventzone.body.wasTouching;                                   
+      let Vtouching = Ventzone1.body.touching;                                //reserve variables for overlapping vent
+      let VwasTouching = Ventzone1.body.wasTouching;                                   
       if (Vtouching.none && !VwasTouching.none) {                             //if not touching vent, set to leavezone                    
-        Ventzone.emit('leaveVzone');
+        Ventzone1.emit('leaveVzone');
       }
       else if (!Vtouching.none && VwasTouching.none) {                        //else if touching, set to enterzone
-        Ventzone.emit('enterVzone');
+        Ventzone1.emit('enterVzone');
+      }
+
+      let V2touching = Ventzone2.body.touching;                                //reserve variables for overlapping vent
+      let V2wasTouching = Ventzone2.body.wasTouching;                                   
+      if (V2touching.none && !V2wasTouching.none) {                             //if not touching vent, set to leavezone                    
+        Ventzone2.emit('leaveV2zone');
+      }
+      else if (!V2touching.none && V2wasTouching.none) {                        //else if touching, set to enterzone
+        Ventzone2.emit('enterV2zone');
       }
       //second button zone variables for entry and leaving  
       let btouching = buttonzone1.body.touching;

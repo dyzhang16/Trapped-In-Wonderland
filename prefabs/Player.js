@@ -85,7 +85,22 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             this.setFlipX(true);
         }
         if(cookieObtained == true && this.body.onFloor()){                      //sizeUp upon eating cookie
-            if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 2 && inVent == false){ //can scale up to 2x original size
+            if(inSmallVent == true){
+                //text dialogue for too small!
+                console.log('Too Small!');
+            }else if(inMedVent == true){
+                if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 1){   //can scale up to 2x original size
+                    this.setScale(2*currentScale);                                  //but can only scale up provided not in a vent
+                    currentScale = 2*currentScale;                                  //sets scale and keep track of current scale
+                    drugsTaken += 1;
+                    console.log(drugsTaken);
+                    console.log('Medium Vent!');
+                    //this.eatingFX.play();                                         //bugged eating sound
+                    //this.play('p1SizeUp');                                        //bugged sizeUp animation
+                    //console.log('CurrentScale is:', currentScale);
+                }
+            } else {
+                if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 2){   //can scale up to 2x original size
                 this.setScale(2*currentScale);                                  //but can only scale up provided not in a vent
                 currentScale = 2*currentScale;                                  //sets scale and keep track of current scale
                 drugsTaken += 1;
@@ -93,6 +108,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
                 //this.eatingFX.play();                                         //bugged eating sound
                 //this.play('p1SizeUp');                                        //bugged sizeUp animation
                 //console.log('CurrentScale is:', currentScale);
+                }   
             }
         }
         if(drinkObtained == true && this.body.onFloor()){                       //sizeDown upon drinking drink
