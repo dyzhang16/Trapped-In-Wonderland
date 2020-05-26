@@ -202,15 +202,35 @@ class LevelFour extends Phaser.Scene{
       //instructions to solve puzzle(letters appear the more drugs are taken)
       //this.puzzleSolver();
       this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);          //instantiate physics between player and door
-      //this.physics.world.collide(this.p1, this.smallBox, this.pickUpBox, null, this);   
+      this.physics.world.collide(this.p1, this.smallBox1, this.pickUpBox1, null, this);
+      this.physics.world.collide(this.p1, this.smallBox2, this.pickUpBox2, null, this);
+      this.physics.world.collide(this.p1, this.smallBox3, this.pickUpBox3, null, this);
+      // this.physics.world.collide(this.p1, this.smallBox2, this.pickUpBox2, null, this); 
+      // this.physics.world.collide(this.p1, this.smallBox3, this.pickUpBox3, null, this);    
       //attempt at collision between player picking up box(not implemented yet) 
-      if(pickedUpBox == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
-        //this.physics.world.collide(this.platforms4, this.smallBox, null, this);
-        this.smallBox.x = this.p1.x;
-        this.smallBox.y = this.p1.y-50;
-        this.smallBox.setVisible(true);
-        this.smallBox.body.enable = true;
-        pickedUpBox = false;
+      if(pickedUpBox1 == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
+        //this.physics.world.collide(this.smallBox, this.platforms1,  null, this);
+        this.smallBox1.x = this.p1.x;
+        this.smallBox1.y = this.p1.y-50;
+        this.smallBox1.setVisible(true);
+        this.smallBox1.body.enable = true;
+        pickedUpBox1 = false;
+      }
+      if(pickedUpBox2 == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
+        //this.physics.world.collide(this.smallBox, this.platforms1,  null, this);
+        this.smallBox2.x = this.p1.x;
+        this.smallBox2.y = this.p1.y-50;
+        this.smallBox2.setVisible(true);
+        this.smallBox2.body.enable = true;
+        pickedUpBox2 = false;
+      }
+      if(pickedUpBox3 == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
+        //this.physics.world.collide(this.smallBox, this.platforms1,  null, this);
+        this.smallBox3.x = this.p1.x;
+        this.smallBox3.y = this.p1.y-50;
+        this.smallBox3.setVisible(true);
+        this.smallBox3.body.enable = true;
+        pickedUpBox3 = false;
       }
       let V1touching = Ventzone1.body.touching;                                //reserve variables for overlapping vent
       let V1wasTouching = Ventzone1.body.wasTouching;                                   
@@ -292,12 +312,28 @@ class LevelFour extends Phaser.Scene{
       }
     }
     //attempt at picking up a box if the player is overlapping(not implemented yet)    
-    pickUpBox(p1,smallBox){
+    pickUpBox1(p1,smallBox1){
       if(Phaser.Input.Keyboard.JustDown(keySPACE)){
-        this.smallBox.setVisible(false);
-        this.smallBox.body.enable = false;
+        this.smallBox1.setVisible(false);
+        this.smallBox1.body.enable = false;
         //animation to pickup box
-        pickedUpBox = true;
+        pickedUpBox1 = true;
+      } 
+    }
+    pickUpBox2(p1,smallBox2){
+      if(Phaser.Input.Keyboard.JustDown(keySPACE)){
+        this.smallBox2.setVisible(false);
+        this.smallBox2.body.enable = false;
+        //animation to pickup box
+        pickedUpBox2 = true;
+      } 
+    }
+    pickUpBox3(p1,smallBox3){
+      if(Phaser.Input.Keyboard.JustDown(keySPACE)){
+        this.smallBox3.setVisible(false);
+        this.smallBox3.body.enable = false;
+        //animation to pickup box
+        pickedUpBox3 = true;
       } 
     }
     //door collision only allowed to continue if both buttons are pressed
