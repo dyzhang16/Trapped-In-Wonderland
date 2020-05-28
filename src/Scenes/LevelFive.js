@@ -1,6 +1,6 @@
-class LevelFour extends Phaser.Scene{
+class LevelFive extends Phaser.Scene{
     constructor(){
-            super('levelFourScene');
+            super('levelFiveScene');
     }
   
     preload(){                                                                   
@@ -202,35 +202,35 @@ class LevelFour extends Phaser.Scene{
       //instructions to solve puzzle(letters appear the more drugs are taken)
       //this.puzzleSolver();
       this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);          //instantiate physics between player and door
-      if(currentScale > 0.5){
-        this.physics.world.collide(this.p1, this.smallBox1, this.pickUpBox1, null, this);
-        this.physics.world.collide(this.p1, this.smallBox2, this.pickUpBox2, null, this);
-        this.physics.world.collide(this.p1, this.smallBox3, this.pickUpBox3, null, this);
-      }
-      //Dropping Box if picked up a small Box
-      if(pickedUpBox1 == true && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor()){
+      this.physics.world.collide(this.p1, this.smallBox1, this.pickUpBox1, null, this);
+      this.physics.world.collide(this.p1, this.smallBox2, this.pickUpBox2, null, this);
+      this.physics.world.collide(this.p1, this.smallBox3, this.pickUpBox3, null, this);
+      // this.physics.world.collide(this.p1, this.smallBox2, this.pickUpBox2, null, this); 
+      // this.physics.world.collide(this.p1, this.smallBox3, this.pickUpBox3, null, this);    
+      //attempt at collision between player picking up box(not implemented yet) 
+      if(pickedUpBox1 == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
+        //this.physics.world.collide(this.smallBox, this.platforms1,  null, this);
         this.smallBox1.x = this.p1.x;
-        this.smallBox1.y = this.p1.y-35;
+        this.smallBox1.y = this.p1.y-50;
         this.smallBox1.setVisible(true);
         this.smallBox1.body.enable = true;
         pickedUpBox1 = false;
-        holdingBox = false;
       }
-      if(pickedUpBox2 == true && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor()){
+      if(pickedUpBox2 == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
+        //this.physics.world.collide(this.smallBox, this.platforms1,  null, this);
         this.smallBox2.x = this.p1.x;
-        this.smallBox2.y = this.p1.y-35;
+        this.smallBox2.y = this.p1.y-50;
         this.smallBox2.setVisible(true);
         this.smallBox2.body.enable = true;
         pickedUpBox2 = false;
-        holdingBox = false;
       }
-      if(pickedUpBox3 == true && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor()){
+      if(pickedUpBox3 == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
+        //this.physics.world.collide(this.smallBox, this.platforms1,  null, this);
         this.smallBox3.x = this.p1.x;
-        this.smallBox3.y = this.p1.y-35;
+        this.smallBox3.y = this.p1.y-50;
         this.smallBox3.setVisible(true);
         this.smallBox3.body.enable = true;
         pickedUpBox3 = false;
-        holdingBox = false;
       }
       let V1touching = Ventzone1.body.touching;                                //reserve variables for overlapping vent
       let V1wasTouching = Ventzone1.body.wasTouching;                                   
@@ -313,30 +313,27 @@ class LevelFour extends Phaser.Scene{
     }
     //attempt at picking up a box if the player is overlapping(not implemented yet)    
     pickUpBox1(p1,smallBox1){
-      if(Phaser.Input.Keyboard.JustDown(keySPACE) && holdingBox == false){
+      if(Phaser.Input.Keyboard.JustDown(keySPACE)){
         this.smallBox1.setVisible(false);
         this.smallBox1.body.enable = false;
         //animation to pickup box
         pickedUpBox1 = true;
-        holdingBox = true;
       } 
     }
     pickUpBox2(p1,smallBox2){
-      if(Phaser.Input.Keyboard.JustDown(keySPACE) && holdingBox == false){
+      if(Phaser.Input.Keyboard.JustDown(keySPACE)){
         this.smallBox2.setVisible(false);
         this.smallBox2.body.enable = false;
         //animation to pickup box
         pickedUpBox2 = true;
-        holdingBox = true;
       } 
     }
     pickUpBox3(p1,smallBox3){
-      if(Phaser.Input.Keyboard.JustDown(keySPACE) && holdingBox == false){
+      if(Phaser.Input.Keyboard.JustDown(keySPACE)){
         this.smallBox3.setVisible(false);
         this.smallBox3.body.enable = false;
         //animation to pickup box
         pickedUpBox3 = true;
-        holdingBox = true;
       } 
     }
     //door collision only allowed to continue if both buttons are pressed
@@ -355,27 +352,26 @@ class LevelFour extends Phaser.Scene{
         Box.setImmovable(false);
       }
     }
-    puzzleSolver(){
+    /*puzzleSolver(){
       switch(drugsTaken)
       {
-        case 2/*15*/:   let text1 = this.add.text(400,700, 'Size Matters!',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
-                  let text2 = this.add.text(400,700 + textSpacer, 'Scale Down to Jump Farther!',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
+        case 7:   let text1 = this.add.text(400,700, 'S_a__ _p',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
+                  let text2 = this.add.text(400,700 + textSpacer, '_ _o U__',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
                   text1.alpha = 0.2;
                   text2.alpha = 0.2; 
           break;
-        case 3/*20*/:  let text3 = this.add.text(400,700, 'Size Matters!',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
-                  let text4 = this.add.text(400,700 + textSpacer, 'Scale Down to Jump Farther',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
+        case 10:  let text3 = this.add.text(400,700, '___l_ U_',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
+                  let text4 = this.add.text(400,700 + textSpacer, '& __ __!',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
                   text3.alpha = 0.5;
                   text4.alpha = 0.5;
           break;
-        case 4/*25*/:  let text5 = this.add.text(400,700, 'Size Matters!',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
-                  let text6 = this.add.text(400,700 + textSpacer, 'Scale Down to Jump Farther!',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
+        case 15:  let text5 = this.add.text(400,700, '_c__e __',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
+                  let text6 = this.add.text(400,700 + textSpacer, '_ G_ _p_',{ fontSize: '20px', color: '#8B0000' }).setOrigin(0.5);
                   text5.alpha = 0.7;
                   text6.alpha = 0.7;
           break;      
         default:
           break;
       }
-    }
+    }*/
 }
-    

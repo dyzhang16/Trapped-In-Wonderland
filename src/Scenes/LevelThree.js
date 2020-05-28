@@ -12,9 +12,9 @@ class LevelThree extends Phaser.Scene{
         this.load.spritesheet('button','./assets/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
         this.load.spritesheet('door', './assets/doorAnimation/doorOpening.png',{frameWidth: 32, frameHeight: 32, startFrame:0 , endFrame: 4});
         this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
-        this.load.spritesheet('playerIdle','./assets/Alice_Standing/initialAliceStandingMedium.png',{frameWidth: 23, frameHeight: 61, startFrame: 0, endFrame: 1});
-        this.load.spritesheet('playerJump','./assets/Alice_Jumping/initialAliceJumpMedium.png',{frameWidth: 37, frameHeight: 61, startFrame: 0, endFrame: 6});
-        this.load.spritesheet('playerWalk','./assets/Alice_Walking/initialAliceWalking.png',{frameWidth:28, frameHeight: 61, startFrame:0, endFrame: 5})
+        this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2Standing.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
+        this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
       }
     create(){
         drugsTaken = 0;
@@ -66,18 +66,18 @@ class LevelThree extends Phaser.Scene{
         this.anims.create({                                 //basic movement animation
           key: 'p1Idle',
           repeat: -1,
-          frames: this.anims.generateFrameNumbers('playerIdle', {start: 0, end: 1, first: 0}),
+          frames: this.anims.generateFrameNumbers('playerIdle', {start: 0, end: 0, first: 0}),
           frameRate: 30
         });
         this.anims.create({                                 //basic movement animation
           key: 'p1Walk',
           repeat: -1,
-          frames: this.anims.generateFrameNumbers('playerWalk', {start: 0, end: 5, first: 0}),
+          frames: this.anims.generateFrameNumbers('playerWalk', {start: 0, end: 7, first: 0}),
           frameRate: 24
         });
         this.anims.create({                                 //basic movement animation
           key: 'p1Jump',
-          frames: this.anims.generateFrameNumbers('playerJump', {start: 0, end: 4, first: 0}),
+          frames: this.anims.generateFrameNumbers('playerJump', {start: 0, end: 5, first: 0}),
           frameRate: 5
         });
         this.anims.create({                                 //basic movement animation

@@ -12,9 +12,10 @@ class LevelTwo extends Phaser.Scene{
       this.load.spritesheet('button','./assets/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
       this.load.spritesheet('door', './assets/doorAnimation/doorOpening.png',{frameWidth: 32, frameHeight: 32, startFrame:0 , endFrame: 4});
       this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
-      this.load.spritesheet('playerIdle','./assets/Alice_Standing/initialAliceStandingMedium.png',{frameWidth: 23, frameHeight: 61, startFrame: 0, endFrame: 1});
-      this.load.spritesheet('playerJump','./assets/Alice_Jumping/initialAliceJumpMedium.png',{frameWidth: 37, frameHeight: 61, startFrame: 0, endFrame: 6});
-      this.load.spritesheet('playerWalk','./assets/Alice_Walking/initialAliceWalking.png',{frameWidth:28, frameHeight: 61, startFrame:0, endFrame: 5})
+      this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2Standing.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
+      this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
+      this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
+      this.load.spritesheet('playerPush','./assets/AliceAnim/AliceV2Pushing.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 5});
     }
   create(){
       drugsTaken = 0;
@@ -57,20 +58,26 @@ class LevelTwo extends Phaser.Scene{
       this.anims.create({                                 //basic movement animation
         key: 'p1Idle',
         repeat: -1,
-        frames: this.anims.generateFrameNumbers('playerIdle', {start: 0, end: 1, first: 0}),
+        frames: this.anims.generateFrameNumbers('playerIdle', {start: 0, end: 0, first: 0}),
         frameRate: 30
       });
       this.anims.create({                                 //basic movement animation
         key: 'p1Walk',
         repeat: -1,
-        frames: this.anims.generateFrameNumbers('playerWalk', {start: 0, end: 5, first: 0}),
+        frames: this.anims.generateFrameNumbers('playerWalk', {start: 0, end: 7, first: 0}),
         frameRate: 24
       });
       this.anims.create({                                 //basic movement animation
         key: 'p1Jump',
-        frames: this.anims.generateFrameNumbers('playerJump', {start: 0, end: 4, first: 0}),
+        frames: this.anims.generateFrameNumbers('playerJump', {start: 0, end: 5, first: 0}),
         frameRate: 5
       });
+      this.anims.create({
+        key:'p1Push',
+        repeat: -1,
+        frames: this.anims.generateFrameNumbers('playerPush', {start: 0, end: 5, first: 0}),
+        frameRate: 30
+      })
       this.anims.create({                                 //basic movement animation
         key: 'p1SizeUp',
         frames: this.anims.generateFrameNumbers('playerSizeUp', {start: 0, end: 10, first: 0}),
@@ -114,15 +121,17 @@ class LevelTwo extends Phaser.Scene{
     //instructions to solve puzzle(letters appear the more drugs are taken)
     this.puzzleSolver();
     this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);          //instantiate physics between player and door
-    this.physics.world.collide(this.p1, this.smallBox, this.pickUpBox, null, this);   
-    //attempt at collision between player picking up box(not implemented yet) 
-    if(pickedUpBox == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
-      //this.physics.world.collide(this.platforms2, this.smallBox, null, this);
+    if(currentScale > 0.5){
+      this.physics.world.collide(this.p1, this.smallBox, this.pickUpBox, null, this);   
+    }
+    //Picking up box 
+    if(pickedUpBox == true && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor() && this.smallBox.body.onFloor()){
       this.smallBox.x = this.p1.x;
-      this.smallBox.y = this.p1.y-50;
+      this.smallBox.y = this.p1.y-35;
       this.smallBox.setVisible(true);
       this.smallBox.body.enable = true;
       pickedUpBox = false;
+      holdingBox = false;
     }
     //first button zone variables for entry and leaving
     let touching1 = buttonzone1.body.touching;
@@ -153,18 +162,20 @@ class LevelTwo extends Phaser.Scene{
     }else{
       this.button2.setFrame(0);
     }
+    
     if(onButton1 == true && onButton2 == true){
         this.exit.setFrame(1);
         this.anims.play('doorOpen', this.door);
-      }     
+      }   
   }
   //attempt at picking up a box if the player is overlapping(not implemented yet)    
   pickUpBox(p1,smallBox){
-    if(Phaser.Input.Keyboard.JustDown(keySPACE)){
+    if(Phaser.Input.Keyboard.JustDown(keySPACE) && holdingBox == false){
       this.smallBox.setVisible(false);
       this.smallBox.body.enable = false;
       //animation to pickup box
       pickedUpBox = true;
+      holdingBox = true;
     } 
   }
   //door collision only allowed to continue if both buttons are pressed
@@ -187,17 +198,17 @@ class LevelTwo extends Phaser.Scene{
     switch(drugsTaken)
     {
       case 7:   let text1 = this.add.text(centerX,centerY - textSpacer, 'P___ _h_ B___s',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                let text2 = this.add.text(centerX,centerY, '_n b___o_ __ _p__ _o__',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                let text2 = this.add.text(centerX,centerY, '_n _h_ b___o_ __ _p__ _o__',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
                 text1.alpha = 0.2;
                 text2.alpha = 0.2; 
         break;
       case 10:  let text3 = this.add.text(centerX,centerY - textSpacer, '_u__ __e _o___',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                let text4 = this.add.text(centerX,centerY, '__ __t__n t_ ___n __or',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                let text4 = this.add.text(centerX,centerY, '__ t__ __t__n t_ ___n __or',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
                 text3.alpha = 0.5;
                 text4.alpha = 0.5;
         break;
       case 15:  let text5 = this.add.text(centerX,centerY - textSpacer, '__sh t__ __xe_',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                let text6 = this.add.text(centerX,centerY, 'o_ _u_to_ _o o_e_ D___',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+                let text6 = this.add.text(centerX,centerY, 'o_ __e _u_to_ _o o_e_ D___',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
                 text5.alpha = 0.7;
                 text6.alpha = 0.7;
         break;      

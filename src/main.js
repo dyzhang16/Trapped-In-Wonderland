@@ -3,7 +3,7 @@ let config = {                                                      //set config
     pixelArt: true,
     width: 896, 
     height: 512,
-    scene:[Loading, Menu, Instructions, LevelOne, LevelTwo, LevelThree, LevelFour, Credits],
+    scene:[Loading, Menu, Instructions, LevelOne, LevelTwo, LevelThree, LevelFour, LevelFive, Credits],
     physics:{                                                       //include arcadePhysics for phaser game
         default: "arcade",
         arcade:{
@@ -27,6 +27,7 @@ let currentScale = 1;                                               //tracks ing
 let drugsTaken = 0;
 let cookieObtained = true;
 let drinkObtained = true;
+let holdingBox = false;
 let pickedUpBox = false;
 let pickedUpBox1 = false;
 let pickedUpBox2 = false;

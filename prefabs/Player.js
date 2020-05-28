@@ -11,6 +11,14 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         scene.add.existing(this);                                               //add to current scene
         scene.physics.add.existing(this);                                       //add object to existing scene
     }
+    preload(){
+        //this.load.audio('eatFX','./assets/soundFX/eating.wav');                     //http://soundbible.com/976-Eating.html
+        //this.load.audio('drinkFX','./assets/soundFX/drinking.wav');                 //http://soundbible.com/1502-Slurping-2.html   
+    }
+    create(){
+        //this.eatingFX = this.sound.add('eatFX');                                      //add soundFX for eating and drinking(not implemented yet)
+        //this.drinkingFX = this.sound.add('drinkFX');                 
+    }
     update(){ 
         //character movement
         if(currentScale == 1){                                                  //movement for individual sizes
@@ -27,7 +35,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             } else {                                                            //idle
                 this.setVelocityX(0);                                           //no movement
                 if (this.body.onFloor()) {
-                  this.anims.play('p1Idle',true);
+                    this.anims.play('p1Idle',true);
                 }
             }
             if (cursors.up.isDown && this.body.onFloor()) {                     //jumping movement
@@ -44,12 +52,12 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             } else if (cursors.right.isDown) {
                 this.setVelocityX(100);
                 if (this.body.onFloor()) {
-                  this.anims.play('p1Walk', true);
+                    this.anims.play('p1Walk', true);
                 }
             } else {
                 this.setVelocityX(0);
                 if (this.body.onFloor()) {
-                  this.anims.play('p1Idle',true);
+                    this.anims.play('p1Idle',true);
                 }
             }
             if (cursors.up.isDown && this.body.onFloor()) {
@@ -95,7 +103,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
                     drugsTaken += 1;
                     console.log(drugsTaken);
                     console.log('Medium Vent!');
-                    //this.eatingFX.play();                                         //bugged eating sound
+                    //this.eatingFX.play();                                           //bugged eating sound
                     //this.play('p1SizeUp');                                        //bugged sizeUp animation
                     //console.log('CurrentScale is:', currentScale);
                 }
@@ -117,7 +125,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
                 currentScale = 0.5*currentScale;
                 drugsTaken += 1;
                 console.log(drugsTaken);        
-                //this.drinkingFX.play();                                   //bugged drinking sound                        
+                //this.drinkingFX.play();                                      //bugged drinking sound                        
                 //this.play('p1SizeDown');                                  //bugged sizeDown animation
                 //console.log('CurrentScale is:', currentScale);
             }

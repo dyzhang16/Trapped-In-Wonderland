@@ -10,11 +10,13 @@ class LevelOne extends Phaser.Scene{
         this.load.tilemapTiledJSON('map1','./assets/TileMaps/level1.json');
         this.load.spritesheet('door', './assets/doorAnimation/initialDoor.png',{frameWidth: 64, frameHeight: 64, startFrame:0 , endFrame: 13});
         this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
-        this.load.spritesheet('playerIdle','./assets/Alice_Standing/initialAliceStandingMedium.png',{frameWidth: 23, frameHeight: 61, startFrame: 0, endFrame: 1});
-        this.load.spritesheet('playerJump','./assets/Alice_Jumping/initialAliceJumpMedium.png',{frameWidth: 37, frameHeight: 61, startFrame: 0, endFrame: 6});
-        this.load.spritesheet('playerWalk','./assets/Alice_Walking/initialAliceWalking.png',{frameWidth:28, frameHeight: 61, startFrame:0, endFrame: 5});
+        this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2Standing.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
+        this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
+        this.load.spritesheet('playerPush','./assets/AliceAnim/AliceV2Pushing.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 5});
         this.load.spritesheet('playerSizeUp','./assets/initialAliceSizeUp.png',{frameWidth:46, frameHeight:122,startFrame:0, endFrame: 10 });
         this.load.spritesheet('playerSizeDown','./assets/initialAliceSizeUp.png',{frameWidth:66, frameHeight:122,startFrame:0, endFrame: 11 });
+      
       }
     create(){
         drugsTaken = 0;
@@ -35,18 +37,18 @@ class LevelOne extends Phaser.Scene{
         this.anims.create({                                 //basic movement animation
             key: 'p1Idle',
             repeat: -1,
-            frames: this.anims.generateFrameNumbers('playerIdle', {start: 0, end: 1, first: 0}),
+            frames: this.anims.generateFrameNumbers('playerIdle', {start: 0, end: 0, first: 0}),
             frameRate: 30
         });
         this.anims.create({                                 //basic movement animation
           key: 'p1Walk',
           repeat: -1,
-          frames: this.anims.generateFrameNumbers('playerWalk', {start: 0, end: 5, first: 0}),
+          frames: this.anims.generateFrameNumbers('playerWalk', {start: 0, end: 7, first: 0}),
           frameRate: 24
         });
         this.anims.create({                                 //basic movement animation
             key: 'p1Jump',
-            frames: this.anims.generateFrameNumbers('playerJump', {start: 0, end: 4, first: 0}),
+            frames: this.anims.generateFrameNumbers('playerJump', {start: 0, end: 5, first: 0}),
             frameRate: 5
         });
         this.anims.create({                                 //basic movement animation
@@ -63,7 +65,7 @@ class LevelOne extends Phaser.Scene{
         this.cookie = new Cookie(this, 350, 432,'cookie').setOrigin(0.5);
         this.drink = new Drink(this, 70, 350,'drink').setOrigin(0.5);
         //creating a zone for the vent area where the player cannot scale up
-        Ventzone1 = this.add.zone(560, 300).setSize(155, 190).setOrigin(0,0);    //https://www.html5gamedevs.com/topic/38895-making-a-zone/
+        Ventzone1 = this.add.zone(565, 430).setSize(150, 60).setOrigin(0,0);    //https://www.html5gamedevs.com/topic/38895-making-a-zone/
         this.physics.world.enable(Ventzone1);
         Ventzone1.body.setAllowGravity(false);
         Ventzone1.body.moves = false;
@@ -126,18 +128,18 @@ class LevelOne extends Phaser.Scene{
     puzzleSolver(){
       switch(drugsTaken)
       {
-        case 7:   let text1 = this.add.text(centerX,centerY - textSpacer, 'P___s _ __ I_cr__s_',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                  let text2 = this.add.text(centerX,centerY, '___s_ Q t_ _e___a__',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+        case 7:   let text1 = this.add.text(centerX - 150,centerY - textSpacer, '_h_ a__ __d c___d j___ h____r_._.',{ fontSize: '18px', color: '#8B0000' }).setOrigin(0.5);
+                  let text2 = this.add.text(centerX - 150,centerY, 'S__ d_a__ a__ _o_l_ ___ t_g____.___',{ fontSize: '18px', color: '#8B0000' }).setOrigin(0.5);
                   text1.alpha = 0.2;
                   text2.alpha = 0.2; 
           break;
-        case 10:  let text3 = this.add.text(centerX,centerY - textSpacer, '_r___ _ _o _n___a__',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                  let text4 = this.add.text(centerX,centerY, '__e__ _ _o __c___s_',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+        case 10:  let text3 = this.add.text(centerX - 150,centerY - textSpacer, 'S__ _t_ _n_ ___l_ _u_p _i__e_.___',{ fontSize: '18px', color: '#8B0000' }).setOrigin(0.5);
+                  let text4 = this.add.text(centerX - 150,centerY, '_h_ _r___ ___ __u_d f__ _i__t_r_._.',{ fontSize: '18px', color: '#8B0000' }).setOrigin(0.5);
                   text3.alpha = 0.5;
                   text4.alpha = 0.5;
           break;
-        case 15:  let text5 = this.add.text(centerX,centerY - textSpacer, '__es_ E t_ ____e__e',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                  let text6 = this.add.text(centerX,centerY, 'Pr__s _ __ D__re__e',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
+        case 15:  let text5 = this.add.text(centerX - 150,centerY - textSpacer, '__e __e a__ _ou__ __m_ __gh____._',{ fontSize: '18px', color: '#8B0000' }).setOrigin(0.5);
+                  let text6 = this.add.text(centerX - 150,centerY, '__e ___nk _nd c____ _it ___h_e___._',{ fontSize: '18px', color: '#8B0000' }).setOrigin(0.5);
                   text5.alpha = 0.7;
                   text6.alpha = 0.7;
           break;      
