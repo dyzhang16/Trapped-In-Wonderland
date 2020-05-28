@@ -3,21 +3,14 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         super(scene, x, y, texture, frame);
         //setting up Player Class
         let custom_body = new Phaser.Physics.Arcade.Body(scene.physics.world, this)     //https://phaser.discourse.group/t/character-class/4184/4
-        this.body = custom_body;                                                                                                   
+        this.body = custom_body;
+        this.scene = scene;                                                                                                   
         this.setBounce(0);                                                      //bounce when hitting other object    
         this.setImmovable();                                                    //cannot be pushed by other objects
         this.destroyed = false;                                                 //variables for player state
         //this.setCollideWorldBounds(true);                                       //bound by game window
         scene.add.existing(this);                                               //add to current scene
         scene.physics.add.existing(this);                                       //add object to existing scene
-    }
-    preload(){
-        //this.load.audio('eatFX','./assets/soundFX/eating.wav');                     //http://soundbible.com/976-Eating.html
-        //this.load.audio('drinkFX','./assets/soundFX/drinking.wav');                 //http://soundbible.com/1502-Slurping-2.html   
-    }
-    create(){
-        //this.eatingFX = this.sound.add('eatFX');                                      //add soundFX for eating and drinking(not implemented yet)
-        //this.drinkingFX = this.sound.add('drinkFX');                 
     }
     update(){ 
         //character movement
@@ -93,30 +86,32 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             this.setFlipX(true);
         }
         if(cookieObtained == true && this.body.onFloor()){                      //sizeUp upon eating cookie
-            if(inSmallVent == true){
-                //text dialogue for too small!
-                console.log('Too Small!');
-            }else if(inMedVent == true){
-                if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 1){   //can scale up to 2x original size
-                    this.setScale(2*currentScale);                                  //but can only scale up provided not in a vent
-                    currentScale = 2*currentScale;                                  //sets scale and keep track of current scale
-                    drugsTaken += 1;
-                    console.log(drugsTaken);
-                    console.log('Medium Vent!');
-                    //this.eatingFX.play();                                           //bugged eating sound
-                    //this.play('p1SizeUp');                                        //bugged sizeUp animation
-                    //console.log('CurrentScale is:', currentScale);
+            if(!this.body.blocked.left){
+                if(inSmallVent == true){
+                    //text dialogue for too small!
+                    console.log('Too Small!');
+                }else if(inMedVent == true){
+                    if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 1){   //can scale up to 2x original size
+                        this.setScale(2*currentScale);                                  //but can only scale up provided not in a vent
+                        currentScale = 2*currentScale;                                  //sets scale and keep track of current scale
+                        drugsTaken += 1;
+                        console.log(drugsTaken);
+                        console.log('Medium Vent!');
+                        this.scene.eatingFX.play();                                           //bugged eating sound
+                        //this.play('p1SizeUp');                                        //bugged sizeUp animation
+                        //console.log('CurrentScale is:', currentScale);
+                    }
+                } else {
+                    if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 2){   //can scale up to 2x original size
+                        this.setScale(2*currentScale);                                  //but can only scale up provided not in a vent
+                        currentScale = 2*currentScale;                                  //sets scale and keep track of current scale
+                        drugsTaken += 1;
+                        console.log(drugsTaken);
+                        this.scene.eatingFX.play();                                         //bugged eating sound
+                        //this.play('p1SizeUp');                                        //bugged sizeUp animation
+                        //console.log('CurrentScale is:', currentScale);
+                    }   
                 }
-            } else {
-                if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 2){   //can scale up to 2x original size
-                this.setScale(2*currentScale);                                  //but can only scale up provided not in a vent
-                currentScale = 2*currentScale;                                  //sets scale and keep track of current scale
-                drugsTaken += 1;
-                console.log(drugsTaken);
-                //this.eatingFX.play();                                         //bugged eating sound
-                //this.play('p1SizeUp');                                        //bugged sizeUp animation
-                //console.log('CurrentScale is:', currentScale);
-                }   
             }
         }
         if(drinkObtained == true && this.body.onFloor()){                       //sizeDown upon drinking drink
@@ -125,7 +120,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
                 currentScale = 0.5*currentScale;
                 drugsTaken += 1;
                 console.log(drugsTaken);        
-                //this.drinkingFX.play();                                      //bugged drinking sound                        
+                this.scene.drinkingFX.play();                                      //bugged drinking sound                        
                 //this.play('p1SizeDown');                                  //bugged sizeDown animation
                 //console.log('CurrentScale is:', currentScale);
             }

@@ -16,10 +16,13 @@ class LevelOne extends Phaser.Scene{
         this.load.spritesheet('playerPush','./assets/AliceAnim/AliceV2Pushing.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 5});
         this.load.spritesheet('playerSizeUp','./assets/initialAliceSizeUp.png',{frameWidth:46, frameHeight:122,startFrame:0, endFrame: 10 });
         this.load.spritesheet('playerSizeDown','./assets/initialAliceSizeUp.png',{frameWidth:66, frameHeight:122,startFrame:0, endFrame: 11 });
-      
+        this.load.audio('eatFX','./assets/soundFX/eating.wav');                     //http://soundbible.com/976-Eating.html
+        this.load.audio('drinkFX','./assets/soundFX/drinking.wav');                 //http://soundbible.com/1502-Slurping-2.html
       }
     create(){
         drugsTaken = 0;
+        this.eatingFX = this.sound.add('eatFX',{volume: 0.3});                                      //add soundFX for eating and drinking(not implemented yet)
+        this.drinkingFX = this.sound.add('drinkFX',{volume: 0.3});            
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);  //reserve space e and q as interactable buttons
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
