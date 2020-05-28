@@ -94,7 +94,7 @@ class LevelTwo extends Phaser.Scene{
       this.physics.add.collider(this.smallBox, platforms2);
       this.physics.add.collider(this.medBox, platforms2);
       //instantiate physics between player and boxes
-      this.physics.add.collider(this.p1, this.smallBox);
+      
       this.physics.add.collider(this.p1, this.medBox, this.checkSize, null, this);  //checks if player is big enough to push box
       //creates zones on buttons to play buttonDown Animation 
       this.physics.add.overlap(this.smallBox, buttonzone1);
@@ -120,6 +120,8 @@ class LevelTwo extends Phaser.Scene{
     }
     //instructions to solve puzzle(letters appear the more drugs are taken)
     this.puzzleSolver();
+   
+    this.physics.world.collide(this.p1, this.smallBox/*, this.pushBox, null, this*/);
     this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);          //instantiate physics between player and door
     if(currentScale > 0.5){
       this.physics.world.collide(this.p1, this.smallBox, this.pickUpBox, null, this);   
@@ -177,6 +179,9 @@ class LevelTwo extends Phaser.Scene{
       pickedUpBox = true;
       holdingBox = true;
     } 
+  }
+  pushBox(){
+    this.anims.play('p1Push', this.p1);
   }
   //door collision only allowed to continue if both buttons are pressed
   atDoor(){
