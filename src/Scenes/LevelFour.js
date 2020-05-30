@@ -8,21 +8,29 @@ class LevelFour extends Phaser.Scene{
         this.load.image('smallBox','./assets/Tiles/smallObstacle.png');
         this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
         this.load.tilemapTiledJSON('map4','./assets/TileMaps/level4.json');
+        this.load.image('level4Background', './assets/Backgrounds/level4Background.png');
         this.load.spritesheet('button','./assets/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
         this.load.spritesheet('door', './assets/doorAnimation/doorOpening.png',{frameWidth: 32, frameHeight: 32, startFrame:0 , endFrame: 4});
         this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
         this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2Standing.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
         this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
         this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
+        this.load.audio('eatFX','./assets/soundFX/eating.wav');                     //http://soundbible.com/976-Eating.html
+        this.load.audio('drinkFX','./assets/soundFX/drinking.wav');                 //http://soundbible.com/1502-Slurping-2.html
       }
     create(){
         drugsTaken = 0;
         onButton1 = false;
-        game.scale.resize(1280,640);
+        onButton2 = false;
+        onButton3 = false;
+        this.eatingFX = this.sound.add('eatFX',{volume: 0.3});                                      //add soundFX for eating and drinking(not implemented yet)
+        this.drinkingFX = this.sound.add('drinkFX',{volume: 0.3});            
+        game.scale.resize(896,512);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);    //reserve variables for key inputs
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         cursors = this.input.keyboard.createCursorKeys();                               //reserve arrow keys for movement
+        let background = this.add.tileSprite(0,0,1280,960,'level4Background').setOrigin(0,0);
         //add in level 2 tilemap and sets collision for tilemap
         const map4 = this.make.tilemap({key: 'map4'});
         const tileset4 = map4.addTilesetImage('ScaleDistortionGameTileset','tiles',32,32,0,0);
@@ -184,21 +192,21 @@ class LevelFour extends Phaser.Scene{
         buttonzone3.on('leaveb3zone', () => onButton3 = false);
 
         //console.log(onButton1);
-        //this.cameras.main.setBounds(0, 0, 1280, 960);
-        //this.cameras.main.setZoom(1.25);
-        //this.cameras.main.startFollow(this.p1);
+        this.cameras.main.setBounds(0, 0, 1280, 640);
+        this.cameras.main.setZoom(1.25);
+        this.cameras.main.startFollow(this.p1);
     }
   
     update(){
       this.p1.update();                                                                   //calls player update for controls
       
-      /*if(currentScale == 2){
+      if(currentScale == 2){
         this.cameras.main.setZoom(1);
       }else if(currentScale == 0.5){
         this.cameras.main.setZoom(1.5);
       }else if(currentScale == 1){
         this.cameras.main.setZoom(1.25);
-      }*/
+      }
       //instructions to solve puzzle(letters appear the more drugs are taken)
       //this.puzzleSolver();
       this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);          //instantiate physics between player and door
@@ -343,7 +351,7 @@ class LevelFour extends Phaser.Scene{
     atDoor(){
       if(onButton1 == true && onButton2 == true && onButton3 == true && currentScale == 1){
         if(cursors.up.isDown && this.p1.body.onFloor()){
-          this.scene.start('creditScene');
+          this.scene.start('levelFiveScene');
         }
       }  
     }

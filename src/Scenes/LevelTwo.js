@@ -9,20 +9,27 @@ class LevelTwo extends Phaser.Scene{
       this.load.image('smallBox','./assets/Tiles/smallObstacle.png');
       this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
       this.load.tilemapTiledJSON('map2','./assets/TileMaps/level2.json');
+      this.load.image('level2Background', './assets/Backgrounds/level2Background.png');
       this.load.spritesheet('button','./assets/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
-      this.load.spritesheet('door', './assets/doorAnimation/doorOpening.png',{frameWidth: 32, frameHeight: 32, startFrame:0 , endFrame: 4});
+      this.load.spritesheet('door', './assets/doorAnimation/initialDoor.png',{frameWidth: 64, frameHeight: 64, startFrame:0 , endFrame: 13});
       this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
       this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2Standing.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
       this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
       this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
       this.load.spritesheet('playerPush','./assets/AliceAnim/AliceV2Pushing.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 5});
+      this.load.audio('eatFX','./assets/soundFX/eating.wav');                     //http://soundbible.com/976-Eating.html
+      this.load.audio('drinkFX','./assets/soundFX/drinking.wav');                 //http://soundbible.com/1502-Slurping-2.html
     }
   create(){
       drugsTaken = 0;
+      onButton1 = false;
+      this.eatingFX = this.sound.add('eatFX',{volume: 0.3});                                      //add soundFX for eating and drinking(not implemented yet)
+      this.drinkingFX = this.sound.add('drinkFX',{volume: 0.3});  
       keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);    //reserve variables for key inputs
       keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
       keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
       cursors = this.input.keyboard.createCursorKeys();                               //reserve arrow keys for movement
+      let background = this.add.tileSprite(0,0,896,512,'level2Background').setOrigin(0,0);
       //add in level 2 tilemap and sets collision for tilemap
       const map2 = this.make.tilemap({key: 'map2'});
       const tileset2 = map2.addTilesetImage('ScaleDistortionGameTileset','tiles',32,32,0,0);
@@ -120,7 +127,7 @@ class LevelTwo extends Phaser.Scene{
     }
     //instructions to solve puzzle(letters appear the more drugs are taken)
     this.puzzleSolver();
-   
+    
     this.physics.world.collide(this.p1, this.smallBox/*, this.pushBox, null, this*/);
     this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);          //instantiate physics between player and door
     if(currentScale > 0.5){
@@ -168,7 +175,11 @@ class LevelTwo extends Phaser.Scene{
     if(onButton1 == true && onButton2 == true){
         this.exit.setFrame(1);
         this.anims.play('doorOpen', this.door);
-      }   
+    }
+    else{
+      this.exit.setFrame(0);
+      this.door.setFrame(0);
+    }   
   }
   //attempt at picking up a box if the player is overlapping(not implemented yet)    
   pickUpBox(p1,smallBox){

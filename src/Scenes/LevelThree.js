@@ -9,21 +9,27 @@ class LevelThree extends Phaser.Scene{
         this.load.image('smallBox','./assets/Tiles/smallObstacle.png');
         this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
         this.load.tilemapTiledJSON('map3','./assets/TileMaps/level3.json');
+        this.load.image('level3Background', './assets/Backgrounds/level3Background.png');
         this.load.spritesheet('button','./assets/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
         this.load.spritesheet('door', './assets/doorAnimation/doorOpening.png',{frameWidth: 32, frameHeight: 32, startFrame:0 , endFrame: 4});
         this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
         this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2Standing.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
         this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
         this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
+        this.load.audio('eatFX','./assets/soundFX/eating.wav');                     //http://soundbible.com/976-Eating.html
+        this.load.audio('drinkFX','./assets/soundFX/drinking.wav');                 //http://soundbible.com/1502-Slurping-2.html
       }
     create(){
         drugsTaken = 0;
         onButton1 = false;
+        this.eatingFX = this.sound.add('eatFX',{volume: 0.3});                                      //add soundFX for eating and drinking(not implemented yet)
+        this.drinkingFX = this.sound.add('drinkFX',{volume: 0.3});            
         game.scale.resize(512,512);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);    //reserve variables for key inputs
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         cursors = this.input.keyboard.createCursorKeys();                               //reserve arrow keys for movement
+        let background = this.add.tileSprite(0,0,512,960,'level3Background').setOrigin(0,0);
         //add in level 2 tilemap and sets collision for tilemap
         const map3 = this.make.tilemap({key: 'map3'});
         const tileset3 = map3.addTilesetImage('ScaleDistortionGameTileset','tiles',32,32,0,0);

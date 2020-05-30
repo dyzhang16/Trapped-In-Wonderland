@@ -1,6 +1,8 @@
 let config = {                                                      //set configuration for phaser game
     type: Phaser.CANVAS,                                            //game window is 896 by512
-    pixelArt: true,
+    render: {
+        pixelArt: true
+    },
     width: 896, 
     height: 512,
     scene:[Loading, Menu, Instructions, LevelOne, LevelTwo, LevelThree, LevelFour, LevelFive, Credits],
@@ -34,11 +36,19 @@ let pickedUpBox2 = false;
 let pickedUpBox3 = false;
 let inSmallVent = false;
 let inMedVent = false;
+
 let Ventzone1;
 let Ventzone2;
 let Ventzone3;
 let Ventzone4;
 let Ventzone5;
+let Ventzone6;
+let Ventzone7;
+let Ventzone8;
+let Ventzone9;
+let Ventzone10;
+let Ventzone11;
+let Ventzone12;
 
 let Doorzone;
 let buttonzone1;

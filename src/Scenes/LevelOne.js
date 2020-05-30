@@ -8,9 +8,10 @@ class LevelOne extends Phaser.Scene{
         this.load.image('drink','./assets/initialDrinkMe.png');
         this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
         this.load.tilemapTiledJSON('map1','./assets/TileMaps/level1.json');
+        this.load.image('level1Background', './assets/Backgrounds/level1Background.png');
         this.load.spritesheet('door', './assets/doorAnimation/initialDoor.png',{frameWidth: 64, frameHeight: 64, startFrame:0 , endFrame: 13});
         this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
-        this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2Standing.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2StandingExtraPixel.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
         this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
         this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
         this.load.spritesheet('playerPush','./assets/AliceAnim/AliceV2Pushing.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 5});
@@ -27,6 +28,7 @@ class LevelOne extends Phaser.Scene{
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         cursors = this.input.keyboard.createCursorKeys();                             //reserve arrow keys for movement
+        let background = this.add.tileSprite(0,0,896,512,'level1Background').setOrigin(0,0);
         //add in level 1 tilemap and sets collision for tilemap
         const map1 = this.make.tilemap({key: 'map1'});                                //https://stackabuse.com/phaser-3-and-tiled-building-a-platformer/
         const tileset1 = map1.addTilesetImage('ScaleDistortionGameTileset','tiles',32,32,0,0);
@@ -90,7 +92,7 @@ class LevelOne extends Phaser.Scene{
       
       this.puzzleSolver();
       if(Phaser.Input.Keyboard.JustDown(keySPACE)){                       //shortcut for debugging future levels
-      this.scene.start('levelFourScene');
+      this.scene.start('levelFiveScene');
       }
 
       if(currentScale == 2){
@@ -131,20 +133,14 @@ class LevelOne extends Phaser.Scene{
     puzzleSolver(){
       switch(drugsTaken)
       {
-        case 7:   let text1 = this.add.text(centerX - 150,centerY - textSpacer, '_h_ a__ __d c___d j___ h____r_._.',{ fontSize: '18px', color: '#8B0000' }).setOrigin(0.5);
-                  let text2 = this.add.text(centerX - 150,centerY, 'S__ d_a__ a__ _o_l_ ___ t_g____.___',{ fontSize: '18px', color: '#8B0000' }).setOrigin(0.5);
-                  text1.alpha = 0.2;
-                  text2.alpha = 0.2; 
+        case 7:   let text1 = this.add.text(centerX - 150,centerY - textSpacer, '_h_ a__ __d c___d j___ h____r_._.',{ fontSize: '18px',fontStyle: 'bold', color: '#8B0000' }).setOrigin(0.5);
+                  let text2 = this.add.text(centerX - 150,centerY, 'S__ d_a__ a__ _o_l_ ___ t_g____.___',{ fontSize: '18px',fontStyle: 'bold', color: '#8B0000' }).setOrigin(0.5);
           break;
-        case 10:  let text3 = this.add.text(centerX - 150,centerY - textSpacer, 'S__ _t_ _n_ ___l_ _u_p _i__e_.___',{ fontSize: '18px', color: '#8B0000' }).setOrigin(0.5);
-                  let text4 = this.add.text(centerX - 150,centerY, '_h_ _r___ ___ __u_d f__ _i__t_r_._.',{ fontSize: '18px', color: '#8B0000' }).setOrigin(0.5);
-                  text3.alpha = 0.5;
-                  text4.alpha = 0.5;
+        case 10:  let text3 = this.add.text(centerX - 150,centerY - textSpacer, 'S__ _t_ _n_ ___l_ _u_p _i__e_.___',{ fontSize: '18px', fontStyle: 'bold',  color: '#8B0000' }).setOrigin(0.5);
+                  let text4 = this.add.text(centerX - 150,centerY, '_h_ _r___ ___ __u_d f__ _i__t_r_._.',{ fontSize: '18px',fontStyle: 'bold', color: '#8B0000' }).setOrigin(0.5);
           break;
-        case 15:  let text5 = this.add.text(centerX - 150,centerY - textSpacer, '__e __e a__ _ou__ __m_ __gh____._',{ fontSize: '18px', color: '#8B0000' }).setOrigin(0.5);
-                  let text6 = this.add.text(centerX - 150,centerY, '__e ___nk _nd c____ _it ___h_e___._',{ fontSize: '18px', color: '#8B0000' }).setOrigin(0.5);
-                  text5.alpha = 0.7;
-                  text6.alpha = 0.7;
+        case 15:  let text5 = this.add.text(centerX - 150,centerY - textSpacer, '__e __e a__ _ou__ __m_ __gh____._',{ fontSize: '18px',fontStyle: 'bold', color: '#8B0000' }).setOrigin(0.5);
+                  let text6 = this.add.text(centerX - 150,centerY, '__e ___nk _nd c____ _it ___h_e___._',{ fontSize: '18px',fontStyle: 'bold', color: '#8B0000' }).setOrigin(0.5);      
           break;      
         default:
           break;

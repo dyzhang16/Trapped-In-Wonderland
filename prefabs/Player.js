@@ -86,7 +86,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             this.setFlipX(true);
         }
         if(cookieObtained == true && this.body.onFloor()){                      //sizeUp upon eating cookie
-            if(!this.body.blocked.left){
+            if(!this.body.blocked.left || !this.body.blocked.right){
                 if(inSmallVent == true){
                     //text dialogue for too small!
                     console.log('Too Small!');
