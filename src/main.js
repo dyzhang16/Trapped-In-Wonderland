@@ -29,8 +29,7 @@ let currentScale = 1;                                               //tracks ing
 let drugsTaken = 0;
 let cookieObtained = true;
 let drinkObtained = true;
-let holdingBox = false;
-let pickedUpBox = false;
+
 let pickedUpBox1 = false;
 let pickedUpBox2 = false;
 let pickedUpBox3 = false;
@@ -50,7 +49,6 @@ let Ventzone10;
 let Ventzone11;
 let Ventzone12;
 
-let Doorzone;
 let buttonzone1;
 let buttonzone2;
 let buttonzone3;

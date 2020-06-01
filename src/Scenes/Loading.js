@@ -15,8 +15,7 @@ class Loading extends Phaser.Scene{
             callbackScope: this,
             loop: true
         });
-        this.menumusic = this.sound.add('BGM',{volume: 0.3});                                       //add BGM
-        this.menumusic.loop = true;                                                                 //loop music
+        this.menumusic = this.sound.add('BGM',{volume: 0.3}, true);                                       //add BGM
         this.menumusic.play();                                                                      //play BGM     
     }
     update(){

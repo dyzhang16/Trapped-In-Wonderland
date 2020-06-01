@@ -86,7 +86,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             this.setFlipX(true);
         }
         if(cookieObtained == true && this.body.onFloor()){                      //sizeUp upon eating cookie
-            if(!this.body.blocked.left || !this.body.blocked.right){
+            if(!this.body.blocked.left && !this.body.blocked.right){
                 if(inSmallVent == true){
                     //text dialogue for too small!
                     console.log('Too Small!');
@@ -97,7 +97,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
                         drugsTaken += 1;
                         console.log(drugsTaken);
                         console.log('Medium Vent!');
-                        this.scene.eatingFX.play();                                           //bugged eating sound
+                        this.scene.scaleUp.play();                                           //bugged eating sound
                         //this.play('p1SizeUp');                                        //bugged sizeUp animation
                         //console.log('CurrentScale is:', currentScale);
                     }
@@ -107,7 +107,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
                         currentScale = 2*currentScale;                                  //sets scale and keep track of current scale
                         drugsTaken += 1;
                         console.log(drugsTaken);
-                        this.scene.eatingFX.play();                                         //bugged eating sound
+                        this.scene.scaleUp.play();                                         //bugged eating sound
                         //this.play('p1SizeUp');                                        //bugged sizeUp animation
                         //console.log('CurrentScale is:', currentScale);
                     }   
@@ -120,7 +120,7 @@ class Player extends Phaser.Physics.Arcade.Sprite{
                 currentScale = 0.5*currentScale;
                 drugsTaken += 1;
                 console.log(drugsTaken);        
-                this.scene.drinkingFX.play();                                      //bugged drinking sound                        
+                this.scene.scaleDown.play();                                      //bugged drinking sound                        
                 //this.play('p1SizeDown');                                  //bugged sizeDown animation
                 //console.log('CurrentScale is:', currentScale);
             }

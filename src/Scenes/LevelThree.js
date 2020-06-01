@@ -16,14 +16,16 @@ class LevelThree extends Phaser.Scene{
         this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2Standing.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
         this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
         this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
-        this.load.audio('eatFX','./assets/soundFX/eating.wav');                     //http://soundbible.com/976-Eating.html
-        this.load.audio('drinkFX','./assets/soundFX/drinking.wav');                 //http://soundbible.com/1502-Slurping-2.html
+        this.load.audio('ScaleUp','./assets/soundFX/ScaleUp.mp3');                  //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
+        this.load.audio('ScaleDown','./assets/soundFX/ScaleDown.mp3');               //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
+        this.load.audio('doorOpening','./assets/soundFX/doorOpening.mp3');               //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id
       }
     create(){
         drugsTaken = 0;
         onButton1 = false;
-        this.eatingFX = this.sound.add('eatFX',{volume: 0.3});                                      //add soundFX for eating and drinking(not implemented yet)
-        this.drinkingFX = this.sound.add('drinkFX',{volume: 0.3});            
+        this.scaleUp = this.sound.add('ScaleUp',{volume: 0.3});                                      //add soundFX for eating and drinking(not implemented yet)
+        this.scaleDown = this.sound.add('ScaleDown',{volume: 0.3});
+        this.doorSound = this.sound.add('doorOpening',{volume: 0.3});                                    
         game.scale.resize(512,512);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);    //reserve variables for key inputs
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
@@ -42,12 +44,7 @@ class LevelThree extends Phaser.Scene{
           key: 'doorOpen',
           frames: this.anims.generateFrameNumbers('door', {start: 0, end: 13, first: 0}),
           frameRate: 12
-        });
-        //creating a zone for a door to play animation
-        Doorzone = this.add.zone(438, 896).setSize(64, 64).setOrigin(0.5);    
-        this.physics.world.enable(Doorzone);
-        Doorzone.body.setAllowGravity(false);
-        Doorzone.body.moves = false;      
+        });     
         //creating a zone for the vent area where the player cannot scale up
         Ventzone1 = this.add.zone(220, 882).setSize(105, 50).setOrigin(0,0);   
         this.physics.world.enable(Ventzone1);
@@ -102,10 +99,7 @@ class LevelThree extends Phaser.Scene{
         this.physics.add.collider(this.medBox, platforms3);
         //instantiate physics between player and boxes
         this.physics.add.collider(this.p1, this.medBox, this.checkSize, null, this);  //checks if player is big enough to push box
-        //creates zones on door to play doorOpening Animation
-        this.physics.add.overlap(this.p1, Doorzone);
-        Doorzone.on('enterDzone', () => this.anims.play('doorOpen', this.door));
-        Doorzone.on('leaveDzone', () => this.door.setFrame(0));
+
         //create zone for Vent
         this.physics.add.overlap(this.p1, Ventzone1);                         //if player overlaps with ventzone
         Ventzone1.on('enterVzone', () => inSmallVent = true);                      //on entering zone, set to true
@@ -127,7 +121,6 @@ class LevelThree extends Phaser.Scene{
   
     update(){
       this.p1.update();                                                                   //calls player update for controls
-      this.puzzleSolver();
       if(currentScale == 2){
         this.cameras.main.setZoom(1);
       }else if(currentScale == 0.5){
@@ -136,15 +129,9 @@ class LevelThree extends Phaser.Scene{
         this.cameras.main.setZoom(1.25);
       }
       //instructions to solve puzzle(letters appear the more drugs are taken)
-      
+      this.puzzleSolver();
       this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);          //instantiate physics between player and door
-      //this.physics.world.collide(this.p1, this.smallBox, this.pickUpBox, null, this);   
-      //attempt at collision between player picking up box(not implemented yet) 
-      /*if(pickedUpBox == true && Phaser.Input.Keyboard.JustDown(keySPACE)){
-        //this.physics.world.collide(this.platforms2, this.smallBox, null, this);
-        this.Box = new Box(this,this.p1.x,this.p1.y-20,'smallBox').setOrigin(0.5,1);
-        pickedUpBox = false;
-      }*/
+
       let Vtouching = Ventzone1.body.touching;                                //reserve variables for overlapping vent
       let VwasTouching = Ventzone1.body.wasTouching;                                   
       if (Vtouching.none && !VwasTouching.none) {                             //if not touching vent, set to leavezone                    
@@ -171,28 +158,20 @@ class LevelThree extends Phaser.Scene{
           buttonzone1.emit('enterbzone');
       }
       //sets first button to buttonDown frame is box is on button
-      if(onButton1 == true){ 
+      if(onButton1){ 
         this.exit.setFrame(1);
         this.button.setFrame(1);
-        let Dtouching = Doorzone.body.touching;                                //reserve variables for overlapping door
-        let DwasTouching = Doorzone.body.wasTouching;                                   
-        if (Dtouching.none && !DwasTouching.none) {                             //if not touching door, set to leavezone                    
-          Doorzone.emit('leaveDzone');
-        }
-        else if (!Dtouching.none && DwasTouching.none) {                        //else if touching, set to enterzone
-          Doorzone.emit('enterDzone');
-        }
-      }else
-        this.button.setFrame(0);     
+      }else { 
+        this.button.setFrame(0);
+        this.exit.setFrame(0); 
+      }
+      if(!onButton1){
+          this.anims.play('doorOpen', this.door);
+          this.doorSound.play();                                      //bugged drinking sound  
+          //console.log(onButton1, onButton2);
+        }       
     }
-    //attempt at picking up a box if the player is overlapping(not implemented yet)    
-    /*pickUpBox(p1,smallBox){
-      if(Phaser.Input.Keyboard.JustDown(keySPACE)){
-        smallBox.destroy();
-        //animation to pickup box
-        pickedUpBox = true;
-      } 
-    }*/
+
     //door collision only allowed to continue if both buttons are pressed
     atDoor(){
       if(onButton1 == true && currentScale == 1){
