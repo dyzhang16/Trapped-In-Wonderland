@@ -4,30 +4,29 @@ class LevelTwo extends Phaser.Scene{
   }
 
   preload(){
-      this.load.image('bigBox','./assets/Tiles/heavyObstacleLarge.png');          //load all assets used in Level 2
-      this.load.image('medBox','./assets/Tiles/heavyObstacleMedium.png');
-      this.load.image('smallBox','./assets/Tiles/smallObstacle.png');
+      //load all assets used in Level 2
       this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
       this.load.tilemapTiledJSON('map2','./assets/TileMaps/level2.json');
       this.load.image('level2Background', './assets/Backgrounds/level2Background.png');
-      this.load.spritesheet('button','./assets/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
+      this.load.image('medBox','./assets/Objects/heavyObstacleMedium.png');
+      this.load.image('smallBox','./assets/Objects/smallObstacle.png');
+      this.load.spritesheet('button','./assets/Objects/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
       this.load.spritesheet('door', './assets/doorAnimation/initialDoor.png',{frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 13});
       this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
       this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2Standing.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
       this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
       this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
-      this.load.spritesheet('playerPush','./assets/AliceAnim/AliceV2Pushing.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 5});
-      this.load.audio('ScaleUp','./assets/soundFX/ScaleUp.mp3');                  //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
-      this.load.audio('ScaleDown','./assets/soundFX/ScaleDown.mp3');               //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
-      this.load.audio('doorOpening','./assets/soundFX/doorOpening.mp3');               //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id
+      this.load.audio('ScaleUp','./assets/soundFX/ScaleUp.mp3');                    
+      this.load.audio('ScaleDown','./assets/soundFX/ScaleDown.mp3');               
+      this.load.audio('doorOpening','./assets/soundFX/doorOpening.mp3');               
     }
   create(){
       drugsTaken = 0;
       onButton1 = false;
       onButton2 = false;
       pickedUpBox1 = false;
-      this.scaleUp = this.sound.add('ScaleUp',{volume: 0.3});                                      //add soundFX for eating and drinking(not implemented yet)
-      this.scaleDown = this.sound.add('ScaleDown',{volume: 0.3});
+      this.scaleUp = this.sound.add('ScaleUp',{volume: 0.1});                                      //add soundFX for eating and drinking(not implemented yet)
+      this.scaleDown = this.sound.add('ScaleDown',{volume: 0.1});
       this.doorSound = this.sound.add('doorOpening',{volume: 0.3});                            
       keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);    //reserve variables for key inputs
       keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);

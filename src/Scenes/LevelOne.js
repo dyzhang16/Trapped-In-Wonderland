@@ -4,8 +4,8 @@ class LevelOne extends Phaser.Scene{
     }
 
     preload(){
-        this.load.image('cookie','./assets/initialEatMe.png');        //load in all assets for level 1
-        this.load.image('drink','./assets/initialDrinkMe.png');
+        this.load.image('cookie','./assets/Objects/updatedEatMe.png');        //load in all assets for level 1
+        this.load.image('drink','./assets/Objects/updatedDrinkMe.png');
         this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
         this.load.tilemapTiledJSON('map1','./assets/TileMaps/level1.json');
         this.load.image('level1Background', './assets/Backgrounds/level1Background.png');
@@ -14,16 +14,14 @@ class LevelOne extends Phaser.Scene{
         this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2StandingExtraPixel.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
         this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
         this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
-        this.load.spritesheet('playerPush','./assets/AliceAnim/AliceV2Pushing.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 5});
-        this.load.spritesheet('playerSizeUp','./assets/initialAliceSizeUp.png',{frameWidth:46, frameHeight:122,startFrame:0, endFrame: 10 });
-        this.load.spritesheet('playerSizeDown','./assets/initialAliceSizeUp.png',{frameWidth:66, frameHeight:122,startFrame:0, endFrame: 11 });
-        this.load.audio('ScaleUp','./assets/soundFX/ScaleUp.mp3');                  //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
-        this.load.audio('ScaleDown','./assets/soundFX/ScaleDown.mp3');               //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
+        //this.load.spritesheet('playerPush','./assets/AliceAnim/AliceV2Pushing.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 5});
+        this.load.audio('ScaleUp','./assets/soundFX/ScaleUp.mp3');                    //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
+        this.load.audio('ScaleDown','./assets/soundFX/ScaleDown.mp3');                //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
       }
     create(){
         drugsTaken = 0;
-        this.scaleUp = this.sound.add('ScaleUp',{volume: 0.3});                                      //add soundFX for eating and drinking(not implemented yet)
-        this.scaleDown = this.sound.add('ScaleDown',{volume: 0.3});                                
+        this.scaleUp = this.sound.add('ScaleUp',{volume: 0.1});                                      //add soundFX for eating and drinking(not implemented yet)
+        this.scaleDown = this.sound.add('ScaleDown',{volume: 0.1});                                
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);  //reserve space e and q as interactable buttons
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);

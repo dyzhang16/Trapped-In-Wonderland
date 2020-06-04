@@ -4,21 +4,22 @@ class LevelFour extends Phaser.Scene{
     }
   
     preload(){                                                                   
-        this.load.image('medBox','./assets/Tiles/heavyObstacleMedium.png');                         //load all assets used in Level 4
-        this.load.image('smallBox','./assets/Tiles/smallObstacle.png');
+        //load all assets for Level 4
         this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
         this.load.tilemapTiledJSON('map4','./assets/TileMaps/level4.json');
         this.load.image('level4Background', './assets/Backgrounds/level4Background.png');
-        this.load.spritesheet('button','./assets/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
+        this.load.image('medBox','./assets/Objects/heavyObstacleMedium.png');                         
+        this.load.image('smallBox','./assets/Objects/smallObstacle.png');
+        this.load.spritesheet('button','./assets/Objects/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
         this.load.spritesheet('door', './assets/doorAnimation/doorOpening.png',{frameWidth: 32, frameHeight: 32, startFrame:0 , endFrame: 4});
         this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
         this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2Standing.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
         this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
         this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
-        this.load.audio('ScaleUp','./assets/soundFX/ScaleUp.mp3');                  //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
-        this.load.audio('ScaleDown','./assets/soundFX/ScaleDown.mp3');               //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
-        this.load.audio('doorOpening','./assets/soundFX/doorOpening.mp3');               //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id
-      }
+        this.load.audio('ScaleUp','./assets/soundFX/ScaleUp.mp3');                  
+        this.load.audio('ScaleDown','./assets/soundFX/ScaleDown.mp3');               
+        this.load.audio('doorOpening','./assets/soundFX/doorOpening.mp3');
+    }               
     create(){
         drugsTaken = 0;
         onButton1 = false;
@@ -26,9 +27,10 @@ class LevelFour extends Phaser.Scene{
         onButton3 = false;
         pickedUpBox1 = false;
         pickedUpBox2 = false;
-        pickedUpBox3 = false;   
-        this.scaleUp = this.sound.add('ScaleUp',{volume: 0.3});                                      //add soundFX for eating and drinking(not implemented yet)
-        this.scaleDown = this.sound.add('ScaleDown',{volume: 0.3});
+        pickedUpBox3 = false;
+        holdingBox = false;   
+        this.scaleUp = this.sound.add('ScaleUp',{volume: 0.1});                                      //add soundFX for eating and drinking(not implemented yet)
+        this.scaleDown = this.sound.add('ScaleDown',{volume: 0.1});
         this.doorSound = this.sound.add('doorOpening',{volume: 0.3});                              
         game.scale.resize(896,512);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);    //reserve variables for key inputs
@@ -226,6 +228,7 @@ class LevelFour extends Phaser.Scene{
         this.smallBox1.setVisible(true);
         this.smallBox1.body.enable = true;
         pickedUpBox1 = false;
+        holdingBox = false;
       }
       if(pickedUpBox2 && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor()){
         this.smallBox2.x = this.p1.x;
@@ -233,6 +236,7 @@ class LevelFour extends Phaser.Scene{
         this.smallBox2.setVisible(true);
         this.smallBox2.body.enable = true;
         pickedUpBox2 = false;
+        holdingBox = false;
       }
       if(pickedUpBox3 && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor()){
         this.smallBox3.x = this.p1.x;
@@ -240,6 +244,7 @@ class LevelFour extends Phaser.Scene{
         this.smallBox3.setVisible(true);
         this.smallBox3.body.enable = true;
         pickedUpBox3 = false;
+        holdingBox = false;
       }
       let V1touching = Ventzone1.body.touching;                                //reserve variables for overlapping vent
       let V1wasTouching = Ventzone1.body.wasTouching;                                   
@@ -335,32 +340,35 @@ class LevelFour extends Phaser.Scene{
 
     //attempt at picking up a box if the player is overlapping(not implemented yet)    
     pickUpBox1(p1,smallBox1){
-      if(Phaser.Input.Keyboard.JustDown(keySPACE) && pickedUpBox1 == false && smallBox1.body.onFloor()){
+      if(Phaser.Input.Keyboard.JustDown(keySPACE) && !holdingBox && smallBox1.body.onFloor()){
         this.smallBox1.setVisible(false);
         this.smallBox1.body.enable = false;
         //animation to pickup box
         pickedUpBox1 = true;
+        holdingBox = true;
       } 
     }
     pickUpBox2(p1,smallBox2){
-      if(Phaser.Input.Keyboard.JustDown(keySPACE) && pickedUpBox2 == false && smallBox2.body.onFloor()){
+      if(Phaser.Input.Keyboard.JustDown(keySPACE) && !holdingBox && smallBox2.body.onFloor()){
         this.smallBox2.setVisible(false);
         this.smallBox2.body.enable = false;
         //animation to pickup box
         pickedUpBox2 = true;
+        holdingBox = true;
       } 
     }
     pickUpBox3(p1,smallBox3){
-      if(Phaser.Input.Keyboard.JustDown(keySPACE) && pickedUpBox3 == false && smallBox3.body.onFloor()){
+      if(Phaser.Input.Keyboard.JustDown(keySPACE) && !holdingBox && smallBox3.body.onFloor()){
         this.smallBox3.setVisible(false);
         this.smallBox3.body.enable = false;
         //animation to pickup box
         pickedUpBox3 = true;
+        holdingBox = true;
       } 
     }
     //door collision only allowed to continue if both buttons are pressed
     atDoor(){
-      if(onButton1 == true && onButton2 == true && onButton3 == true && currentScale == 1){
+      if(onButton1 && onButton2 && onButton3 && currentScale == 1){
         if(cursors.up.isDown && this.p1.body.onFloor()){
           this.scene.start('levelFiveScene');
         }
