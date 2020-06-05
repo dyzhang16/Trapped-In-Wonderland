@@ -29,6 +29,7 @@ let currentScale = 1;                                               //tracks ing
 let drugsTaken = 0;
 let cookieObtained = false;
 let drinkObtained = false;
+
 let pickedUpBox1 = false;
 let pickedUpBox2 = false;
 let pickedUpBox3 = false;
@@ -56,3 +57,23 @@ let Ventzone12;
 let buttonzone1;
 let buttonzone2;
 let buttonzone3;
+                            
+                                          
+let textVent4 = false;                                              //variable for texts bubble vents
+let textVent5 = false;
+
+let miniZone1 = false;                                               //variables for smaller vent for box overlap
+let miniZone2 = false;
+let miniZone3 = false;
+let miniZone4 = false;
+let miniZone5 = false;
+let miniZone6 = false;
+let miniZone7 = false;
+
+let smallOn1 = false;
+let smallOn2 = false;
+let smallOn3 = false;
+let smallOn4 = false;
+let smallOn5 = false;
+let smallOn6 = false;
+let medOn1 = false;

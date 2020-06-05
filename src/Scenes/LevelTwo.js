@@ -10,6 +10,7 @@ class LevelTwo extends Phaser.Scene{
       this.load.image('level2Background', './assets/Backgrounds/level2Background.png');
       this.load.image('medBox','./assets/Objects/heavyObstacleMedium.png');
       this.load.image('smallBox','./assets/Objects/smallObstacle.png');
+      this.load.image('textBox', './assets/TextBubbles/boxPickupText.png')
       this.load.spritesheet('button','./assets/Objects/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
       this.load.spritesheet('door', './assets/doorAnimation/initialDoor.png',{frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 13});
       this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
@@ -113,7 +114,21 @@ class LevelTwo extends Phaser.Scene{
       this.physics.add.overlap(this.medBox, buttonzone2);
       buttonzone2.on('enterzone2', () => onButton2 = true);
       buttonzone2.on('leavezone2', () => onButton2 = false);
-  
+
+      //create text and zone  with variables
+      this.moveText = this.add.sprite(328,64,'textBox');
+      this.moveText.setVisible(false);
+
+      Ventzone4 = this.add.zone(185, 330).setSize(60, 60).setOrigin(0,0); 
+      this.physics.world.enable(Ventzone4);
+      Ventzone4.body.setAllowGravity(false);
+      Ventzone4.body.moves = false;
+
+      this.physics.add.overlap(this.p1, Ventzone4); 
+
+      Ventzone4.on('enterVzone4', () => textVent4 = true);  
+      Ventzone4.on('leaveVzone4', () => textVent4 = false);  
+
       this.cameras.main.setBounds(0, 0, 896, 512);
       this.cameras.main.setZoom(1.25);
       this.cameras.main.startFollow(this.p1);
@@ -124,6 +139,10 @@ class LevelTwo extends Phaser.Scene{
 
   update(){
     this.p1.update();                                                                 //calls player update for controls
+
+    this.moveText.x = this.p1.body.position.x+100;                                    //bubble follwing player position
+    this.moveText.y = this.p1.body.position.y-30;
+
     if(currentScale == 2){
       this.cameras.main.setZoom(1);
     }else if(currentScale == 0.5){
@@ -146,6 +165,21 @@ class LevelTwo extends Phaser.Scene{
       this.smallBox.setVisible(true);
       this.smallBox.body.enable = true;
       pickedUpBox1 = false;
+    }
+    // text zone 
+    let Vtouching4 = Ventzone4.body.touching;                               
+    let VwasTouching4 = Ventzone4.body.wasTouching;                                   
+    if (Vtouching4.none && !VwasTouching4.none) {                                                
+      Ventzone4.emit('leaveVzone4');
+    }
+    else if (!Vtouching4.none && VwasTouching4.none) {                        
+      Ventzone4.emit('enterVzone4');
+    } 
+
+    if(textVent4){                                                            //sets text box if overlap
+      this.moveText.setVisible(true);
+    }else{
+      this.moveText.setVisible(false);   
     }
     //first button zone variables for entry and leaving
     let touching1 = buttonzone1.body.touching;
@@ -189,6 +223,7 @@ class LevelTwo extends Phaser.Scene{
       //console.log(onButton1, onButton2);
     }
   }
+
   //attempt at picking up a box if the player is overlapping(not implemented yet)    
   pickUpBox(p1,smallBox){
     if(Phaser.Input.Keyboard.JustDown(keySPACE) && pickedUpBox1 == false && smallBox.body.onFloor()){

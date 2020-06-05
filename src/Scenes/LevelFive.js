@@ -248,6 +248,31 @@ class LevelFive extends Phaser.Scene{
       buttonzone2.on('enterb2zone', () => onButton2 = true);
       buttonzone2.on('leaveb2zone', () => onButton2 = false);
 
+      //mini zones for large button
+      miniZone1 = this.add.zone(305, 580).setSize(67, 10).setOrigin(0,0); 
+      this.physics.world.enable(miniZone1);
+      miniZone1.body.setAllowGravity(false);
+      miniZone1.body.moves = false;
+      this.physics.add.overlap(this.smallBox1, miniZone1);
+      miniZone1.on('enterMini1', () => smallOn1 = true);  
+      miniZone1.on('leaveMini1', () => smallOn1 = false);
+
+      miniZone2 = this.add.zone(305, 590).setSize(67, 10).setOrigin(0,0); 
+      this.physics.world.enable(miniZone2);
+      miniZone2.body.setAllowGravity(false);
+      miniZone2.body.moves = false;
+      this.physics.add.overlap(this.smallBox2, miniZone2);
+      miniZone2.on('enterMini2', () => smallOn2 = true);  
+      miniZone2.on('leaveMini2', () => smallOn2 = false);
+
+      miniZone3 = this.add.zone(305, 600).setSize(67, 10).setOrigin(0,0); 
+      this.physics.world.enable(miniZone3);
+      miniZone3.body.setAllowGravity(false);
+      miniZone3.body.moves = false;
+      this.physics.add.overlap(this.smallBox3, miniZone3);
+      miniZone3.on('enterMini3', () => smallOn3 = true);  
+      miniZone3.on('leaveMini3', () => smallOn3 = false);
+
       //this.cameras.main.setBounds(0, 0, 1280, 640);
       //this.cameras.main.setZoom(1.25);
       //this.cameras.main.startFollow(this.p1);
@@ -408,8 +433,36 @@ class LevelFive extends Phaser.Scene{
         buttonzone2.emit('enterb2zone');
     }
 
+     // mini zone leaving and entering zones 
+     let mzTouch1 = miniZone1.body.touching;                                //reserve variables for overlapping vent
+     let mzwasTouch1 = miniZone1.body.wasTouching;                                   
+     if (mzTouch1.none && !mzwasTouch1.none) {                             //if not touching vent, set to leavezone                    
+       miniZone1.emit('leaveMini1');
+     }
+     else if (!mzTouch1.none && mzwasTouch1.none) {                        //else if touching, set to enterzone
+       miniZone1.emit('enterMini1');
+     } 
+
+     let mzTouch2 = miniZone2.body.touching;                                //reserve variables for overlapping vent
+     let mzwasTouch2 = miniZone2.body.wasTouching;                                   
+     if (mzTouch2.none && !mzwasTouch2.none) {                             //if not touching vent, set to leavezone                    
+       miniZone2.emit('leaveMini2');
+     }
+     else if (!mzTouch2.none && mzwasTouch2.none) {                        //else if touching, set to enterzone
+       miniZone2.emit('enterMini2');
+     } 
+
+     let mzTouch3 = miniZone3.body.touching;                                //reserve variables for overlapping vent
+     let mzwasTouch3 = miniZone3.body.wasTouching;                                   
+     if (mzTouch3.none && !mzwasTouch3.none) {                             //if not touching vent, set to leavezone                    
+       miniZone3.emit('leaveMini3');
+     }
+     else if (!mzTouch3.none && mzwasTouch3.none) {                        //else if touching, set to enterzone
+       miniZone3.emit('enterMini3');
+     } 
+
     //sets first button to buttonDown frame is box is on button
-    if(onButton1){ 
+    if((smallOn1 && smallOn2) || (smallOn1 && smallOn3) || (smallOn2 && smallOn3)){ 
       this.largeButton.setFrame(1);
     }else{
       this.largeButton.setFrame(0);     

@@ -197,6 +197,63 @@ class LevelFour extends Phaser.Scene{
         buttonzone3.on('enterb3zone', () => onButton3 = true);
         buttonzone3.on('leaveb3zone', () => onButton3 = false);
 
+        //mini zones for each small box / overlaps for mini zone
+        miniZone1 = this.add.zone(167, 230).setSize(67, 10).setOrigin(0,0); 
+        this.physics.world.enable(miniZone1);
+        miniZone1.body.setAllowGravity(false);
+        miniZone1.body.moves = false;
+        this.physics.add.overlap(this.smallBox1, miniZone1);
+        miniZone1.on('enterMini1', () => smallOn1 = true);  
+        miniZone1.on('leaveMini1', () => smallOn1 = false);
+
+        miniZone2 = this.add.zone(167, 240).setSize(67, 10).setOrigin(0,0); 
+        this.physics.world.enable(miniZone2);
+        miniZone2.body.setAllowGravity(false);
+        miniZone2.body.moves = false;
+        this.physics.add.overlap(this.smallBox2, miniZone2);
+        miniZone2.on('enterMini2', () => smallOn2 = true);  
+        miniZone2.on('leaveMini2', () => smallOn2 = false);
+
+        miniZone3 = this.add.zone(167, 250).setSize(67, 10).setOrigin(0,0); 
+        this.physics.world.enable(miniZone3);
+        miniZone3.body.setAllowGravity(false);
+        miniZone3.body.moves = false;
+        this.physics.add.overlap(this.smallBox3, miniZone3);
+        miniZone3.on('enterMini3', () => smallOn3 = true);  
+        miniZone3.on('leaveMini3', () => smallOn3 = false);
+
+        miniZone4 = this.add.zone(740, 480).setSize(67, 10).setOrigin(0,0); 
+        this.physics.world.enable(miniZone4);
+        miniZone4.body.setAllowGravity(false);
+        miniZone4.body.moves = false;
+        this.physics.add.overlap(this.smallBox1, miniZone4);
+        miniZone4.on('enterMini4', () => smallOn4 = true);  
+        miniZone4.on('leaveMini4', () => smallOn4 = false);
+
+        miniZone5 = this.add.zone(740, 490).setSize(67, 10).setOrigin(0,0); 
+        this.physics.world.enable(miniZone5);
+        miniZone5.body.setAllowGravity(false);
+        miniZone5.body.moves = false;
+        this.physics.add.overlap(this.smallBox2, miniZone5);
+        miniZone5.on('enterMini5', () => smallOn5 = true);  
+        miniZone5.on('leaveMini5', () => smallOn5 = false);
+
+        miniZone6 = this.add.zone(740, 500).setSize(67, 10).setOrigin(0,0); 
+        this.physics.world.enable(miniZone6);
+        miniZone6.body.setAllowGravity(false);
+        miniZone6.body.moves = false;
+        this.physics.add.overlap(this.smallBox3, miniZone6);
+        miniZone6.on('enterMini6', () => smallOn6 = true);  
+        miniZone6.on('leaveMini6', () => smallOn6 = false);
+
+        miniZone7 = this.add.zone(740, 470).setSize(67, 10).setOrigin(0,0); 
+        this.physics.world.enable(miniZone7);
+        miniZone7.body.setAllowGravity(false);
+        miniZone7.body.moves = false;
+        this.physics.add.overlap(this.medBox, miniZone7);
+        miniZone7.on('enterMini7', () => medOn1 = true);  
+        miniZone7.on('leaveMini7', () => medOn1 = false);
+
         //console.log(onButton1);
         this.cameras.main.setBounds(0, 0, 1280, 640);
         this.cameras.main.setZoom(1.25);
@@ -308,8 +365,72 @@ class LevelFour extends Phaser.Scene{
       } else if (!b3touching.none && b3wasTouching.none) {
           buttonzone3.emit('enterb3zone');
       }
+       // mini zone leaving and entering zones 
+      let mzTouch1 = miniZone1.body.touching;                                //reserve variables for overlapping vent
+      let mzwasTouch1 = miniZone1.body.wasTouching;                                   
+      if (mzTouch1.none && !mzwasTouch1.none) {                             //if not touching vent, set to leavezone                    
+        miniZone1.emit('leaveMini1');
+      }
+      else if (!mzTouch1.none && mzwasTouch1.none) {                        //else if touching, set to enterzone
+        miniZone1.emit('enterMini1');
+      } 
+
+      let mzTouch2 = miniZone2.body.touching;                                
+      let mzwasTouch2 = miniZone2.body.wasTouching;                                   
+      if (mzTouch2.none && !mzwasTouch2.none) {                                                
+        miniZone2.emit('leaveMini2');
+      }
+      else if (!mzTouch2.none && mzwasTouch2.none) {                       
+        miniZone2.emit('enterMini2');
+      } 
+
+      let mzTouch3 = miniZone3.body.touching;                                
+      let mzwasTouch3 = miniZone3.body.wasTouching;                                   
+      if (mzTouch3.none && !mzwasTouch3.none) {                                                
+        miniZone3.emit('leaveMini3');
+      }
+      else if (!mzTouch3.none && mzwasTouch3.none) {                       
+        miniZone3.emit('enterMini3');
+      } 
+
+      let mzTouch4 = miniZone4.body.touching;                                
+      let mzwasTouch4 = miniZone4.body.wasTouching;                                   
+      if (mzTouch4.none && !mzwasTouch4.none) {                                                
+        miniZone4.emit('leaveMini4');
+      }
+      else if (!mzTouch4.none && mzwasTouch4.none) {                       
+        miniZone4.emit('enterMini4');
+      } 
+
+      let mzTouch5 = miniZone5.body.touching;                                
+      let mzwasTouch5 = miniZone5.body.wasTouching;                                   
+      if (mzTouch5.none && !mzwasTouch5.none) {                                                
+        miniZone5.emit('leaveMini5');
+      }
+      else if (!mzTouch5.none && mzwasTouch5.none) {                       
+        miniZone5.emit('enterMini5');
+      } 
+
+      let mzTouch6 = miniZone6.body.touching;                                
+      let mzwasTouch6 = miniZone6.body.wasTouching;                                   
+      if (mzTouch6.none && !mzwasTouch6.none) {                                             
+        miniZone6.emit('leaveMini6');
+      }
+      else if (!mzTouch6.none && mzwasTouch6.none) {                        
+        miniZone6.emit('enterMini6');
+      } 
+
+      let mzTouch7 = miniZone7.body.touching;                             
+      let mzwasTouch7 = miniZone7.body.wasTouching;                                   
+      if (mzTouch7.none && !mzwasTouch7.none) {                                                
+        miniZone7.emit('leaveMini7');
+      }
+      else if (!mzTouch7.none && mzwasTouch7.none) {                       
+        miniZone7.emit('enterMini7');
+      } 
+
       //sets first button to buttonDown frame is box is on button
-      if(onButton1){ 
+      if((smallOn1 && smallOn2) || (smallOn1 && smallOn3) || (smallOn2 && smallOn3)){ 
         this.largeButton1.setFrame(1);
       }else{
         this.largeButton1.setFrame(0);     
@@ -319,7 +440,7 @@ class LevelFour extends Phaser.Scene{
       }else{
         this.smallButton.setFrame(0);     
       }
-      if(onButton3){ 
+      if((smallOn4 && smallOn5) || (smallOn4 && smallOn6) || (smallOn5 && smallOn6) || (medOn1)){ 
         this.largeButton2.setFrame(1);
       }else{
         this.largeButton2.setFrame(0);     

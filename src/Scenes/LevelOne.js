@@ -6,6 +6,10 @@ class LevelOne extends Phaser.Scene{
     preload(){
         this.load.image('cookie','./assets/Objects/updatedEatMe.png');        //load in all assets for level 1
         this.load.image('drink','./assets/Objects/updatedDrinkMe.png');
+        this.load.image('textMove', './assets/TextBubbles/movementText.png');
+        this.load.image('textDoor', './assets/TextBubbles/levelExitTextInvert.png');
+        this.load.image('textDrink', './assets/TextBubbles/drinkMeText.png');
+        this.load.image('textEat', './assets/TextBubbles/eatMeText.png');
         this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
         this.load.tilemapTiledJSON('map1','./assets/TileMaps/level1.json');
         this.load.image('level1Background', './assets/Backgrounds/level1Background.png');
@@ -35,6 +39,14 @@ class LevelOne extends Phaser.Scene{
         //add in door object and exitSign object 
         this.door = new Door(this, 800, 448,'door', 13).setOrigin(0.5);
         this.exit = new DoorIndicator(this, 800, 398, 'exitSign', 1).setOrigin(0.5);
+        //add text bubbles
+        this.eatText = this.add.sprite(128,64,'textEat');
+        this.eatText.setVisible(false);
+        this.drinkText = this.add.sprite(228,64,'textDrink');
+        this.drinkText.setVisible(false);
+        this.doorText = this.add.sprite(428,64,'textDoor');
+        this.doorText.setVisible(false);
+        this.doorText.setDepth(1);
         //add in player object and create animations(scale up and down animations bugged atm)
         this.p1 = new Player(this, 400, 100,'playerIdle').setOrigin(0.5,1); //bug with swapping different sized characters
         this.anims.create({                                 //basic movement animation
@@ -72,14 +84,22 @@ class LevelOne extends Phaser.Scene{
         this.physics.world.enable(Ventzone1);
         Ventzone1.body.setAllowGravity(false);
         Ventzone1.body.moves = false;
+        //vent zone for door bubble 
+        Ventzone6 = this.add.zone(765, 430).setSize(60, 60).setOrigin(0,0);
+        this.physics.world.enable(Ventzone6);
+        Ventzone6.body.setAllowGravity(false);
+        Ventzone6.body.moves = false; 
         //instantiating physics 
         this.physics.add.collider(this.p1, platforms1);                     //physics between objects and map 
         this.physics.add.collider(this.door, platforms1);                   //to ensure they don't fall through
         this.physics.add.collider(this.cookie, platforms1);                 //the map 
         this.physics.add.collider(this.drink, platforms1);
         this.physics.add.overlap(this.p1, Ventzone1);                        //if player overlaps with ventzone
+        this.physics.add.overlap(this.p1, Ventzone6);  
         Ventzone1.on('enterVzone', () => inSmallVent = true);                      //on entering zone, set to true
         Ventzone1.on('leaveVzone', () => inSmallVent = false);                     //when not overlapping, set to false
+        Ventzone6.on('enterVzone6', () => textVent5 = true);  
+        Ventzone6.on('leaveVzone6', () => textVent5 = false);
 
         this.cameras.main.setBounds(0, 0, 896, 512);
         this.cameras.main.setZoom(1.25);
@@ -87,16 +107,26 @@ class LevelOne extends Phaser.Scene{
       }
     update(){ 
       this.p1.update();                                                     //calls on player object update()
+
+       //text bubbles positions
+      this.eatText.x = this.p1.body.position.x+100;
+      this.eatText.y = this.p1.body.position.y-30;
+      this.drinkText.x = this.p1.body.position.x+100;
+      this.drinkText.y = this.p1.body.position.y-30;
+      this.doorText.x = this.p1.body.position.x-100;
+      this.doorText.y = this.p1.body.position.y-30;
       
       this.puzzleSolver();
       if(Phaser.Input.Keyboard.JustDown(keySPACE)){                       //shortcut for debugging future levels
-      this.scene.start('levelFiveScene');
+      this.scene.start('levelFourScene');
       }
 
       if(currentScale == 2){
         this.cameras.main.setZoom(1);
+        this.eatText.destroy();
       }else if(currentScale == 0.5){
         this.cameras.main.setZoom(1.5);
+        this.drinkText.destroy();
       }else if(currentScale == 1){
         this.cameras.main.setZoom(1.25);
       }
@@ -112,15 +142,34 @@ class LevelOne extends Phaser.Scene{
       else if (!Vtouching.none && VwasTouching.none) {                        //else if touching, set to enterzone
         Ventzone1.emit('enterVzone');
       } 
+
+      let Vtouching6 = Ventzone6.body.touching; 
+      let VwasTouching6 = Ventzone6.body.wasTouching;                               
+      if (Vtouching6.none && !VwasTouching6.none) {                                             
+        Ventzone6.emit('leaveVzone6');
+      }
+      else if (!Vtouching6.none && VwasTouching6.none) {                        
+        Ventzone6.emit('enterVzone6');
+      } 
+
+      if(textVent5){                                                          //conditions if true for text bubble door
+        this.doorText.setVisible(true);
+      }else{
+        this.doorText.setVisible(false);
+      }
+        
     }
+    
     p1cookieCollision(){                                                    //called when p1 collides into the cookie object
       this.cookie.destroy();
       cookieObtained = true;                                                //sets variable to true to enable future use
+      this.eatText.setVisible(true);
       //console.log(cookieObtained);
     }
     p1drinkCollision(){                                                     //called when p1 collides into the drink object
       this.drink.destroy();
       drinkObtained = true;                                                 //sets variable to true to enable future use
+      this.drinkText.setVisible(true);
       //console.log(drinkObtained);
     }
     atDoor(){                                                               //called when p1 collides into the door object
