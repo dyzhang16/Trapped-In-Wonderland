@@ -5,7 +5,6 @@ class LevelFour extends Phaser.Scene{
   
     preload(){                                                                   
         //load all assets for Level 4
-        this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
         this.load.tilemapTiledJSON('map4','./assets/TileMaps/level4.json');
         this.load.image('level4Background', './assets/Backgrounds/level4Background.png');
         this.load.image('medBox','./assets/Objects/heavyObstacleMedium.png');                         
@@ -32,10 +31,10 @@ class LevelFour extends Phaser.Scene{
         this.scaleUp = this.sound.add('ScaleUp',{volume: 0.1});                                      //add soundFX for eating and drinking(not implemented yet)
         this.scaleDown = this.sound.add('ScaleDown',{volume: 0.1});
         this.doorSound = this.sound.add('doorOpening',{volume: 0.3});                              
-        game.scale.resize(896,512);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);    //reserve variables for key inputs
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+        keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         cursors = this.input.keyboard.createCursorKeys();                               //reserve arrow keys for movement
         let background = this.add.tileSprite(0,0,1280,960,'level4Background').setOrigin(0,0);
         //add in level 2 tilemap and sets collision for tilemap
@@ -263,6 +262,9 @@ class LevelFour extends Phaser.Scene{
     update(){
       this.p1.update();                                                                   //calls player update for controls
       
+      if(Phaser.Input.Keyboard.JustDown(keyR)){
+        this.scene.start('levelFourIntroScene');
+      }
       if(currentScale == 2){
         this.cameras.main.setZoom(1);
       }else if(currentScale == 0.5){
@@ -493,7 +495,7 @@ class LevelFour extends Phaser.Scene{
     atDoor(){
       if(onButton1 && onButton2 && onButton3 && currentScale == 1){
         if(cursors.up.isDown && this.p1.body.onFloor()){
-          this.scene.start('levelFiveScene');
+          this.scene.start('levelFiveIntroScene');
         }
       }  
     }

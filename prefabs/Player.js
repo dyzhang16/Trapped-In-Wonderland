@@ -32,7 +32,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
                 }
             }
             if (cursors.up.isDown && this.body.onFloor()) {                     //jumping movement
-                //console.log('jump');
                 this.setVelocityY(-150);                                        
                 this.anims.play('p1Jump',true);
             }   
@@ -88,28 +87,19 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         if(cookieObtained == true && this.body.onFloor()){                      //sizeUp upon eating cookie
             if(!this.body.blocked.left && !this.body.blocked.right){
                 if(inSmallVent == true){
-                    //text dialogue for too small!
-                    console.log('Too Small!');
                 }else if(inMedVent == true){
                     if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 1){   //can scale up to 2x original size
                         this.setScale(2*currentScale);                                  //but can only scale up provided not in a vent
                         currentScale = 2*currentScale;                                  //sets scale and keep track of current scale
                         drugsTaken += 1;
-                        console.log(drugsTaken);
-                        console.log('Medium Vent!');
                         this.scene.scaleUp.play();                                           //bugged eating sound
-                        //this.play('p1SizeUp');                                        //bugged sizeUp animation
-                        //console.log('CurrentScale is:', currentScale);
                     }
                 } else {
                     if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 2){   //can scale up to 2x original size
                         this.setScale(2*currentScale);                                  //but can only scale up provided not in a vent
                         currentScale = 2*currentScale;                                  //sets scale and keep track of current scale
                         drugsTaken += 1;
-                        console.log(drugsTaken);
                         this.scene.scaleUp.play();                                         //bugged eating sound
-                        //this.play('p1SizeUp');                                        //bugged sizeUp animation
-                        //console.log('CurrentScale is:', currentScale);
                     }   
                 }
             }
@@ -118,11 +108,8 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             if(Phaser.Input.Keyboard.JustDown(keyQ) && currentScale > 0.5){ //can shrink to half size
                 this.setScale(currentScale * 0.5);                          //sets scale and keeps track of current scale
                 currentScale = 0.5*currentScale;
-                drugsTaken += 1;
-                console.log(drugsTaken);        
+                drugsTaken += 1;       
                 this.scene.scaleDown.play();                                      //bugged drinking sound                        
-                //this.play('p1SizeDown');                                  //bugged sizeDown animation
-                //console.log('CurrentScale is:', currentScale);
             }
         }
     }   

@@ -10,7 +10,7 @@ class LevelOne extends Phaser.Scene{
         this.load.image('textDoor', './assets/TextBubbles/levelExitTextInvert.png');
         this.load.image('textDrink', './assets/TextBubbles/drinkMeText.png');
         this.load.image('textEat', './assets/TextBubbles/eatMeText.png');
-        this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
+        this.load.image('tiles','./assets/Tiles/finalTileSheet.png');
         this.load.tilemapTiledJSON('map1','./assets/TileMaps/level1.json');
         this.load.image('level1Background', './assets/Backgrounds/level1Background.png');
         this.load.spritesheet('door', './assets/doorAnimation/initialDoor.png',{frameWidth: 64, frameHeight: 64, startFrame:0 , endFrame: 13});
@@ -29,6 +29,7 @@ class LevelOne extends Phaser.Scene{
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);  //reserve space e and q as interactable buttons
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+        keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         cursors = this.input.keyboard.createCursorKeys();                             //reserve arrow keys for movement
         let background = this.add.tileSprite(0,0,896,512,'level1Background').setOrigin(0,0);
         //add in level 1 tilemap and sets collision for tilemap
@@ -102,13 +103,15 @@ class LevelOne extends Phaser.Scene{
         Ventzone6.on('leaveVzone6', () => textVent5 = false);
 
         this.cameras.main.setBounds(0, 0, 896, 512);
-        this.cameras.main.setZoom(1.25);
+        this.cameras.roundPixels = true;
         this.cameras.main.startFollow(this.p1);
       }
     update(){ 
       this.p1.update();                                                     //calls on player object update()
-
-       //text bubbles positions
+      if(Phaser.Input.Keyboard.JustDown(keyR)){
+        this.scene.start('levelOneIntroScene');
+      }
+      //text bubbles positions
       this.eatText.x = this.p1.body.position.x+100;
       this.eatText.y = this.p1.body.position.y-30;
       this.drinkText.x = this.p1.body.position.x+100;
@@ -117,10 +120,9 @@ class LevelOne extends Phaser.Scene{
       this.doorText.y = this.p1.body.position.y-30;
       
       this.puzzleSolver();
-      if(Phaser.Input.Keyboard.JustDown(keySPACE)){                       //shortcut for debugging future levels
-      this.scene.start('levelFourScene');
-      }
-
+      /*if(Phaser.Input.Keyboard.JustDown(keySPACE)){                       //shortcut for debugging future levels
+        this.scene.start('ExitLevelIntroScene');
+      }*/
       if(currentScale == 2){
         this.cameras.main.setZoom(1);
         this.eatText.destroy();
@@ -174,7 +176,7 @@ class LevelOne extends Phaser.Scene{
     }
     atDoor(){                                                               //called when p1 collides into the door object
       if(cursors.up.isDown && this.p1.body.onFloor() && currentScale == 1){ //can only transition if the player is the right size
-        this.scene.start('levelTwoScene');
+        this.scene.start('levelTwoIntroScene');
       }
     }
     puzzleSolver(){
