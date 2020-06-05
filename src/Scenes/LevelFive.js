@@ -242,7 +242,7 @@ class LevelFive extends Phaser.Scene{
       this.physics.add.overlap(this.smallBox3, buttonzone1);
       this.physics.add.overlap(this.smallBox3, buttonzone2);
       
-      buttonzone1.on('enterb1zone', () => onButton1 = true);
+      //buttonzone1.on('enterb1zone', () => onButton1 = true);
       buttonzone1.on('leaveb1zone', () => onButton1 = false);
       buttonzone2.on('enterb2zone', () => onButton2 = true);
       buttonzone2.on('leaveb2zone', () => onButton2 = false);
@@ -467,8 +467,10 @@ class LevelFive extends Phaser.Scene{
     //sets first button to buttonDown frame is box is on button
     if((smallOn1 && smallOn2) || (smallOn1 && smallOn3) || (smallOn2 && smallOn3)){ 
       this.largeButton.setFrame(1);
+      onButton1 = true;
     }else{
-      this.largeButton.setFrame(0);     
+      this.largeButton.setFrame(0);
+      onButton1 = false;     
     }
     if(onButton2){ 
       this.smallButton.setFrame(1);
