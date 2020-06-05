@@ -5,7 +5,6 @@ class LevelFive extends Phaser.Scene{
 
   preload(){                                                                   
       //load all assets Level 5
-      this.load.image('tiles1','./assets/Tiles/tileSheetV2.png');
       this.load.tilemapTiledJSON('map5','./assets/TileMaps/level5.json');
       this.load.image('level5Background', './assets/Backgrounds/level5Background.png');
       this.load.image('medBox','./assets/Objects/heavyObstacleMedium.png');                         
@@ -31,15 +30,16 @@ class LevelFive extends Phaser.Scene{
       this.scaleUp = this.sound.add('ScaleUp',{volume: 0.1});                                      //add soundFX for eating and drinking(not implemented yet)
       this.scaleDown = this.sound.add('ScaleDown',{volume: 0.1});
       this.doorSound = this.sound.add('doorOpening',{volume: 0.3});                                       
-      game.scale.resize(1280,640);//game.scale.resize(896,512);
+      game.scale.resize(896,512);
       keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);    //reserve variables for key inputs
       keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
       keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+      keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
       cursors = this.input.keyboard.createCursorKeys();                               //reserve arrow keys for movement
       let background = this.add.tileSprite(0,0,1280,960,'level5Background').setOrigin(0,0);
       //add in level 2 tilemap and sets collision for tilemap
       const map5 = this.make.tilemap({key: 'map5'});
-      const tileset5 = map5.addTilesetImage('ScaleDistortionGameTileset','tiles1',32,32,0,0);
+      const tileset5 = map5.addTilesetImage('ScaleDistortionGameTileset','tiles',32,32,0,0);
       const platforms5 = map5.createStaticLayer('Platforms',tileset5,0,0).setOrigin(0.5);
       platforms5.setCollisionByProperty({collides: true});
       //add in door object and create its animation(currently broken)
@@ -163,7 +163,6 @@ class LevelFive extends Phaser.Scene{
       //instantiate physics between objects and map
       this.physics.add.collider(this.p1, platforms5);
       this.physics.add.collider(this.door,platforms5);
-      //this.physics.add.collider(this.medBox, platforms4);
       this.physics.add.collider(this.smallBox1, platforms5);
       this.physics.add.collider(this.smallBox2, platforms5);
       this.physics.add.collider(this.smallBox3, platforms5);
@@ -273,21 +272,25 @@ class LevelFive extends Phaser.Scene{
       miniZone3.on('enterMini3', () => smallOn3 = true);  
       miniZone3.on('leaveMini3', () => smallOn3 = false);
 
-      //this.cameras.main.setBounds(0, 0, 1280, 640);
-      //this.cameras.main.setZoom(1.25);
-      //this.cameras.main.startFollow(this.p1);
+      this.cameras.main.setBounds(0, 0, 1280, 640);
+      this.cameras.main.setZoom(1.25);
+      this.cameras.main.startFollow(this.p1);
   }
 
   update(){
     this.p1.update();                                                                   //calls player update for controls
     
-    /*if(currentScale == 2){
+    if(Phaser.Input.Keyboard.JustDown(keyR)){
+      this.scene.start('levelFiveIntroScene');
+    }
+
+    if(currentScale == 2){
       this.cameras.main.setZoom(1);
     }else if(currentScale == 0.5){
       this.cameras.main.setZoom(1.5);
     }else if(currentScale == 1){
       this.cameras.main.setZoom(1.25);
-    }*/
+    }
     //instructions to solve puzzle(letters appear the more drugs are taken)
     //this.puzzleSolver();
     this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);          //instantiate physics between player and door
@@ -516,7 +519,7 @@ class LevelFive extends Phaser.Scene{
   atDoor(){
     if(onButton1 && onButton2 && currentScale == 1){
       if(cursors.up.isDown && this.p1.body.onFloor()){
-        this.scene.start('creditScene');
+        this.scene.start('ExitLevelIntroScene');
       }
     }  
   }

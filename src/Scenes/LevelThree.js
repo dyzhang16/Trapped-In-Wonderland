@@ -5,7 +5,6 @@ class LevelThree extends Phaser.Scene{
   
     preload(){
         //load all assets used in Level 3
-        this.load.image('tiles','./assets/Tiles/initialTileSheetPlatform.png');
         this.load.tilemapTiledJSON('map3','./assets/TileMaps/level3.json');
         this.load.image('level3Background', './assets/Backgrounds/level3Background.png');
         this.load.image('medBox','./assets/Objects/heavyObstacleMedium.png');
@@ -30,6 +29,7 @@ class LevelThree extends Phaser.Scene{
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);    //reserve variables for key inputs
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+        keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         cursors = this.input.keyboard.createCursorKeys();                               //reserve arrow keys for movement
         let background = this.add.tileSprite(0,0,512,960,'level3Background').setOrigin(0,0);
         //add in level 2 tilemap and sets collision for tilemap
@@ -121,6 +121,9 @@ class LevelThree extends Phaser.Scene{
   
     update(){
       this.p1.update();                                                                   //calls player update for controls
+      if(Phaser.Input.Keyboard.JustDown(keyR)){
+        this.scene.start('levelThreeIntroScene');
+      }
       if(currentScale == 2){
         this.cameras.main.setZoom(1);
       }else if(currentScale == 0.5){
@@ -176,7 +179,7 @@ class LevelThree extends Phaser.Scene{
     atDoor(){
       if(onButton1 == true && currentScale == 1){
         if(cursors.up.isDown && this.p1.body.onFloor()){
-          this.scene.start('levelFourScene');
+          this.scene.start('levelFourIntroScene');
         }
       }  
     }

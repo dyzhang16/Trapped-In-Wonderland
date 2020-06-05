@@ -5,7 +5,8 @@ let config = {                                                      //set config
     },
     width: 896, 
     height: 512,
-    scene:[Loading, Menu, Instructions, LevelOneIntro, LevelOne, LevelTwo, LevelThree, LevelFour, LevelFive, Credits],
+    scene:[Loading, Menu, Instructions, LevelOneIntro, LevelOne, LevelTwoIntro ,LevelTwo, LevelThreeIntro, LevelThree, 
+        LevelFourIntro, LevelFour, LevelFiveIntro, LevelFive, ExitLevelIntro, ExitLevel, EndingOne, EndingTwo, Credits],
     physics:{                                                       //include arcadePhysics for phaser game
         default: "arcade",
         arcade:{
@@ -27,6 +28,7 @@ let seconds = 0;                                                    //tracks tim
 
 let currentScale = 1;                                               //tracks ingame variables and states
 let drugsTaken = 0;
+let breakingglass = 0;
 let cookieObtained = false;
 let drinkObtained = false;
 

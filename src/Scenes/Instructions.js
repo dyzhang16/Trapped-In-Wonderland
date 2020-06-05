@@ -4,7 +4,7 @@ class Instructions extends Phaser.Scene{
     }
 
     preload(){
-        this.load.image('Instructions','./assets/ScreenUI/initialControlsScreen.png');
+        this.load.image('Instructions','./assets/ScreenUI/controlsScreen.png');
     }
     create(){
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);                //reserve Space key input
