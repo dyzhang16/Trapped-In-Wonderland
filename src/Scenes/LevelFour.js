@@ -194,7 +194,7 @@ class LevelFour extends Phaser.Scene{
         buttonzone1.on('leaveb1zone', () => onButton1 = false);
         buttonzone2.on('enterb2zone', () => onButton2 = true);
         buttonzone2.on('leaveb2zone', () => onButton2 = false);
-        buttonzone3.on('enterb3zone', () => onButton3 = true);
+        //buttonzone3.on('enterb3zone', () => onButton3 = true);
         buttonzone3.on('leaveb3zone', () => onButton3 = false);
 
         //mini zones for each small box / overlaps for mini zone
@@ -432,8 +432,10 @@ class LevelFour extends Phaser.Scene{
       //sets first button to buttonDown frame is box is on button
       if((smallOn1 && smallOn2) || (smallOn1 && smallOn3) || (smallOn2 && smallOn3)){ 
         this.largeButton1.setFrame(1);
+        onButton3 = true;
       }else{
-        this.largeButton1.setFrame(0);     
+        this.largeButton1.setFrame(0);  
+        onButton3 = false;   
       }
       if(onButton2){ 
         this.smallButton.setFrame(1);
