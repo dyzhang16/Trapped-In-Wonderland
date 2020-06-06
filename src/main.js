@@ -11,7 +11,7 @@ let config = {                                                      //set config
         default: "arcade",
         arcade:{
             gravity:{ y : 150},                                     //include gravity with a velocityY of 150
-            debug: false,
+            debug: true,
         }
     }
 }
@@ -24,25 +24,41 @@ let cursors;                                                        //reserve ar
 let centerX = game.config.width/2;                                  //reserve variables for text and spacing
 let centerY = game.config.height/2;
 const textSpacer = 36;
-let seconds = 0;                                                    //tracks time
-
-let currentScale = 1;                                               //tracks ingame variables and states
-let drugsTaken = 0;
-let breakingglass = 0;
-let cookieObtained = false;
-let drinkObtained = false;
-
-let pickedUpBox1 = false;
+//variables for time and ingame states
+let seconds = 0;                    //time
+let currentScale = 1;               //currentSize of player                                     
+let drugsTaken = 0;                 //number of drugs taken for puzzleSolver()
+let breakingglass = 0;              //number of times glass broken for hidden ending
+let cookieObtained = true;         //tracks if players have obtained the drug
+let drinkObtained = true;          //to scale up or down
+//boolean box variables
+let pickedUpBox1 = false;           
 let pickedUpBox2 = false;
 let pickedUpBox3 = false;
 let holdingBox = false;
+let smallOn1 = false;
+let smallOn2 = false;
+let smallOn3 = false;
+let smallOn4 = false;
+let smallOn5 = false;
+let smallOn6 = false;
+let medOn1 = false;
+
+let miniZone1 = false;                                               //variables for smaller vent for box overlap
+let miniZone2 = false;
+let miniZone3 = false;
+let miniZone4 = false;
+let miniZone5 = false;
+let miniZone6 = false;
+let miniZone7 = false;
+//boolean vent variables
 let inSmallVent = false;
 let inMedVent = false;
-
-let onButton1 = false;
-let onButton2 = false;
-let onButton3 = false;
-
+//boolean button variables
+let buttonPressed1 = false;
+let buttonPressed2 = false;
+let buttonPressed3 = false;
+//variables for creating ventZones
 let Ventzone1;                                                      //allocate variables for creating vents and buttons
 let Ventzone2;
 let Ventzone3;
@@ -55,27 +71,14 @@ let Ventzone9;
 let Ventzone10;
 let Ventzone11;
 let Ventzone12;
-
+//variables for creating buttonZones
 let buttonzone1;
 let buttonzone2;
 let buttonzone3;
-                            
-                                          
-let textVent4 = false;                                              //variable for texts bubble vents
+//variables for creating textZones      
+let textVent4 = false;                                               //variable for texts bubble vents
 let textVent5 = false;
 
-let miniZone1 = false;                                               //variables for smaller vent for box overlap
-let miniZone2 = false;
-let miniZone3 = false;
-let miniZone4 = false;
-let miniZone5 = false;
-let miniZone6 = false;
-let miniZone7 = false;
 
-let smallOn1 = false;
-let smallOn2 = false;
-let smallOn3 = false;
-let smallOn4 = false;
-let smallOn5 = false;
-let smallOn6 = false;
-let medOn1 = false;
+
+

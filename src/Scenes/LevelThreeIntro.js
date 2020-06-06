@@ -5,6 +5,9 @@ class LevelThreeIntro extends Phaser.Scene{
 
     preload(){
         this.load.image('level3Load','./assets/ScreenUI/level3Intro.png');
+        this.load.tilemapTiledJSON('map3','./assets/TileMaps/level3.json');
+        this.load.image('level3Background', './assets/Backgrounds/level3Background.png');
+        this.load.spritesheet('level3Hint', './assets/Hints/level3Hints.png',{frameWidth: 512, frameHeight: 960,startFrame: 0, endFrame: 3}); 
       }
     create(){
         seconds = 0;

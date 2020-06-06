@@ -2,28 +2,12 @@ class LevelTwo extends Phaser.Scene{
   constructor(){
           super('levelTwoScene');
   }
-
   preload(){
-      //load all assets used in Level 2
-      this.load.tilemapTiledJSON('map2','./assets/TileMaps/level2.json');
-      this.load.image('level2Background', './assets/Backgrounds/level2Background.png');
-      this.load.image('medBox','./assets/Objects/heavyObstacleMedium.png');
-      this.load.image('smallBox','./assets/Objects/smallObstacle.png');
-      this.load.image('textBox', './assets/TextBubbles/boxPickupText.png')
-      this.load.spritesheet('button','./assets/Objects/buttonSpriteSheet.png',{frameWidth:32, frameHeight: 32, startFrame: 0 ,endFrame: 1});
-      this.load.spritesheet('door', './assets/doorAnimation/initialDoor.png',{frameWidth: 64, frameHeight: 64, startFrame: 0, endFrame: 13});
-      this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
-      this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2Standing.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
-      this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
-      this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
-      this.load.audio('ScaleUp','./assets/soundFX/ScaleUp.mp3');                    
-      this.load.audio('ScaleDown','./assets/soundFX/ScaleDown.mp3');               
-      this.load.audio('doorOpening','./assets/soundFX/doorOpening.mp3');               
-    }
+  }
   create(){
       drugsTaken = 0;
-      onButton1 = false;
-      onButton2 = false;
+      buttonPressed1 = false;
+      buttonPressed2 = false;
       pickedUpBox1 = false;
       this.scaleUp = this.sound.add('ScaleUp',{volume: 0.1});                                      //add soundFX for eating and drinking(not implemented yet)
       this.scaleDown = this.sound.add('ScaleDown',{volume: 0.1});
@@ -34,6 +18,7 @@ class LevelTwo extends Phaser.Scene{
       keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
       cursors = this.input.keyboard.createCursorKeys();                               //reserve arrow keys for movement
       let background = this.add.tileSprite(0,0,896,512,'level2Background').setOrigin(0,0);
+      this.hint = this.add.image(0,0,'level2Hint').setOrigin(0,0);
       //add in level 2 tilemap and sets collision for tilemap
       const map2 = this.make.tilemap({key: 'map2'});
       const tileset2 = map2.addTilesetImage('ScaleDistortionGameTileset','tiles',32,32,0,0);
@@ -50,18 +35,13 @@ class LevelTwo extends Phaser.Scene{
       //create small button object and add collision between the button and map
       this.button1 = new Button(this,380,475,'button').setOrigin(0.5);
       this.physics.add.collider(this.button1,platforms2);
-      buttonzone1 = this.add.zone(380, 465).setSize(32, 32).setOrigin(0.5);
-      this.physics.world.enable(buttonzone1);
-      buttonzone1.body.setAllowGravity(false);
-      buttonzone1.body.moves = false;
+      this.buttonzone1 = new Zone(this, 380, 465, 32, 32).setOrigin(0.5);
+
       //create large button object and add collision between the button and map
       this.button2 = new Button(this,660,450,'button').setOrigin(0.5).setScale(2);
       this.physics.add.collider(this.button2,platforms2);
-      buttonzone2 = this.add.zone(660, 450).setSize(64, 64).setOrigin(0.5);
-      this.physics.world.enable(buttonzone2);
-      buttonzone2.body.setAllowGravity(false);
-      buttonzone2.body.moves = false;
-      //add small and medium box objects
+      this.buttonzone2 = new Zone(this, 660, 450, 64, 64).setOrigin(0.5);
+
       this.smallBox = new Box(this, 310,475,'smallBox').setOrigin(0.5);
       this.medBox = new Box(this,550,445,'medBox').setOrigin(0.5);
       //add in player object and its animations(sizeUp animations not working)
@@ -108,26 +88,23 @@ class LevelTwo extends Phaser.Scene{
       
       this.physics.add.collider(this.p1, this.medBox, this.checkSize, null, this);  //checks if player is big enough to push box
       //creates zones on buttons to play buttonDown Animation 
-      this.physics.add.overlap(this.smallBox, buttonzone1);
-      buttonzone1.on('enterzone1', () => onButton1 = true);
-      buttonzone1.on('leavezone1', () => onButton1 = false);
-      this.physics.add.overlap(this.medBox, buttonzone2);
-      buttonzone2.on('enterzone2', () => onButton2 = true);
-      buttonzone2.on('leavezone2', () => onButton2 = false);
+      this.physics.add.overlap(this.smallBox, this.buttonzone1);
+      this.buttonzone1.on('enterzone', () => buttonPressed1 = true);
+      this.buttonzone1.on('leavezone', () => buttonPressed1 = false);
+      this.physics.add.overlap(this.medBox, this.buttonzone2);
+      this.buttonzone2.on('enterzone', () => buttonPressed2 = true);
+      this.buttonzone2.on('leavezone', () => buttonPressed2 = false);
 
       //create text and zone  with variables
       this.moveText = this.add.sprite(328,64,'textBox');
       this.moveText.setVisible(false);
 
-      Ventzone4 = this.add.zone(185, 330).setSize(60, 60).setOrigin(0,0); 
-      this.physics.world.enable(Ventzone4);
-      Ventzone4.body.setAllowGravity(false);
-      Ventzone4.body.moves = false;
+      this.Ventzone4 = new Zone(this, 185, 330, 60, 60).setOrigin(0,0); 
 
-      this.physics.add.overlap(this.p1, Ventzone4); 
+      this.physics.add.overlap(this.p1, this.Ventzone4); 
 
-      Ventzone4.on('enterVzone4', () => textVent4 = true);  
-      Ventzone4.on('leaveVzone4', () => textVent4 = false);  
+      this.Ventzone4.on('enterzone', () => textVent4 = true);  
+      this.Ventzone4.on('leavezone', () => textVent4 = false);  
 
       this.cameras.main.setBounds(0, 0, 896, 512);
       this.cameras.main.setZoom(1.25);
@@ -136,7 +113,9 @@ class LevelTwo extends Phaser.Scene{
 
   update(){
     this.p1.update();                                                                 //calls player update for controls
-
+    this.Ventzone4.update();
+    this.buttonzone1.update();
+    this.buttonzone2.update();
     if(Phaser.Input.Keyboard.JustDown(keyR)){
       this.scene.start('levelTwoIntroScene');
     }
@@ -152,7 +131,6 @@ class LevelTwo extends Phaser.Scene{
     }
     //instructions to solve puzzle(letters appear the more drugs are taken)
     this.puzzleSolver();
-    
     this.physics.world.collide(this.p1, this.smallBox);
     this.physics.world.collide(this.p1, this.door, this.atDoor, null, this);          //instantiate physics between player and door
     if(currentScale > 0.5){
@@ -166,61 +144,33 @@ class LevelTwo extends Phaser.Scene{
       this.smallBox.body.enable = true;
       pickedUpBox1 = false;
     }
-    // text zone 
-    let Vtouching4 = Ventzone4.body.touching;                               
-    let VwasTouching4 = Ventzone4.body.wasTouching;                                   
-    if (Vtouching4.none && !VwasTouching4.none) {                                                
-      Ventzone4.emit('leaveVzone4');
-    }
-    else if (!Vtouching4.none && VwasTouching4.none) {                        
-      Ventzone4.emit('enterVzone4');
-    } 
 
     if(textVent4){                                                            //sets text box if overlap
       this.moveText.setVisible(true);
     }else{
       this.moveText.setVisible(false);   
     }
-    //first button zone variables for entry and leaving
-    let touching1 = buttonzone1.body.touching;
-    let wasTouching1 = buttonzone1.body.wasTouching;  
-    if (touching1.none && !wasTouching1.none) {
-      buttonzone1.emit('leavezone1');
-    }
-    else if (!touching1.none && wasTouching1.none) {
-      buttonzone1.emit('enterzone1');
-    }
-    //sets first button to buttonDown frame if box is on button
-    if(onButton1){
+    if(buttonPressed1){
       this.button1.setFrame(1);
     }else{
       this.button1.setFrame(0);
     }
-    //second button zone variables for entry and leaving
-    let touching2 = buttonzone2.body.touching;
-    let wasTouching2 = buttonzone2.body.wasTouching;  
-    if (touching2.none && !wasTouching2.none) {
-      buttonzone2.emit('leavezone2');
-    } else if (!touching2.none && wasTouching2.none) {
-      buttonzone2.emit('enterzone2');
-    }
-    //sets first button to buttonDown frame is box is on button
-    if(onButton2){
+
+    if(buttonPressed2){
       this.button2.setFrame(1);
     }else{
       this.button2.setFrame(0);
     }
     
-    if(onButton1 && onButton2){
+    if(buttonPressed1 && buttonPressed2){
       this.exit.setFrame(1);
     }
     else{
       this.exit.setFrame(0);
     }
-    if(!onButton1 || !onButton2){
+    if(!buttonPressed1 || !buttonPressed2){
       this.anims.play('doorOpen', this.door);
       this.doorSound.play();                                      //bugged drinking sound  
-      //console.log(onButton1, onButton2);
     }
   }
 
@@ -235,7 +185,7 @@ class LevelTwo extends Phaser.Scene{
   }
   //door collision only allowed to continue if both buttons are pressed
   atDoor(){
-    if(onButton1 && onButton2 && currentScale == 1){
+    if(buttonPressed1 && buttonPressed2 && currentScale == 1){
       if(cursors.up.isDown && this.p1.body.onFloor()){
         this.scene.start('levelThreeIntroScene');
       }
@@ -252,20 +202,11 @@ class LevelTwo extends Phaser.Scene{
   puzzleSolver(){
     switch(drugsTaken)
     {
-      case 7:   let text1 = this.add.text(centerX,centerY - textSpacer, 'P___ _h_ B___s',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                let text2 = this.add.text(centerX,centerY, '_n _h_ b___o_ __ _p__ _o__',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                text1.alpha = 0.2;
-                text2.alpha = 0.2; 
+      case 7:   this.hint.setFrame(1);
         break;
-      case 10:  let text3 = this.add.text(centerX,centerY - textSpacer, '_u__ __e _o___',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                let text4 = this.add.text(centerX,centerY, '__ t__ __t__n t_ ___n __or',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                text3.alpha = 0.5;
-                text4.alpha = 0.5;
+      case 10:  this.hint.setFrame(2);  
         break;
-      case 15:  let text5 = this.add.text(centerX,centerY - textSpacer, '__sh t__ __xe_',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                let text6 = this.add.text(centerX,centerY, 'o_ __e _u_to_ _o o_e_ D___',{ fontSize: '22px', color: '#8B0000' }).setOrigin(0.5);
-                text5.alpha = 0.7;
-                text6.alpha = 0.7;
+      case 15:  this.hint.setFrame(3);  
         break;      
       default:
         break;

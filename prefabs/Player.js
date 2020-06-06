@@ -105,8 +105,8 @@ class Player extends Phaser.Physics.Arcade.Sprite{
             }
         }
         if(drinkObtained == true && this.body.onFloor()){                       //sizeDown upon drinking drink
-            if(Phaser.Input.Keyboard.JustDown(keyQ) && currentScale > 0.5){ //can shrink to half size
-                this.setScale(currentScale * 0.5);                          //sets scale and keeps track of current scale
+            if(Phaser.Input.Keyboard.JustDown(keyQ) && currentScale > 0.5){     //can shrink to half size
+                this.setScale(currentScale * 0.5);                              //sets scale and keeps track of current scale
                 currentScale = 0.5*currentScale;
                 drugsTaken += 1;       
                 this.scene.scaleDown.play();                                      //bugged drinking sound                        

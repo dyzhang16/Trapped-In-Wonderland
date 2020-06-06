@@ -8,6 +8,7 @@ class ExitLevelIntro extends Phaser.Scene{
       }
     create(){
         seconds = 0;
+        inMedVent = false;
         this.ExitLevelIntro = this.add.tileSprite(0,0,896,512,'exitLevelLoad').setOrigin(0,0);
         this.Timer = this.time.addEvent({                         
           delay: 1000,                                                    //calls on LoadingTime() function every second

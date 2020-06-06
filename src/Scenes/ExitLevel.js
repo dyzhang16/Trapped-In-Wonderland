@@ -20,7 +20,7 @@ class ExitLevel extends Phaser.Scene{
       }
     create(){
         drugsTaken = 0;
-        breakingglass = 0;  
+        breakingglass = 0;
         this.scaleUp = this.sound.add('ScaleUp',{volume: 0.1});                                      //add soundFX for eating and drinking(not implemented yet)
         this.scaleDown = this.sound.add('ScaleDown',{volume: 0.1});                                      
         game.scale.resize(896,512);
@@ -41,7 +41,7 @@ class ExitLevel extends Phaser.Scene{
         this.door = new Door(this, 700, 320,'door', 13).setOrigin(0.5);
         this.exit = new DoorIndicator(this, 700, 270, 'exitSign', 1).setOrigin(0.5);
         
-        this.glassExit = new Door (this, 400, 320, 'glassExit', 0).setOrigin(0.5);
+        this.glassExit = new Door (this, 400, 290, 'glassExit', 0).setOrigin(0.5);
         //add in player object and its animations
         this.p1 = new Player(this, 120, 355,'playerIdle').setOrigin(0.5,1);
         this.anims.create({                                 //basic movement animation
@@ -75,17 +75,7 @@ class ExitLevel extends Phaser.Scene{
         this.physics.add.collider(this.p1, platforms6);
         this.physics.add.collider(this.door,platforms6);
         this.physics.add.collider(this.glassExit, platforms6);
-  
-        //mini zones for large button
-        /*miniZone1 = this.add.zone(305, 580).setSize(67, 10).setOrigin(0,0); 
-        this.physics.world.enable(miniZone1);
-        miniZone1.body.setAllowGravity(false);
-        miniZone1.body.moves = false;
-        this.physics.add.overlap(this.smallBox1, miniZone1);
-        miniZone1.on('enterMini1', () => smallOn1 = true);  
-        miniZone1.on('leaveMini1', () => smallOn1 = false);
-        */
-  
+
         this.cameras.main.setBounds(0, 0, 896, 512);
         this.cameras.main.setZoom(1.25);
         this.cameras.main.startFollow(this.p1);

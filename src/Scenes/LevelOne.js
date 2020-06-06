@@ -4,24 +4,7 @@ class LevelOne extends Phaser.Scene{
     }
 
     preload(){
-        this.load.image('cookie','./assets/Objects/updatedEatMe.png');        //load in all assets for level 1
-        this.load.image('drink','./assets/Objects/updatedDrinkMe.png');
-        this.load.image('textMove', './assets/TextBubbles/movementText.png');
-        this.load.image('textDoor', './assets/TextBubbles/levelExitTextInvert.png');
-        this.load.image('textDrink', './assets/TextBubbles/drinkMeText.png');
-        this.load.image('textEat', './assets/TextBubbles/eatMeText.png');
-        this.load.image('tiles','./assets/Tiles/finalTileSheet.png');
-        this.load.tilemapTiledJSON('map1','./assets/TileMaps/level1.json');
-        this.load.image('level1Background', './assets/Backgrounds/level1Background.png');
-        this.load.spritesheet('door', './assets/doorAnimation/initialDoor.png',{frameWidth: 64, frameHeight: 64, startFrame:0 , endFrame: 13});
-        this.load.spritesheet('exitSign','./assets/doorAnimation/doorIndicator1.png',{frameWidth: 16, frameHeight: 16, startFrame:0 , endFrame: 1});
-        this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2StandingExtraPixel.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
-        this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
-        this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
-        //this.load.spritesheet('playerPush','./assets/AliceAnim/AliceV2Pushing.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 5});
-        this.load.audio('ScaleUp','./assets/soundFX/ScaleUp.mp3');                    //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
-        this.load.audio('ScaleDown','./assets/soundFX/ScaleDown.mp3');                //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
-      }
+    }
     create(){
         drugsTaken = 0;
         this.scaleUp = this.sound.add('ScaleUp',{volume: 0.1});                                      //add soundFX for eating and drinking(not implemented yet)
@@ -32,6 +15,7 @@ class LevelOne extends Phaser.Scene{
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         cursors = this.input.keyboard.createCursorKeys();                             //reserve arrow keys for movement
         let background = this.add.tileSprite(0,0,896,512,'level1Background').setOrigin(0,0);
+        this.hint = this.add.image(0,0,'level1Hint').setOrigin(0,0);
         //add in level 1 tilemap and sets collision for tilemap
         const map1 = this.make.tilemap({key: 'map1'});                                //https://stackabuse.com/phaser-3-and-tiled-building-a-platformer/
         const tileset1 = map1.addTilesetImage('ScaleDistortionGameTileset','tiles',32,32,0,0);
@@ -81,26 +65,19 @@ class LevelOne extends Phaser.Scene{
         this.cookie = new Cookie(this, 350, 432,'cookie').setOrigin(0.5);
         this.drink = new Drink(this, 70, 350,'drink').setOrigin(0.5);
         //creating a zone for the vent area where the player cannot scale up
-        Ventzone1 = this.add.zone(565, 430).setSize(150, 60).setOrigin(0,0);    //https://www.html5gamedevs.com/topic/38895-making-a-zone/
-        this.physics.world.enable(Ventzone1);
-        Ventzone1.body.setAllowGravity(false);
-        Ventzone1.body.moves = false;
-        //vent zone for door bubble 
-        Ventzone6 = this.add.zone(765, 430).setSize(60, 60).setOrigin(0,0);
-        this.physics.world.enable(Ventzone6);
-        Ventzone6.body.setAllowGravity(false);
-        Ventzone6.body.moves = false; 
-        //instantiating physics 
+        this.Ventzone1 = new Zone(this, 565, 430, 150, 60).setOrigin(0,0);    //https://www.html5gamedevs.com/topic/38895-making-a-zone/
+        this.Ventzone6 = new Zone(this, 765, 430, 60, 60).setOrigin(0,0);
+
         this.physics.add.collider(this.p1, platforms1);                     //physics between objects and map 
         this.physics.add.collider(this.door, platforms1);                   //to ensure they don't fall through
         this.physics.add.collider(this.cookie, platforms1);                 //the map 
         this.physics.add.collider(this.drink, platforms1);
-        this.physics.add.overlap(this.p1, Ventzone1);                        //if player overlaps with ventzone
-        this.physics.add.overlap(this.p1, Ventzone6);  
-        Ventzone1.on('enterVzone', () => inSmallVent = true);                      //on entering zone, set to true
-        Ventzone1.on('leaveVzone', () => inSmallVent = false);                     //when not overlapping, set to false
-        Ventzone6.on('enterVzone6', () => textVent5 = true);  
-        Ventzone6.on('leaveVzone6', () => textVent5 = false);
+        this.physics.add.overlap(this.p1, this.Ventzone1);                        //if player overlaps with ventzone
+        this.physics.add.overlap(this.p1, this.Ventzone6);  
+        this.Ventzone1.on('enterzone', () => inSmallVent = true);                      //on entering zone, set to true
+        this.Ventzone1.on('leavezone', () => inSmallVent = false);                     //when not overlapping, set to false
+        this.Ventzone6.on('enterzone', () => textVent5 = true);  
+        this.Ventzone6.on('leavezone', () => textVent5 = false);
 
         this.cameras.main.setBounds(0, 0, 896, 512);
         this.cameras.roundPixels = true;
@@ -108,6 +85,8 @@ class LevelOne extends Phaser.Scene{
       }
     update(){ 
       this.p1.update();                                                     //calls on player object update()
+      this.Ventzone1.update();
+      this.Ventzone6.update();
       if(Phaser.Input.Keyboard.JustDown(keyR)){
         this.scene.start('levelOneIntroScene');
       }
@@ -120,9 +99,9 @@ class LevelOne extends Phaser.Scene{
       this.doorText.y = this.p1.body.position.y-30;
       
       this.puzzleSolver();
-      /*if(Phaser.Input.Keyboard.JustDown(keySPACE)){                       //shortcut for debugging future levels
-        this.scene.start('ExitLevelIntroScene');
-      }*/
+      if(Phaser.Input.Keyboard.JustDown(keySPACE)){                       //shortcut for debugging future levels
+        this.scene.start('levelFiveIntroScene');
+      }
       if(currentScale == 2){
         this.cameras.main.setZoom(1);
         this.eatText.destroy();
@@ -135,31 +114,12 @@ class LevelOne extends Phaser.Scene{
       this.physics.world.collide(this.p1, this.cookie, this.p1cookieCollision, null, this); //add physics for collision between player
       this.physics.world.collide(this.p1, this.drink, this.p1drinkCollision,null, this);    //and objects in the game
       this.physics.world.overlap(this.p1, this.door, this.atDoor, null, this);
-      
-      let Vtouching = Ventzone1.body.touching;                                //reserve variables for overlapping vent
-      let VwasTouching = Ventzone1.body.wasTouching;                                   
-      if (Vtouching.none && !VwasTouching.none) {                             //if not touching vent, set to leavezone                    
-        Ventzone1.emit('leaveVzone');
-      }
-      else if (!Vtouching.none && VwasTouching.none) {                        //else if touching, set to enterzone
-        Ventzone1.emit('enterVzone');
-      } 
-
-      let Vtouching6 = Ventzone6.body.touching; 
-      let VwasTouching6 = Ventzone6.body.wasTouching;                               
-      if (Vtouching6.none && !VwasTouching6.none) {                                             
-        Ventzone6.emit('leaveVzone6');
-      }
-      else if (!Vtouching6.none && VwasTouching6.none) {                        
-        Ventzone6.emit('enterVzone6');
-      } 
 
       if(textVent5){                                                          //conditions if true for text bubble door
         this.doorText.setVisible(true);
       }else{
         this.doorText.setVisible(false);
       }
-        
     }
     
     p1cookieCollision(){                                                    //called when p1 collides into the cookie object
@@ -177,19 +137,17 @@ class LevelOne extends Phaser.Scene{
     atDoor(){                                                               //called when p1 collides into the door object
       if(cursors.up.isDown && this.p1.body.onFloor() && currentScale == 1){ //can only transition if the player is the right size
         this.scene.start('levelTwoIntroScene');
+        this.doorText.setVisible(false);
       }
     }
     puzzleSolver(){
       switch(drugsTaken)
       {
-        case 7:   let text1 = this.add.text(centerX - 150,centerY - textSpacer, '_h_ a__ __d c___d j___ h____r_._.',{ fontSize: '18px',fontStyle: 'bold', color: '#8B0000' }).setOrigin(0.5);
-                  let text2 = this.add.text(centerX - 150,centerY, 'S__ d_a__ a__ _o_l_ ___ t_g____.___',{ fontSize: '18px',fontStyle: 'bold', color: '#8B0000' }).setOrigin(0.5);
+        case 7:   this.hint.setFrame(1);
           break;
-        case 10:  let text3 = this.add.text(centerX - 150,centerY - textSpacer, 'S__ _t_ _n_ ___l_ _u_p _i__e_.___',{ fontSize: '18px', fontStyle: 'bold',  color: '#8B0000' }).setOrigin(0.5);
-                  let text4 = this.add.text(centerX - 150,centerY, '_h_ _r___ ___ __u_d f__ _i__t_r_._.',{ fontSize: '18px',fontStyle: 'bold', color: '#8B0000' }).setOrigin(0.5);
+        case 10:  this.hint.setFrame(2); 
           break;
-        case 15:  let text5 = this.add.text(centerX - 150,centerY - textSpacer, '__e __e a__ _ou__ __m_ __gh____._',{ fontSize: '18px',fontStyle: 'bold', color: '#8B0000' }).setOrigin(0.5);
-                  let text6 = this.add.text(centerX - 150,centerY, '__e ___nk _nd c____ _it ___h_e___._',{ fontSize: '18px',fontStyle: 'bold', color: '#8B0000' }).setOrigin(0.5);      
+        case 15:  this.hint.setFrame(3);
           break;      
         default:
           break;

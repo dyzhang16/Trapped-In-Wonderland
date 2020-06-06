@@ -13,7 +13,7 @@ class Menu extends Phaser.Scene{
     create(){                           
         //creating text image that are interactables
         this.menu = this.add.image(centerX - textSpacer, centerY - textSpacer * 1, 'GameTitle').setOrigin(0.5).setScale(0.75);
-        let play = this.add.image(centerX, centerY + textSpacer, 'Play', 0).setOrigin(0.5).setScale(0.5);
+        let play = this.add.image(centerX, centerY + textSpacer, 'Play').setOrigin(0.5).setScale(0.5);
         let controls = this.add.image(centerX, centerY + textSpacer * 2, 'Controls').setOrigin(0.5).setScale(0.5);
         let credits = this.add.image(centerX, centerY + textSpacer * 3, 'Credits').setOrigin(0.5).setScale(0.5);
         //sets those images to interactable

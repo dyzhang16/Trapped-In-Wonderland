@@ -4,8 +4,11 @@ class LevelFourIntro extends Phaser.Scene{
     }
 
     preload(){
-        this.load.image('level4Load','./assets/ScreenUI/level4Intro.png');
-      }
+      this.load.tilemapTiledJSON('map4','./assets/TileMaps/level4.json');
+      this.load.image('level4Background', './assets/Backgrounds/level4Background.png');
+      this.load.image('level4Load','./assets/ScreenUI/level4Intro.png');
+      this.load.spritesheet('level4Hint', './assets/Hints/level4Hints.png',{frameWidth: 1280, frameHeight: 640,startFrame: 0, endFrame: 3});
+    }
     create(){
         seconds = 0;
         game.scale.resize(896,512);
