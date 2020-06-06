@@ -26,6 +26,9 @@ class LevelFive extends Phaser.Scene{
       pickedUpBox1 = false;
       pickedUpBox2 = false;
       pickedUpBox3 = false;
+      smallOn1 = false;
+      smallOn2 = false;
+      smallOn3 = false;
       holdingBox = false;   
       this.scaleUp = this.sound.add('ScaleUp',{volume: 0.1});                                      //add soundFX for eating and drinking(not implemented yet)
       this.scaleDown = this.sound.add('ScaleDown',{volume: 0.1});
@@ -300,29 +303,31 @@ class LevelFive extends Phaser.Scene{
       this.physics.world.collide(this.p1, this.smallBox3, this.pickUpBox3, null, this);
     }
     //Dropping Box if picked up a small Box
-    if(pickedUpBox1 == true && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor()){
-      this.smallBox1.x = this.p1.x;
-      this.smallBox1.y = this.p1.y-35;
-      this.smallBox1.setVisible(true);
-      this.smallBox1.body.enable = true;
-      pickedUpBox1 = false;
-      holdingBox = false;
-    }
-    if(pickedUpBox2 == true && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor()){
-      this.smallBox2.x = this.p1.x;
-      this.smallBox2.y = this.p1.y-35;
-      this.smallBox2.setVisible(true);
-      this.smallBox2.body.enable = true;
-      pickedUpBox2 = false;
-      holdingBox = false;
-    }
-    if(pickedUpBox3 == true && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor()){
-      this.smallBox3.x = this.p1.x;
-      this.smallBox3.y = this.p1.y-35;
-      this.smallBox3.setVisible(true);
-      this.smallBox3.body.enable = true;
-      pickedUpBox3 = false;
-      holdingBox = false;
+    if(currentScale> 0.5){
+      if(pickedUpBox1 == true && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor()){
+        this.smallBox1.x = this.p1.x;
+        this.smallBox1.y = this.p1.y-35;
+        this.smallBox1.setVisible(true);
+        this.smallBox1.body.enable = true;
+        pickedUpBox1 = false;
+        holdingBox = false;
+      }
+      if(pickedUpBox2 == true && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor()){
+        this.smallBox2.x = this.p1.x;
+        this.smallBox2.y = this.p1.y-35;
+        this.smallBox2.setVisible(true);
+        this.smallBox2.body.enable = true;
+        pickedUpBox2 = false;
+        holdingBox = false;
+      }
+      if(pickedUpBox3 == true && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor()){
+        this.smallBox3.x = this.p1.x;
+        this.smallBox3.y = this.p1.y-35;
+        this.smallBox3.setVisible(true);
+        this.smallBox3.body.enable = true;
+        pickedUpBox3 = false;
+        holdingBox = false;
+      }
     }
     let V1touching = Ventzone1.body.touching;                                //reserve variables for overlapping vent
     let V1wasTouching = Ventzone1.body.wasTouching;                                   

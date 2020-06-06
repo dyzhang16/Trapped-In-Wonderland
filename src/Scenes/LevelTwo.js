@@ -131,10 +131,7 @@ class LevelTwo extends Phaser.Scene{
 
       this.cameras.main.setBounds(0, 0, 896, 512);
       this.cameras.main.setZoom(1.25);
-      this.cameras.main.startFollow(this.p1);
-
-      
-      
+      this.cameras.main.startFollow(this.p1);   
   }
 
   update(){
@@ -162,7 +159,7 @@ class LevelTwo extends Phaser.Scene{
       this.physics.world.collide(this.p1, this.smallBox, this.pickUpBox, null, this);   
     }
     //Picking up box 
-    if(pickedUpBox1 && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor()){
+    if(pickedUpBox1 && Phaser.Input.Keyboard.JustDown(keySPACE) && this.p1.body.onFloor() && currentScale > 0.5){
       this.smallBox.x = this.p1.x;
       this.smallBox.y = this.p1.y-35;
       this.smallBox.setVisible(true);

@@ -5,7 +5,7 @@ let config = {                                                      //set config
     },
     width: 896, 
     height: 512,
-    scene:[Loading, Menu, Instructions, LevelOneIntro, LevelOne, LevelTwoIntro ,LevelTwo, LevelThreeIntro, LevelThree, 
+    scene:[Audio, Loading, Menu, Instructions, LevelOneIntro, LevelOne, LevelTwoIntro ,LevelTwo, LevelThreeIntro, LevelThree, 
         LevelFourIntro, LevelFour, LevelFiveIntro, LevelFive, ExitLevelIntro, ExitLevel, EndingOne, EndingTwo, Credits],
     physics:{                                                       //include arcadePhysics for phaser game
         default: "arcade",
