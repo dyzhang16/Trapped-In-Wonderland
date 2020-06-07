@@ -32,7 +32,7 @@ class LevelTwoIntro extends Phaser.Scene{
       }
     update(){ 
       if(seconds > 3){
-        this.scene.start('levelFiveIntroScene');                                                         
+        this.scene.start('levelTwoScene');                                                         
       }
       console.log(seconds);
     }

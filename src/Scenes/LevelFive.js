@@ -80,7 +80,7 @@ class LevelFive extends Phaser.Scene{
     this.ventZone2.on('enterzone', () => inMedVent = true);                      
     this.ventZone2.on('leavezone', () => inMedVent = false);   
     this.physics.add.overlap(this.p1, this.ventZone3);                         
-    this.ventzone3.on('enterzone', () => inMedVent = true);                     
+    this.ventZone3.on('enterzone', () => inMedVent = true);                     
     this.ventZone3.on('leavezone', () => inMedVent = false);   
     this.physics.add.overlap(this.p1, this.ventZone4);                         
     this.ventZone4.on('enterzone', () => inSmallVent = true);                      
@@ -258,11 +258,11 @@ class LevelFive extends Phaser.Scene{
   puzzleSolver(){
     switch(drugsTaken)
     {
-      case 2: this.hint.setFrame(1);
+      case 30: this.hint.setFrame(1);
       break;
-      case 3: this.hint.setFrame(2);
+      case 40: this.hint.setFrame(2);
       break;
-      case 4: this.hint.setFrame(3);
+      case 45: this.hint.setFrame(3);
       break;      
       default:
       break;
