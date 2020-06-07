@@ -8,7 +8,6 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.setBounce(0);                                                      //bounce when hitting other object    
         this.setImmovable();                                                    //cannot be pushed by other objects
         this.destroyed = false;                                                 //variables for player state
-        //this.setCollideWorldBounds(true);                                       //bound by game window
         scene.add.existing(this);                                               //add to current scene
         scene.physics.add.existing(this);                                       //add object to existing scene
     }
@@ -78,38 +77,38 @@ class Player extends Phaser.Physics.Arcade.Sprite{
                 this.anims.play('p1Jump',true);
             }
         }  
-        if (this.body.velocity.x > 0) {                                         //flips character if turning the opposite direction
+        if (this.body.velocity.x > 0) {                                             //flips character if turning the opposite direction
             this.setFlipX(false);
         } else if (this.body.velocity.x < 0) {
             // otherwise, make them face the other side
             this.setFlipX(true);
         }
-        if(cookieObtained == true && this.body.onFloor()){                      //sizeUp upon eating cookie
-            if(!this.body.blocked.left && !this.body.blocked.right){
-                if(inSmallVent == true){
-                }else if(inMedVent == true){
-                    if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 1){   //can scale up to 2x original size
-                        this.setScale(2*currentScale);                                  //but can only scale up provided not in a vent
-                        currentScale = 2*currentScale;                                  //sets scale and keep track of current scale
-                        drugsTaken += 1;
-                        this.scene.scaleUp.play();                                           //bugged eating sound
+        if(cookieObtained && this.body.onFloor()){                          //sizeUp upon eating cookie
+            if(!this.body.blocked.left && !this.body.blocked.right){                //prevents players from scaling while next to a wall to avoid clipping
+                if(inSmallVent){                                            //can't scale up while in a small vent        
+                }else if(inMedVent){                                        
+                    if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 1){   //can scale up to original size
+                        this.setScale(2*currentScale);                              //sets scale and keep track of current scale
+                        currentScale = 2*currentScale;                              
+                        drugsTaken += 1;                                            //tracks drugs taken for puzzlesolver()        
+                        this.scene.scaleUp.play();                                  //plays sizeup sound
                     }
                 } else {
                     if(Phaser.Input.Keyboard.JustDown(keyE) && currentScale < 2){   //can scale up to 2x original size
-                        this.setScale(2*currentScale);                                  //but can only scale up provided not in a vent
-                        currentScale = 2*currentScale;                                  //sets scale and keep track of current scale
-                        drugsTaken += 1;
-                        this.scene.scaleUp.play();                                         //bugged eating sound
+                        this.setScale(2*currentScale);                              //sets scale and keep track of current scale    
+                        currentScale = 2*currentScale;                              
+                        drugsTaken += 1;                                            //tracks drugs taken for puzzlesolver()  
+                        this.scene.scaleUp.play();                                  //plays sizeup sound
                     }   
                 }
             }
         }
-        if(drinkObtained == true && this.body.onFloor()){                       //sizeDown upon drinking drink
-            if(Phaser.Input.Keyboard.JustDown(keyQ) && currentScale > 0.5){     //can shrink to half size
-                this.setScale(currentScale * 0.5);                              //sets scale and keeps track of current scale
+        if(drinkObtained && this.body.onFloor()){                                   //sizeDown upon drinking drink
+            if(Phaser.Input.Keyboard.JustDown(keyQ) && currentScale > 0.5){         //can shrink to half size
+                this.setScale(currentScale * 0.5);                                  //sets scale and keeps track of current scale
                 currentScale = 0.5*currentScale;
-                drugsTaken += 1;       
-                this.scene.scaleDown.play();                                      //bugged drinking sound                        
+                drugsTaken += 1;                                                    //tracks drugs taken for puzzlesolver()
+                this.scene.scaleDown.play();                                        //plays sizedown sound                        
             }
         }
     }   

@@ -4,6 +4,7 @@ class LevelFourIntro extends Phaser.Scene{
     }
 
     preload(){
+      //load all assets for level 4
       this.load.tilemapTiledJSON('map4','./assets/TileMaps/level4.json');
       this.load.image('level4Background', './assets/Backgrounds/level4Background.png');
       this.load.image('level4Load','./assets/ScreenUI/level4Intro.png');
@@ -11,7 +12,21 @@ class LevelFourIntro extends Phaser.Scene{
     }
     create(){
         seconds = 0;
-        game.scale.resize(896,512);
+        drugsTaken = 0;
+        buttonPressed1 = false;
+        buttonPressed2 = false;
+        buttonPressed3 = false;
+        smallOn1 = false;
+        smallOn2 = false;
+        smallOn3 = false;
+        smallOn4 = false;
+        smallOn5 = false;
+        smallOn6 = false;
+        pickedUpBox1 = false;
+        pickedUpBox2 = false;
+        pickedUpBox3 = false;
+        holdingBox = false;   
+        game.scale.resize(896,512); // resize after level 3
         this.levelFourIntro = this.add.tileSprite(0,0,896,512,'level4Load').setOrigin(0,0);
         this.Timer = this.time.addEvent({                         
           delay: 1000,                                                    //calls on LoadingTime() function every second
@@ -22,7 +37,7 @@ class LevelFourIntro extends Phaser.Scene{
       }
     update(){ 
       if(seconds > 3){
-        this.scene.start('levelFourScene');                                                          //transitions to menuScreen after 1 second    
+        this.scene.start('levelFourScene');                                                       
       }
       console.log(seconds);
     }

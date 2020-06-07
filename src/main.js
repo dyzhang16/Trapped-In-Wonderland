@@ -11,17 +11,18 @@ let config = {                                                      //set config
         default: "arcade",
         arcade:{
             gravity:{ y : 150},                                     //include gravity with a velocityY of 150
-            debug: true,
+            debug: false,
         }
     }
 }
 
 let game = new Phaser.Game(config);
-
-let keySPACE, keyQ, keyE, keyR;                                     //reserve key variables
-let cursors;                                                        //reserve arrow keys
-                        
-let centerX = game.config.width/2;                                  //reserve variables for text and spacing
+//reserve key variables
+let keySPACE, keyQ, keyE, keyR;
+//reserve arrow keys                                     
+let cursors;                                                        
+//reserve variables for text and spacing                        
+let centerX = game.config.width/2;                                  
 let centerY = game.config.height/2;
 const textSpacer = 36;
 //variables for time and ingame states
@@ -29,28 +30,20 @@ let seconds = 0;                    //time
 let currentScale = 1;               //currentSize of player                                     
 let drugsTaken = 0;                 //number of drugs taken for puzzleSolver()
 let breakingglass = 0;              //number of times glass broken for hidden ending
-let cookieObtained = true;         //tracks if players have obtained the drug
-let drinkObtained = true;          //to scale up or down
+let cookieObtained = false;          //tracks if players have obtained the drug
+let drinkObtained = false;           //to scale up or down
 //boolean box variables
-let pickedUpBox1 = false;           
+let pickedUpBox1 = false;           //tracks specific box picked up
 let pickedUpBox2 = false;
 let pickedUpBox3 = false;
-let holdingBox = false;
-let smallOn1 = false;
+let holdingBox = false;             //tracks if you are holding a box
+let smallOn1 = false;               //tracks if a specific box is on a specific button
 let smallOn2 = false;
 let smallOn3 = false;
 let smallOn4 = false;
 let smallOn5 = false;
 let smallOn6 = false;
-let medOn1 = false;
-
-let miniZone1 = false;                                               //variables for smaller vent for box overlap
-let miniZone2 = false;
-let miniZone3 = false;
-let miniZone4 = false;
-let miniZone5 = false;
-let miniZone6 = false;
-let miniZone7 = false;
+let medOn = false;                 
 //boolean vent variables
 let inSmallVent = false;
 let inMedVent = false;
@@ -58,26 +51,8 @@ let inMedVent = false;
 let buttonPressed1 = false;
 let buttonPressed2 = false;
 let buttonPressed3 = false;
-//variables for creating ventZones
-let Ventzone1;                                                      //allocate variables for creating vents and buttons
-let Ventzone2;
-let Ventzone3;
-let Ventzone4;
-let Ventzone5;
-let Ventzone6;
-let Ventzone7;
-let Ventzone8;
-let Ventzone9;
-let Ventzone10;
-let Ventzone11;
-let Ventzone12;
-//variables for creating buttonZones
-let buttonzone1;
-let buttonzone2;
-let buttonzone3;
-//variables for creating textZones      
-let textVent4 = false;                                               //variable for texts bubble vents
-let textVent5 = false;
+//boolean text display variables      
+let intextZone = false;                                               
 
 
 

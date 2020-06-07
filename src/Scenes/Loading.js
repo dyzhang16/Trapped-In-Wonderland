@@ -1,12 +1,12 @@
 class Loading extends Phaser.Scene{
     constructor(){
-            super({key: 'loadingScene', active: true});
+            super({key: 'loadingScene', active: true});                             //allows scene to run simulataneously with the AudioManager Scene
     }
     create(){
         seconds = 0;                                                                //creating a timer for loading screen                  
         this.add.text(centerX,centerY, 'Loading....',{ fontSize: '22px', color: '#FFF' }).setOrigin(0.5);   
         this.Timer = this.time.addEvent({                         
-            delay: 1000,                                                    //calls on LoadingTime() function every second
+            delay: 1000,                                                            //calls on LoadingTime() function every second
             callback: this.LoadingTime,
             callbackScope: this,
             loop: true
@@ -14,7 +14,7 @@ class Loading extends Phaser.Scene{
     }
     update(){
         if(seconds > 1){
-            this.scene.start('menuScene');                                                          //transitions to menuScreen after 1 second    
+            this.scene.start('menuScene');                                          //transitions to menuScreen after 1 second    
         }
     }
     LoadingTime(){

@@ -11,6 +11,5 @@ class DoorIndicator extends Phaser.Physics.Arcade.Sprite{
         scene.physics.add.existing(this);                                       //add object to existing scene   
     }
     update(){
-      
     }   
 }

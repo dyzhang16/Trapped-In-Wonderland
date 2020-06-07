@@ -4,15 +4,15 @@ class Menu extends Phaser.Scene{
     }
 
     preload(){
-        this.load.image('GameTitle','./assets/ScreenUI/newTitleScreen.png');             //load all assets
+        this.load.image('GameTitle','./assets/ScreenUI/newTitleScreen.png');             //load all assets used in Menu
         this.load.spritesheet('Play','./assets/ScreenUI/PlayButton.png',{frameWidth: 234, frameHeight: 72, startFrame:0 , endFrame: 1});
         this.load.spritesheet('Controls','./assets/ScreenUI/ControlsButton.png',{frameWidth: 184, frameHeight: 77, startFrame:0 , endFrame: 1});
         this.load.spritesheet('Credits','./assets/ScreenUI/CreditsButton.png',{frameWidth: 353/2, frameHeight: 72, startFrame:0 , endFrame: 1});
         
     }
-    create(){                           
-        //creating text image that are interactables
+    create(){
         this.menu = this.add.image(centerX - textSpacer, centerY - textSpacer * 1, 'GameTitle').setOrigin(0.5).setScale(0.75);
+        //creating text image that are interactables
         let play = this.add.image(centerX, centerY + textSpacer, 'Play').setOrigin(0.5).setScale(0.5);
         let controls = this.add.image(centerX, centerY + textSpacer * 2, 'Controls').setOrigin(0.5).setScale(0.5);
         let credits = this.add.image(centerX, centerY + textSpacer * 3, 'Credits').setOrigin(0.5).setScale(0.5);

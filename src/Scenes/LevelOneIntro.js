@@ -4,8 +4,10 @@ class LevelOneIntro extends Phaser.Scene{
     }
 
     preload(){
+        //load in all assets for level 1
         this.load.image('level1Load','./assets/ScreenUI/level1Intro.png');
-        this.load.image('cookie','./assets/Objects/updatedEatMe.png');        //load in all assets for level 1
+        this.load.image('Pepe','./assets/Hints/PePe.png');
+        this.load.image('cookie','./assets/Objects/updatedEatMe.png');        
         this.load.image('drink','./assets/Objects/updatedDrinkMe.png');
         this.load.image('textMove', './assets/TextBubbles/movementText.png');
         this.load.image('textDoor', './assets/TextBubbles/levelExitTextInvert.png');
@@ -20,13 +22,13 @@ class LevelOneIntro extends Phaser.Scene{
         this.load.spritesheet('playerIdle','./assets/AliceAnim/AliceV2StandingExtraPixel.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 0});
         this.load.spritesheet('playerJump','./assets/AliceAnim/AliceV2Jump.png',{frameWidth: 30, frameHeight: 64, startFrame: 0, endFrame: 5});
         this.load.spritesheet('playerWalk','./assets/AliceAnim/AliceV2Walking.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 7});
-        //this.load.spritesheet('playerPush','./assets/AliceAnim/AliceV2Pushing.png',{frameWidth: 30, frameHeight: 64, startFrame:0, endFrame: 5});
         this.load.audio('ScaleUp','./assets/soundFX/ScaleUp.mp3');                    //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
         this.load.audio('ScaleDown','./assets/soundFX/ScaleDown.mp3');                //https://www.zapsplat.com/page/7/?s=jumping&post_type=music&sound-effect-category-id  
       }
     create(){
-        //cookieObtained = false;
-        //drinkObtained = false;
+        cookieObtained = false;         //setting variables to false in case of reset
+        drinkObtained = false;
+        drugsTaken = 0;
         seconds = 0;
         this.levelOneIntro = this.add.tileSprite(0,0,896,512,'level1Load').setOrigin(0,0);
         this.Timer = this.time.addEvent({                         
@@ -38,7 +40,7 @@ class LevelOneIntro extends Phaser.Scene{
       }
     update(){ 
       if(seconds > 3){
-        this.scene.start('levelOneScene');                                                          //transitions to menuScreen after 1 second    
+        this.scene.start('levelOneScene');                                                       
       }
       console.log(seconds);
     }
