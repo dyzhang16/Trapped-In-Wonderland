@@ -141,11 +141,11 @@ class LevelOne extends Phaser.Scene{
     puzzleSolver(){     
       switch(drugsTaken)
       {
-        case 7:   this.hint.setFrame(1);
+        case 6:   this.hint.setFrame(1);
           break;
-        case 10:  this.hint.setFrame(2); 
+        case 8:  this.hint.setFrame(2); 
           break;
-        case 15:  this.hint.setFrame(3);
+        case 10:  this.hint.setFrame(3);
           break;
         case 20:  this.pepe.setVisible(true);      
         default:

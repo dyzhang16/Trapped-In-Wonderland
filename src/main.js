@@ -1,3 +1,11 @@
+/*                                          Trapped in Wonderland by SDC Collective 
+                                    Collaborators: Shui Lau, Daniel Zhang, Carl Erez
+                                              Date Completed May 7th, 2020
+            For our Scale and Distortion Game, we chose to utilize scale as our main theme to focus with a little bit of distortion on 
+        as a side theme. Our game's main mechanic focuses on scaling the size of Alice by taking drugs so that she can access certain 
+        parts of the map to solve the puzzle and escape the facility. Alice can shrink smaller to enter vents or grow bigger to move 
+        heavier boxes. The distortion theme is featured as taking too many drugs will cause Alice to hallucinate, allowing her to see 
+        mythical creatures and phenomenons as well as hints to passing each level. */
 let config = {                                                      //set configuration for phaser game
     type: Phaser.CANVAS,                                            //game window is 896 by 512
     render: {

@@ -15,9 +15,9 @@ class Menu extends Phaser.Scene{
         //creating text image that are interactables
         let play = this.add.image(centerX, centerY + textSpacer, 'Play').setOrigin(0.5).setScale(0.5);
         let controls = this.add.image(centerX, centerY + textSpacer * 2, 'Controls').setOrigin(0.5).setScale(0.5);
-        let credits = this.add.image(centerX, centerY + textSpacer * 3, 'Credits').setOrigin(0.5).setScale(0.5);
+        let credits = this.add.image(centerX, centerY + textSpacer * 3, 'Credits').setOrigin(0.5).setScale(0.5);        //https://www.joshmorony.com/adding-custom-fonts-to-your-phaser-game/
         //sets those images to interactable
-        play.setInteractive();                      
+        play.setInteractive();                              //https://www.youtube.com/watch?v=OS7neDUUhPE
         controls.setInteractive();
         credits.setInteractive();
         //Over mouse hover, highlights the text, mouseclick transitions to different scene

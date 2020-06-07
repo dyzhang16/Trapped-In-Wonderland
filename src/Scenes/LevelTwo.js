@@ -8,7 +8,7 @@ class LevelTwo extends Phaser.Scene{
       //add soundFX for eating, drinking, door, and button
       this.scaleUp = this.sound.add('ScaleUp',{volume: 0.1});                                    
       this.scaleDown = this.sound.add('ScaleDown',{volume: 0.1});
-      this.doorSound = this.sound.add('doorOpening',{volume: 0.3}, false);
+      this.doorSound = this.sound.add('doorOpening',{volume: 0.3}, false);        //https://www.zapsplat.com/?s=elevator+door&post_type=music&sound-effect-category-id=
       //reserve variables for key inputs                            
       keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);    
       keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
@@ -169,11 +169,11 @@ class LevelTwo extends Phaser.Scene{
   puzzleSolver(){
     switch(drugsTaken)
     {
-      case 7:   this.hint.setFrame(1);
+      case 4:   this.hint.setFrame(1);
         break;
-      case 10:  this.hint.setFrame(2);  
+      case 7:  this.hint.setFrame(2);  
         break;
-      case 15:  this.hint.setFrame(3);  
+      case 10:  this.hint.setFrame(3);  
         break;      
       default:
         break;

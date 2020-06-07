@@ -9,7 +9,7 @@ class ExitLevel extends Phaser.Scene{
         //add soundFX for eating and drinking(not implemented yet) 
         this.scaleUp = this.sound.add('ScaleUp',{volume: 0.1});                                      
         this.scaleDown = this.sound.add('ScaleDown',{volume: 0.1});
-        this.glassbreaking = this.sound.add('GlassBreaking', {volume: 0.1});
+        this.glassbreaking = this.sound.add('GlassBreaking', {volume: 0.1});      //https://www.fesliyanstudios.com/royalty-free-sound-effects-download/glass-shattering-and-breaking-124
         //reserve variables for key inputs                                      
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);    
         keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
@@ -88,11 +88,11 @@ class ExitLevel extends Phaser.Scene{
     puzzleSolver(){
       switch(drugsTaken)
       {
-        case 6: this.hint.setFrame(1);
+        case 2: this.hint.setFrame(1);
         break;
-        case 10: this.hint.setFrame(2);
+        case 4: this.hint.setFrame(2);
         break;
-        case 12: this.hint.setFrame(3);
+        case 6: this.hint.setFrame(3);
         break;      
         default:
         break;

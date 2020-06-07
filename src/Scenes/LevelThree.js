@@ -119,11 +119,11 @@ class LevelThree extends Phaser.Scene{
     puzzleSolver(){
       switch(drugsTaken)
       {
-        case 20:  this.hint.setFrame(1); 
+        case 15:  this.hint.setFrame(1); 
           break;
-        case 25:  this.hint.setFrame(2);
+        case 18:  this.hint.setFrame(2);
           break;
-        case 30:  this.hint.setFrame(3);
+        case 23:  this.hint.setFrame(3);
           break;      
         default:
           break;
