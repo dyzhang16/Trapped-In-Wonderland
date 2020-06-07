@@ -33,10 +33,10 @@ class LevelFour extends Phaser.Scene{
         this.smallButton = new Button(this,250, 496,'button').setOrigin(0.5);
         this.largeButton2 = new Button(this,775,480,'button').setOrigin(0.5).setScale(2);
         //add small and medium box objects
+        this.medBox = new Box(this, 720, 255,'medBox').setOrigin(0.5); 
         this.smallBox1 = new Box(this, 500, 120,'smallBox').setOrigin(0.5);
         this.smallBox2 = new Box(this, 1000, 120,'smallBox').setOrigin(0.5);
-        this.smallBox3 = new Box(this, 795, 280,'smallBox').setOrigin(0.5);
-        this.medBox = new Box(this, 720, 255,'medBox').setOrigin(0.5);        
+        this.smallBox3 = new Box(this, 795, 280,'smallBox').setOrigin(0.5);        
         //creating a zone for the vents to set variables
         this.ventZone1 = new Zone(this, 380, 25, 295, 110).setOrigin(0,0);   
         this.ventZone2 = new Zone(this, 380, 150, 50, 110).setOrigin(0,0);   

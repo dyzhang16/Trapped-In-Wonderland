@@ -3,7 +3,7 @@ class ExitLevel extends Phaser.Scene{
             super('ExitLevelScene');
     }
   
-    preload(){                                                                   
+    preload(){
       }
     create(){
         //add soundFX for eating and drinking(not implemented yet) 
