@@ -20,6 +20,7 @@ class LevelTwoIntro extends Phaser.Scene{
         drugsTaken = 0;
         buttonPressed1 = false;
         buttonPressed2 = false;
+        currentScale = 1;
         intextZone = false;
         holdingBox = false;
         this.levelTwoIntro = this.add.tileSprite(0,0,896,512,'level2Load').setOrigin(0,0);

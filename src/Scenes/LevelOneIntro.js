@@ -29,6 +29,7 @@ class LevelOneIntro extends Phaser.Scene{
         cookieObtained = false;         //setting variables to false in case of reset
         drinkObtained = false;
         drugsTaken = 0;
+        currentScale = 1;
         seconds = 0;
         this.levelOneIntro = this.add.tileSprite(0,0,896,512,'level1Load').setOrigin(0,0);
         this.Timer = this.time.addEvent({                         

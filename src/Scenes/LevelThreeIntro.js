@@ -14,6 +14,7 @@ class LevelThreeIntro extends Phaser.Scene{
         drugsTaken = 0;
         buttonPressed1 = false;
         seconds = 0;
+        currentScale = 1;
         game.scale.resize(896,512); //rescale in case of reset level 
         this.levelThreeIntro = this.add.tileSprite(0,0,896,512,'level3Load').setOrigin(0,0);
         this.Timer = this.time.addEvent({                         

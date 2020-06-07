@@ -14,6 +14,7 @@ class ExitLevelIntro extends Phaser.Scene{
       }
     create(){
         seconds = 0;
+        currentScale = 1;
         inMedVent = false;
         drugsTaken = 0;
         breakingglass = 0;

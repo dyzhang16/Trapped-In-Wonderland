@@ -13,6 +13,7 @@ class LevelFourIntro extends Phaser.Scene{
     create(){
         seconds = 0;
         drugsTaken = 0;
+        currentScale = 1;
         buttonPressed1 = false;
         buttonPressed2 = false;
         buttonPressed3 = false;

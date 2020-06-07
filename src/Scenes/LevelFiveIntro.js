@@ -12,6 +12,7 @@ class LevelFiveIntro extends Phaser.Scene{
     }
     create(){
       drugsTaken = 0;
+      currentScale = 1;
       buttonPressed1 = false;
       buttonPressed2 = false;
       pickedUpBox1 = false;
