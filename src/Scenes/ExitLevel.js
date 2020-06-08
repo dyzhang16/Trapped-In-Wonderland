@@ -78,7 +78,7 @@ class ExitLevel extends Phaser.Scene{
         }   
       }
       if(breakingglass > 4){
-        if(currentScale == 1){
+        if(currentScale == 0.5){
           if(cursors.up.isDown && this.p1.body.onFloor()){
             this.scene.start('EndingOneScene');
           }
